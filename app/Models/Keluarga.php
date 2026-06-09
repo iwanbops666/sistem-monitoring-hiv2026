@@ -7,26 +7,30 @@ use Illuminate\Database\Eloquent\Model;
 class Keluarga extends Model
 {
     protected $table = 'keluarga';
-    protected $primaryKey = 'id_keluarga';
+    protected $primaryKey = 'user_id';
+    public $incrementing = false;
 
     protected $fillable = [
-        'id_user',
-        'id_pasien',
-        'hubungan',
+        'user_id',
+        'pasien_id',
+        'nama',
+        'no_hp',
+        'alamat',
+        'rt',
+        'rw',
+        'kabupaten',
+        'kecamatan',
+        'kelurahan',
+        'provinsi',
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'id_user', 'id_user');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function pasien()
     {
-        return $this->belongsTo(Pasien::class, 'id_pasien', 'id_pasien');
-    }
-
-    public function notifikasi()
-    {
-        return $this->hasMany(Notifikasi::class, 'id_keluarga', 'id_keluarga');
+        return $this->belongsTo(Pasien::class, 'pasien_id', 'user_id');
     }
 }

@@ -12,10 +12,14 @@ class LaporanEvaluasi extends Model
     protected $fillable = [
         'id_pasien',
         'id_petugas',
+        'kunjungan',
         'tanggal',
-        'standar_lain',
+        'standar_klinis',
+        'hasil_arv_terakhir',
+        'status_viral_load',
         'status_fungsional',
         'jumlah_cd4',
+        'berat_badan',
         'catatan',
     ];
 

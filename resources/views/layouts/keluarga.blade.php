@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Keluarga Pasien')</title>
+
+    <link rel="manifest" href="/manifest.json">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -12,488 +15,516 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        :root {
-            --sidebar-bg: #58a86b;
-            --sidebar-active: #08703a;
-            --sidebar-text: #113b24;
-            --main-bg: #eef5fb;
-            --card-bg: #ffffff;
-            --text-dark: #172236;
-            --text-soft: #8b95a5;
-            --green: #12a150;
-            --green-soft: #9ee3cf;
-            --green-border: #22aa83;
-            --danger: #ff2020;
-            --shadow: 0 14px 34px rgba(22, 49, 80, 0.10);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--main-bg);
-            color: var(--text-dark);
+            background: #f4faff;
+            color: #111827;
         }
 
-        .family-wrapper {
+        .keluarga-wrapper {
             min-height: 100vh;
             display: flex;
         }
 
-        .family-sidebar {
-            width: 270px;
+        /* SIDEBAR KELUARGA */
+        .keluarga-sidebar {
+            width: 280px;
             min-height: 100vh;
-            background: var(--sidebar-bg);
+            background: #065f46; /* Darker, more premium emerald */
             position: fixed;
             left: 0;
             top: 0;
             bottom: 0;
-            padding: 26px 14px 22px;
+            padding: 40px 20px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            z-index: 100;
+            z-index: 50;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.05);
         }
 
-        .family-logo {
+        .keluarga-logo {
             text-align: center;
-            margin-bottom: 44px;
+            margin-bottom: 50px;
         }
 
-        .family-logo img {
-            width: 100px;
-            height: 100px;
+        .keluarga-logo img {
+            width: 90px;
+            height: 90px;
             object-fit: contain;
             margin-bottom: 18px;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
         }
 
-        .family-logo h2 {
+        .keluarga-logo h3 {
             color: #ffffff;
-            font-size: 16px;
-            font-weight: 900;
-            line-height: 1.18;
-            letter-spacing: 0.2px;
+            font-size: 15px;
+            line-height: 1.4;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            opacity: 0.95;
         }
 
-        .family-menu {
+        .keluarga-menu {
             list-style: none;
+            margin-top: 10px;
         }
 
-        .family-menu li {
-            margin-bottom: 10px;
+        .keluarga-menu li {
+            margin-bottom: 12px;
         }
 
-        .family-menu a {
+        .keluarga-menu a {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 15px;
             width: 100%;
-            padding: 13px 16px;
-            border-radius: 12px;
-            color: var(--sidebar-text);
+            padding: 12px 18px;
+            border-radius: 14px;
+            color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .keluarga-menu a i {
             font-size: 18px;
-            font-weight: 700;
-            transition: 0.2s ease;
+            transition: transform 0.3s ease;
         }
 
-        .family-menu a i {
-            width: 24px;
-            font-size: 21px;
-            text-align: center;
-        }
-
-        .family-menu a:hover {
-            background: rgba(8, 112, 58, 0.13);
-        }
-
-        .family-menu a.active {
-            background: var(--sidebar-active);
+        .keluarga-menu a:hover {
+            background: rgba(255, 255, 255, 0.1);
             color: #ffffff;
-            font-weight: 900;
         }
 
-        .family-logout {
+        .keluarga-menu a:hover i {
+            transform: scale(1.1);
+        }
+
+        .keluarga-menu a.active {
+            background: #ffffff;
+            color: #065f46;
+            font-weight: 800;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .keluarga-logout {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            border-radius: 14px;
+            padding: 14px 20px;
+            text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 14px;
-            background: #24743f;
-            color: #ffffff;
-            text-decoration: none;
-            padding: 18px 20px;
-            border-radius: 14px;
-            font-size: 21px;
-            font-weight: 900;
-            box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+            gap: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .family-logout i {
-            font-size: 26px;
+        .keluarga-logout:hover {
+            background: #ef4444;
+            border-color: #ef4444;
+            box-shadow: 0 8px 15px rgba(239, 68, 68, 0.3);
         }
 
-        .family-main {
-            margin-left: 270px;
-            width: calc(100% - 270px);
+        /* CONTENT */
+        .keluarga-main {
+            margin-left: 280px;
+            width: calc(100% - 280px);
             min-height: 100vh;
-            padding: 44px 50px 42px;
+            padding: 45px 50px;
         }
 
-        .family-inner {
-            max-width: 1220px;
-            margin: 0 auto;
-        }
-
-        .family-topbar {
+        .keluarga-topbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 24px;
-            margin-bottom: 44px;
+            margin-bottom: 45px;
         }
 
-        .family-title {
-            font-size: 42px;
-            font-weight: 900;
-            color: var(--text-dark);
-            line-height: 1.1;
-        }
-
-        .family-user-area {
-            display: flex;
-            align-items: center;
-            gap: 28px;
-        }
-
-        .family-bell {
-            position: relative;
-            border: none;
-            background: transparent;
-            color: #000000;
-            font-size: 31px;
-            cursor: pointer;
-        }
-
-        .family-bell-dot {
-            position: absolute;
-            top: 2px;
-            right: 0;
-            width: 12px;
-            height: 12px;
-            background: #2dcc69;
-            border: 2px solid #ffffff;
-            border-radius: 50%;
-        }
-
-        .family-user {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .family-user img {
-            width: 68px;
-            height: 68px;
-            border-radius: 50%;
-            object-fit: cover;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16);
-        }
-
-        .family-user h4 {
-            font-size: 18px;
+        .keluarga-page-title {
+            font-size: 32px;
             font-weight: 900;
             color: #111827;
-            margin-bottom: 5px;
+            letter-spacing: -0.5px;
         }
 
-        .family-user span {
-            font-size: 15px;
-            color: var(--text-soft);
-            font-weight: 600;
-        }
-
-        .family-notif-panel {
-            position: fixed;
-            top: 96px;
-            right: 58px;
-            width: 365px;
-            background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 18px 42px rgba(0, 0, 0, 0.16);
-            overflow: hidden;
-            display: none;
-            z-index: 99999;
-        }
-
-        .family-notif-panel.show {
-            display: block;
-            animation: notifFade 0.2s ease;
-        }
-
-        @keyframes notifFade {
-            from {
-                opacity: 0;
-                transform: translateY(-8px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .family-notif-header {
-            padding: 16px 18px;
-            border-bottom: 1px solid #edf0f4;
+        .keluarga-user-area {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            gap: 25px;
         }
 
-        .family-notif-header h3 {
-            font-size: 20px;
-            font-weight: 900;
-            color: #1f2937;
-        }
-
-        .family-notif-close {
-            border: none;
-            background: transparent;
-            font-size: 18px;
-            color: #555;
-            cursor: pointer;
-        }
-
-        .family-notif-body {
-            padding: 8px 16px 12px;
-            max-height: 360px;
-            overflow-y: auto;
-        }
-
-        .family-notif-item {
-            display: flex;
-            gap: 12px;
-            padding: 14px 0;
-            border-bottom: 1px solid #f1f3f6;
-        }
-
-        .family-notif-item:last-child {
-            border-bottom: none;
-        }
-
-        .family-notif-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: #e9f8ef;
-            color: #15964d;
+        .keluarga-bell {
+            width: 48px;
+            height: 48px;
+            background: #ffffff;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 17px;
+            font-size: 20px;
+            color: #64748b;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .keluarga-bell:hover {
+            border-color: #10b981;
+            color: #10b981;
+            background: #f0fdf4;
+            transform: translateY(-2px);
+        }
+
+        .keluarga-bell-dot {
+            position: absolute;
+            top: 13px;
+            right: 13px;
+            width: 10px;
+            height: 10px;
+            background: #ef4444;
+            border: 2.5px solid #ffffff;
+            border-radius: 50%;
+            display: {{ ($global_notifications ?? collect())->count() > 0 ? 'block' : 'none' }};
+        }
+
+        .keluarga-user {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 6px 18px 6px 6px;
+            background: #ffffff;
+            border-radius: 18px;
+            border: 1.5px solid #e5e7eb;
+        }
+
+        .keluarga-user img {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            object-fit: cover;
+        }
+
+        .keluarga-user h4 {
+            font-size: 14px;
+            font-weight: 800;
+            color: #111827;
+        }
+
+        .keluarga-user span {
+            font-size: 12px;
+            font-weight: 600;
+            color: #94a3b8;
+        }
+
+        /* NOTIFICATION PANEL */
+        .keluarga-notif-panel {
+            position: fixed;
+            top: 105px;
+            right: 50px;
+            width: 380px;
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            display: none;
+            z-index: 100000;
+            border: 1px solid #f1f5f9;
+        }
+
+        .keluarga-notif-panel.show {
+            display: block;
+            animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .keluarga-notif-header {
+            padding: 22px 25px;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .keluarga-notif-header h3 {
+            font-size: 18px;
+            font-weight: 900;
+            color: #111827;
+        }
+
+        .keluarga-notif-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            border: none;
+            background: #f1f5f9;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .keluarga-notif-close:hover { background: #fee2e2; color: #ef4444; }
+
+        .keluarga-notif-body {
+            max-height: 450px;
+            overflow-y: auto;
+        }
+
+        .keluarga-notif-item {
+            display: flex;
+            gap: 15px;
+            padding: 20px 25px;
+            border-bottom: 1px solid #f8fafc;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+
+        .keluarga-notif-item:hover { background: #f8fafc; }
+
+        .keluarga-notif-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: #ecfdf5;
+            color: #10b981;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
             flex-shrink: 0;
         }
 
-        .family-notif-content h5 {
+        .keluarga-notif-content h5 {
             font-size: 14px;
-            font-weight: 900;
-            color: #1f2937;
-            margin-bottom: 5px;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 4px;
         }
 
-        .family-notif-content p {
+        .keluarga-notif-content p {
             font-size: 13px;
-            color: #6b7280;
-            line-height: 1.45;
-            margin-bottom: 5px;
+            color: #64748b;
+            line-height: 1.5;
+            margin-bottom: 6px;
         }
 
-        .family-notif-content small {
+        .keluarga-notif-content small {
             font-size: 11px;
-            color: #9aa3af;
+            font-weight: 700;
+            color: #94a3b8;
         }
 
-        @media (max-width: 992px) {
-            .family-wrapper {
-                flex-direction: column;
-            }
-
-            .family-sidebar {
-                position: relative;
-                width: 100%;
-                min-height: auto;
-            }
-
-            .family-main {
-                margin-left: 0;
-                width: 100%;
-                padding: 30px 20px;
-            }
-
-            .family-topbar {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .family-user-area {
-                width: 100%;
-                justify-content: space-between;
-            }
+        @media (max-width: 1024px) {
+            .keluarga-main { padding: 40px 30px; }
         }
 
-        @media (max-width: 768px) {
-            .family-title {
-                font-size: 32px;
-            }
-
-            .family-notif-panel {
-                left: 12px;
-                right: 12px;
-                width: auto;
-            }
+        @media (max-width: 900px) {
+            .keluarga-sidebar { display: none; }
+            .keluarga-main { margin-left: 0; width: 100%; }
         }
     </style>
-
-    @stack('styles')
 </head>
 <body>
-    <div class="family-wrapper">
-        <aside class="family-sidebar">
-            <div>
-                <div class="family-logo">
-                    <img src="{{ asset('assets/logo-puskesmas.png') }}" alt="Logo Puskesmas">
-                    <h2>
-                        PUSKESMAS BENCULUK<br>
-                        KABUPATEN BANYUWANGI
-                    </h2>
-                </div>
 
-                <ul class="family-menu">
-                    <li>
-                        <a href="{{ url('/keluarga/dashboard') }}"
-                           class="{{ request()->is('keluarga/dashboard') ? 'active' : '' }}">
-                            <i class="fa-solid fa-table-cells-large"></i>
-                            Dashboard
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="{{ url('/keluarga/profile') }}"
-                           class="{{ request()->is('keluarga/profile') ? 'active' : '' }}">
-                            <i class="fa-regular fa-circle-user"></i>
-                            Profile
-                        </a>
-                    </li>
-                </ul>
+<div class="keluarga-wrapper">
+    <aside class="keluarga-sidebar">
+        <div class="sidebar-top">
+            <div class="keluarga-logo">
+                <img src="{{ asset('assets/logo-puskesmas.png') }}" alt="Logo">
+                <h3>
+                    PUSKESMAS BENCULUK<br>
+                    <span style="font-size: 12px; opacity: 0.7;">KAB. BANYUWANGI</span>
+                </h3>
             </div>
 
-            <a href="{{ url('/logout') }}" class="family-logout">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                Log Out
-            </a>
-        </aside>
+            <ul class="keluarga-menu">
+                <li>
+                    <a href="{{ url('/keluarga/dashboard') }}" class="{{ request()->is('keluarga/dashboard') ? 'active' : '' }}">
+                        <i class="fa-solid fa-house-chimney"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ url('/keluarga/profile') }}" class="{{ request()->is('keluarga/profile') ? 'active' : '' }}">
+                        <i class="fa-solid fa-user-pen"></i>
+                        <span>Profile Keluarga</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
 
-        <main class="family-main">
-            <div class="family-inner">
-                <div class="family-topbar">
-                    <h1 class="family-title">@yield('page-title', 'Dashboard')</h1>
+        <a href="{{ url('/logout') }}" class="keluarga-logout">
+            <i class="fa-solid fa-power-off"></i>
+            <span>Keluar Sistem</span>
+        </a>
+    </aside>
 
-                    <div class="family-user-area">
-                        <button type="button" class="family-bell" id="familyBellButton">
-                            <i class="fa-regular fa-bell"></i>
-                            <span class="family-bell-dot"></span>
-                        </button>
+    <main class="keluarga-main">
+        <div class="keluarga-topbar">
+            <h1 class="keluarga-page-title">@yield('page-title', 'Overview')</h1>
 
-                        <div class="family-user">
-                            <img src="https://i.pravatar.cc/150?img=12" alt="Foto Keluarga">
-                            <div>
-                                <h4>Supri Widodo</h4>
-                                <span>Keluarga Pasien</span>
-                            </div>
-                        </div>
+            <div class="keluarga-user-area">
+                <button type="button" class="keluarga-bell" id="keluargaBellButton">
+                    <i class="fa-regular fa-bell"></i>
+                    <span class="keluarga-bell-dot"></span>
+                </button>
+
+                <div class="keluarga-user">
+                    <img src="https://i.pravatar.cc/150?img=12" alt="User">
+                    <div>
+                        <h4>{{ Auth::user()->name }}</h4>
+                        <span>Keluarga Pasien</span>
                     </div>
                 </div>
-
-                @yield('content')
-            </div>
-        </main>
-    </div>
-
-    <div class="family-notif-panel" id="familyNotifPanel">
-        <div class="family-notif-header">
-            <h3>Notifikasi</h3>
-            <button type="button" class="family-notif-close" id="familyNotifClose">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-
-        <div class="family-notif-body">
-            <div class="family-notif-item">
-                <div class="family-notif-icon">
-                    <i class="fa-solid fa-calendar-check"></i>
-                </div>
-                <div class="family-notif-content">
-                    <h5>Jadwal kontrol sudah dekat</h5>
-                    <p>Pasien memiliki jadwal kontrol dan pengambilan obat dalam 3 hari lagi.</p>
-                    <small>2 jam lalu</small>
-                </div>
-            </div>
-
-            <div class="family-notif-item">
-                <div class="family-notif-icon">
-                    <i class="fa-solid fa-pills"></i>
-                </div>
-                <div class="family-notif-content">
-                    <h5>Pengingat minum obat</h5>
-                    <p>Mohon bantu ingatkan pasien untuk minum obat sesuai jadwal.</p>
-                    <small>Hari ini</small>
-                </div>
-            </div>
-
-            <div class="family-notif-item">
-                <div class="family-notif-icon">
-                    <i class="fa-solid fa-stethoscope"></i>
-                </div>
-                <div class="family-notif-content">
-                    <h5>Pengingat evaluasi</h5>
-                    <p>Ada evaluasi pasien yang perlu diperhatikan pada kunjungan berikutnya.</p>
-                    <small>Kemarin</small>
-                </div>
             </div>
         </div>
+
+        @yield('content')
+    </main>
+</div>
+
+{{-- NOTIFICATION PANEL --}}
+<div class="keluarga-notif-panel" id="keluargaNotifPanel">
+    <div class="keluarga-notif-header">
+        <h3>Notifikasi Baru</h3>
+        <button type="button" class="keluarga-notif-close" id="keluargaNotifClose">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
     </div>
+    <div class="keluarga-notif-body">
+        @forelse($global_notifications ?? [] as $notif)
+            <div class="keluarga-notif-item">
+                <div class="keluarga-notif-icon">
+                    <i class="fa-solid fa-circle-info"></i>
+                </div>
+                <div class="keluarga-notif-content">
+                    <h5>{{ $notif->title }}</h5>
+                    <p>{{ $notif->message }}</p>
+                    <small><i class="fa-regular fa-clock"></i> {{ $notif->created_at->diffForHumans() }}</small>
+                </div>
+            </div>
+        @empty
+            <div style="padding: 40px 20px; text-align: center; color: #94a3b8;">
+                <i class="fa-regular fa-bell-slash" style="font-size: 30px; margin-bottom: 10px; display: block;"></i>
+                <p style="font-size: 14px; font-weight: 600;">Belum ada notifikasi baru</p>
+            </div>
+        @endforelse
+    </div>
+</div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const bellButton = document.getElementById('familyBellButton');
-            const notifPanel = document.getElementById('familyNotifPanel');
-            const notifClose = document.getElementById('familyNotifClose');
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const bell = document.getElementById('keluargaBellButton');
+        const panel = document.getElementById('keluargaNotifPanel');
+        const close = document.getElementById('keluargaNotifClose');
 
-            if (bellButton && notifPanel) {
-                bellButton.addEventListener('click', function (event) {
-                    event.stopPropagation();
-                    notifPanel.classList.toggle('show');
-                });
-            }
+        if (bell && panel) {
+            bell.addEventListener('click', (e) => {
+                e.stopPropagation();
+                panel.classList.toggle('show');
+            });
 
-            if (notifClose && notifPanel) {
-                notifClose.addEventListener('click', function () {
-                    notifPanel.classList.remove('show');
-                });
-            }
+            close.addEventListener('click', () => panel.classList.remove('show'));
 
-            document.addEventListener('click', function (event) {
-                if (
-                    notifPanel &&
-                    notifPanel.classList.contains('show') &&
-                    !notifPanel.contains(event.target) &&
-                    !bellButton.contains(event.target)
-                ) {
-                    notifPanel.classList.remove('show');
+            document.addEventListener('click', (e) => {
+                if (!panel.contains(e.target) && !bell.contains(e.target)) {
+                    panel.classList.remove('show');
                 }
             });
-        });
-    </script>
+        }
+    });
+</script>
 
-    @stack('scripts')
+@stack('scripts')
+    <script>
+        // PWA & Push Notification Logic
+        if ('serviceWorker' in navigator && 'PushManager' in window) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    initializePush(registration);
+                }, function(err) {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+
+        function initializePush(registration) {
+            registration.pushManager.getSubscription()
+            .then(function(subscription) {
+                if (subscription) {
+                    sendSubscriptionToServer(subscription);
+                } else {
+                    subscribeUser(registration);
+                }
+            });
+        }
+
+        function subscribeUser(registration) {
+            const applicationServerKey = urlB64ToUint8Array('{{ config('webpush.vapid.public_key') }}');
+            registration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: applicationServerKey
+            })
+            .then(function(subscription) {
+                sendSubscriptionToServer(subscription);
+            })
+            .catch(function(err) {
+                console.log('Failed to subscribe the user: ', err);
+            });
+        }
+
+        function sendSubscriptionToServer(subscription) {
+            const key = subscription.getKey('p256dh');
+            const token = subscription.getKey('auth');
+            const contentEncoding = (PushManager.supportedContentEncodings || ['aesgcm'])[0];
+
+            fetch('/push-subscriptions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    endpoint: subscription.endpoint,
+                    keys: {
+                        p256dh: key ? btoa(String.fromCharCode.apply(null, new Uint8Array(key))) : null,
+                        auth: token ? btoa(String.fromCharCode.apply(null, new Uint8Array(token))) : null
+                    },
+                    content_encoding: contentEncoding
+                })
+            })
+            .then(res => res.json())
+            .then(data => console.log('Subscription saved on server:', data))
+            .catch(err => console.error('Error saving subscription:', err));
+        }
+
+        function urlB64ToUint8Array(base64String) {
+            const padding = '='.repeat((4 - base64String.length % 4) % 4);
+            const base64 = (base64String + padding)
+                .replace(/\-/g, '+')
+                .replace(/_/g, '/');
+
+            const rawData = window.atob(base64);
+            const outputArray = new Uint8Array(rawData.length);
+
+            for (let i = 0; i < rawData.length; ++i) {
+                outputArray[i] = rawData.charCodeAt(i);
+            }
+            return outputArray;
+        }
+    </script>
 </body>
 </html>

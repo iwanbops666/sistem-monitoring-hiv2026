@@ -4,19 +4,22 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use NotificationChannels\WebPush\HasPushSubscriptions;
+
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, HasPushSubscriptions;
+
 
     protected $table = 'users';
-    protected $primaryKey = 'id_user';
-
     protected $fillable = [
-        'nama',
+        'name',
         'email',
+        'phone_number',
         'password',
         'role',
+        'foto_profil',
     ];
 
     protected $hidden = [
@@ -25,16 +28,16 @@ class User extends Authenticatable
 
     public function petugas()
     {
-        return $this->hasOne(Petugas::class, 'id_user', 'id_user');
+        return $this->hasOne(Petugas::class, 'user_id');
     }
 
     public function pasien()
     {
-        return $this->hasOne(Pasien::class, 'id_user', 'id_user');
+        return $this->hasOne(Pasien::class, 'user_id');
     }
 
     public function keluarga()
     {
-        return $this->hasOne(Keluarga::class, 'id_user', 'id_user');
+        return $this->hasOne(Keluarga::class, 'user_id');
     }
 }

@@ -14,7 +14,9 @@ class KartuKendali extends Model
         'id_petugas',
         'tanggal_kunjungan',
         'rencana_tanggal_kunjungan_selanjutnya',
-        'rejimen_dan_jumlah_obat_arv_yang_tersisa',
+        'obat_yang_diberikan',
+        'rejimen_arv',
+        'jumlah_arv_tersisa',
         'jumlah_inh_yang_tersisa',
         'jumlah_inh_yang_diberikan_untuk_bulan_berikutnya',
         'efek_samping_dan_lab_profilaksis',
@@ -24,6 +26,7 @@ class KartuKendali extends Model
     protected $casts = [
         'tanggal_kunjungan' => 'date',
         'rencana_tanggal_kunjungan_selanjutnya' => 'date',
+        'obat_yang_diberikan' => 'array',
     ];
 
     public function pasien()

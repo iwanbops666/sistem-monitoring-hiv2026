@@ -5,492 +5,405 @@
 
 @section('content')
     <style>
-        .evaluasi-page {
-            width: 100%;
+        .evaluasi-container {
             max-width: 1080px;
-            margin-top: -20px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .evaluasi-card {
             background: #ffffff;
             border-radius: 24px;
-            padding: 36px 42px 26px;
-            box-shadow: 0 18px 35px rgba(213, 224, 235, 0.68);
+            padding: 35px;
+            box-shadow: 0 10px 25px rgba(213, 224, 235, 0.3);
+            border: 1px solid #f1f5f9;
         }
 
-        .evaluasi-card-header {
+        .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 48px;
+            margin-bottom: 35px;
         }
 
-        .evaluasi-card-title {
-            font-size: 20px;
+        .section-header h2 {
+            font-size: 22px;
             font-weight: 900;
             color: #111827;
         }
 
-        .sort-box {
-            height: 42px;
-            border: none;
-            outline: none;
-            background: #f8faff;
-            border-radius: 9px;
-            padding: 0 14px;
-            font-size: 13px;
-            color: #6b7280;
-        }
-
-        .evaluasi-table-wrapper {
-            overflow-x: auto;
-        }
-
-        .evaluasi-table {
+        .custom-table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0 12px;
         }
 
-        .evaluasi-table th {
+        .custom-table th {
             text-align: left;
-            color: #a8adb8;
+            padding: 0 15px 10px;
+            color: #9ca3af;
             font-size: 13px;
             font-weight: 700;
-            padding-bottom: 18px;
+            text-transform: uppercase;
         }
 
-        .evaluasi-table td {
-            color: #111827;
-            font-size: 13px;
-            padding: 17px 0;
-            border-bottom: 1px solid #f1f1f1;
-            vertical-align: middle;
+        .custom-table tr td {
+            background: #f8fafc;
+            padding: 20px 15px;
+            color: #374151;
+            font-size: 14px;
+            transition: background 0.2s;
         }
 
-        .btn-detail-evaluasi {
-            background: #78dfc3;
-            color: #08785c;
-            border: 1px solid #17ac87;
-            padding: 7px 18px;
-            border-radius: 5px;
+        .custom-table tr td:first-child { border-radius: 12px 0 0 12px; font-weight: 700; }
+        .custom-table tr td:last-child { border-radius: 0 12px 12px 0; }
+
+        .custom-table tr:hover td { background: #f1f5f9; }
+
+        .btn-detail {
+            background: #ffffff;
+            color: #10b981;
+            border: 1.5px solid #10b981;
+            padding: 8px 20px;
+            border-radius: 10px;
             font-size: 13px;
             font-weight: 700;
             cursor: pointer;
+            transition: all 0.2s;
         }
 
-        .btn-detail-evaluasi:hover {
-            background: #62d6b6;
-        }
-
-        .evaluasi-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 24px;
-            color: #a9aebb;
-            font-size: 13px;
-        }
-
-        .pagination {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .page-btn {
-            width: 26px;
-            height: 26px;
-            border-radius: 6px;
-            border: none;
-            background: #f3f4f8;
-            color: #757b87;
-            font-size: 13px;
-            cursor: pointer;
-        }
-
-        .page-btn.active {
-            background: #5a45df;
+        .btn-detail:hover {
+            background: #10b981;
             color: #ffffff;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
         }
 
         /* MODAL */
-        .evaluasi-modal-overlay {
+        .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.22);
+            background: rgba(0, 0, 0, 0.35);
             display: none;
             justify-content: center;
             align-items: center;
             padding: 20px;
-            z-index: 9999;
+            z-index: 10000;
+            backdrop-filter: blur(4px);
         }
 
-        .evaluasi-modal-overlay.show {
-            display: flex;
-        }
+        .modal-overlay.show { display: flex; }
 
-        .evaluasi-modal-box {
+        .modal-box {
             width: 100%;
-            max-width: 920px;
+            max-width: 900px;
             background: #ffffff;
-            border-radius: 14px;
-            padding: 34px 44px 30px;
+            border-radius: 24px;
+            padding: 40px;
             position: relative;
-            box-shadow: 0 16px 38px rgba(0,0,0,0.18);
-            max-height: 95vh;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+            max-height: 85vh;
             overflow-y: auto;
+            animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        .evaluasi-modal-close {
+        @keyframes modalPop {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-close {
             position: absolute;
-            right: 16px;
-            top: 14px;
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
+            right: 25px;
+            top: 25px;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
             border: none;
-            background: #ff1f1f;
-            color: #ffffff;
+            background: #f1f5f9;
+            color: #64748b;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover { background: #fee2e2; color: #ef4444; }
+
+        .modal-header h2 {
             font-size: 24px;
             font-weight: 900;
-            cursor: pointer;
-            line-height: 34px;
+            color: #111827;
+            margin-bottom: 30px;
         }
 
-        .evaluasi-modal-title {
-            font-size: 34px;
-            font-weight: 900;
-            color: #000000;
-            margin-bottom: 42px;
-            line-height: 1;
-        }
-
-        .modal-grid-2 {
+        .modal-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 26px 52px;
-            margin-bottom: 24px;
+            gap: 25px 35px;
         }
 
-        .modal-group label {
+        .field-group label {
             display: block;
-            font-size: 16px;
-            color: #111827;
-            font-weight: 500;
+            font-size: 14px;
+            font-weight: 700;
+            color: #64748b;
             margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .modal-group input,
-        .modal-group textarea {
-            width: 100%;
-            border: 1px solid #d8d8d8;
-            border-radius: 8px;
-            background: #ffffff;
-            outline: none;
+        .field-val {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 16px;
+            border: 1.5px solid #e2e8f0;
+            color: #1e293b;
             font-size: 15px;
-            color: #111827;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.06);
-        }
-
-        .modal-group input {
-            height: 46px;
-            padding: 0 14px;
-        }
-
-        .modal-group textarea {
-            height: 98px;
-            padding: 14px;
-            resize: none;
             line-height: 1.5;
+            min-height: 52px;
         }
 
-        .modal-group input:disabled,
-        .modal-group textarea:disabled {
-            background: #ffffff;
-            color: #111827;
-            cursor: not-allowed;
-            opacity: 1;
-        }
-
-        .modal-catatan textarea {
-            height: 135px;
-        }
-
-        @media (max-width: 900px) {
-            .evaluasi-page {
-                margin-top: 0;
-            }
-
-            .evaluasi-card-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 18px;
-            }
-
-            .modal-grid-2 {
-                grid-template-columns: 1fr;
-                gap: 22px;
-            }
-
-            .evaluasi-footer {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 18px;
-            }
+        @media (max-width: 768px) {
+            .modal-grid { grid-template-columns: 1fr; }
+            .section-header { flex-direction: column; align-items: flex-start; gap: 15px; }
         }
     </style>
 
-    <div class="evaluasi-page">
+    <div class="evaluasi-container">
         <section class="evaluasi-card">
-            <div class="evaluasi-card-header">
-                <h2 class="evaluasi-card-title">Pemeriksaan Klinis Dan Laboratorium</h2>
-
-                <select class="sort-box">
-                    <option>Short by : Newest</option>
-                    <option>Oldest</option>
-                </select>
+            <div class="section-header">
+                <h2>Laporan Evaluasi & Klinis</h2>
             </div>
 
-            <div class="evaluasi-table-wrapper">
-                <table class="evaluasi-table">
+            <div style="overflow-x: auto;">
+                <table class="custom-table">
                     <thead>
                         <tr>
-                            <th>Kunjungan</th>
-                            <th>Tanggal</th>
-                            <th>Standart Klinis</th>
-                            <th>Status Fungsional (K.Amb.B)</th>
-                            <th>Jumlah CD 4</th>
+                            <th>Tipe Laporan</th>
+                            <th>Kunjungan / Agenda</th>
+                            <th>Tanggal Periksa</th>
+                            <th>Hasil / Status</th>
                             <th></th>
                         </tr>
                     </thead>
-
                     <tbody>
-                        <tr>
-                            <td>Kunjungan Pertama</td>
-                            <td>16/04/2027</td>
-                            <td>Batuk ringan</td>
-                            <td>Mandiri</td>
-                            <td>450</td>
-                            <td>
-                                <button
-                                    type="button"
-                                    class="btn-detail-evaluasi"
-                                    data-kunjungan="Kunjungan Pertama"
-                                    data-tanggal="2027-04-16"
-                                    data-standart="Batuk ringan, kondisi umum baik."
-                                    data-status="Mandiri, dapat beraktivitas normal."
-                                    data-lain="Tidak ada keluhan tambahan."
-                                    data-cd4="450"
-                                    data-catatan="Pasien dianjurkan menjaga pola makan dan kontrol sesuai jadwal."
-                                >
-                                    Detail
-                                </button>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>Memenuhi Syarat Medis ART</td>
-                            <td>20/05/2027</td>
-                            <td>Kondisi stabil</td>
-                            <td>Mandiri</td>
-                            <td>430</td>
-                            <td>
-                                <button
-                                    type="button"
-                                    class="btn-detail-evaluasi"
-                                    data-kunjungan="Memenuhi Syarat Medis ART"
-                                    data-tanggal="2027-05-20"
-                                    data-standart="Pasien memenuhi syarat medis untuk ART."
-                                    data-status="Mandiri, tidak membutuhkan bantuan."
-                                    data-lain="Tidak ada infeksi oportunistik berat."
-                                    data-cd4="430"
-                                    data-catatan="Lanjutkan edukasi kepatuhan minum obat."
-                                >
-                                    Detail
-                                </button>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>Saat Mulai ART</td>
-                            <td>10/06/2027</td>
-                            <td>Mulai terapi</td>
-                            <td>Mandiri</td>
-                            <td>420</td>
-                            <td>
-                                <button
-                                    type="button"
-                                    class="btn-detail-evaluasi"
-                                    data-kunjungan="Saat Mulai ART"
-                                    data-tanggal="2027-06-10"
-                                    data-standart="Pasien mulai terapi ART."
-                                    data-status="Mandiri."
-                                    data-lain="Pasien diberi edukasi jadwal minum obat."
-                                    data-cd4="420"
-                                    data-catatan="Pantau efek samping obat pada kunjungan berikutnya."
-                                >
-                                    Detail
-                                </button>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>Setelah 6 Bulan ART</td>
-                            <td>10/12/2027</td>
-                            <td>Evaluasi 6 bulan</td>
-                            <td>Mandiri</td>
-                            <td>510</td>
-                            <td>
-                                <button
-                                    type="button"
-                                    class="btn-detail-evaluasi"
-                                    data-kunjungan="Setelah 6 Bulan ART"
-                                    data-tanggal="2027-12-10"
-                                    data-standart="Kondisi klinis membaik setelah 6 bulan ART."
-                                    data-status="Mandiri dan aktif."
-                                    data-lain="Tidak ada keluhan serius."
-                                    data-cd4="510"
-                                    data-catatan="Kepatuhan baik, lanjutkan terapi sesuai jadwal."
-                                >
-                                    Detail
-                                </button>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>Setelah 12 Bulan ART</td>
-                            <td>10/06/2028</td>
-                            <td>Evaluasi 12 bulan</td>
-                            <td>Mandiri</td>
-                            <td>590</td>
-                            <td>
-                                <button
-                                    type="button"
-                                    class="btn-detail-evaluasi"
-                                    data-kunjungan="Setelah 12 Bulan ART"
-                                    data-tanggal="2028-06-10"
-                                    data-standart="Kondisi stabil setelah 12 bulan ART."
-                                    data-status="Mandiri."
-                                    data-lain="Pasien tetap patuh pengobatan."
-                                    data-cd4="590"
-                                    data-catatan="Lanjutkan kontrol berkala dan pemantauan viral load."
-                                >
-                                    Detail
-                                </button>
-                            </td>
-                        </tr>
+                        @forelse ($records as $record)
+                            <tr>
+                                <td>
+                                    @if($record->record_type == 'clinical')
+                                        <span style="padding: 4px 10px; background: #eff6ff; border-radius: 6px; font-size: 11px; font-weight: 800; color: #3b82f6; text-transform: uppercase;">
+                                            <i class="fa-solid fa-stethoscope"></i> Evaluasi Klinis
+                                        </span>
+                                    @else
+                                        <span style="padding: 4px 10px; background: #fef2f2; border-radius: 6px; font-size: 11px; font-weight: 800; color: #ef4444; text-transform: uppercase;">
+                                            <i class="fa-solid fa-vial"></i> Viral Load
+                                        </span>
+                                    @endif
+                                </td>
+                                <td style="font-weight: 800; color: #1e293b;">
+                                    {{ $record->record_type == 'clinical' ? '#' . $record->kunjungan : $record->kunjungan }}
+                                </td>
+                                <td>{{ \Carbon\Carbon::parse($record->tanggal)->format('d M Y') }}</td>
+                                <td>
+                                    @if($record->record_type == 'clinical')
+                                        @php
+                                            $statusMap = [
+                                                'K' => 'K (Kerja)',
+                                                'Amb' => 'Amb (Ambulatory)',
+                                                'B' => 'B (Bedridden)'
+                                            ];
+                                            $statusLabel = $statusMap[$record->status_fungsional] ?? $record->status_fungsional ?? '-';
+                                        @endphp
+                                         <div style="display: flex; flex-direction: column; gap: 4px;">
+                                            <div style="display: flex; gap: 8px;">
+                                                <span style="padding: 2px 8px; background: #ecfdf5; border-radius: 6px; font-size: 11px; font-weight: 700; color: #059669; width: fit-content;">
+                                                    CD4: {{ $record->jumlah_cd4 ?? '-' }}
+                                                </span>
+                                                <span style="padding: 2px 8px; background: #fdf2f8; border-radius: 6px; font-size: 11px; font-weight: 700; color: #db2777; width: fit-content;">
+                                                    BB: {{ $record->berat_badan ?? '-' }} kg
+                                                </span>
+                                            </div>
+                                            @if($record->status_viral_load)
+                                                <span style="padding: 2px 8px; background: #eef2ff; border-radius: 6px; font-size: 11px; font-weight: 700; color: #4f46e5; width: fit-content;">
+                                                    VL: {{ $record->status_viral_load }}
+                                                </span>
+                                            @endif
+                                            <span style="font-size: 11px; font-weight: 600; color: #64748b;">
+                                                Status: {{ $statusLabel }}
+                                            </span>
+                                        </div>
+                                    @else
+                                        <span style="padding: 4px 10px; background: #fff7ed; border-radius: 6px; font-size: 12px; font-weight: 700; color: #f97316;">
+                                            VL: {{ $record->nilai_viral_load }}
+                                        </span>
+                                    @endif
+                                </td>
+                                <td style="text-align: right;">
+                                    <button 
+                                        type="button" 
+                                        class="btn-detail"
+                                         data-type="{{ $record->record_type }}"
+                                         data-kunjungan="{{ $record->record_type == 'clinical' ? $record->kunjungan : 'Pemeriksaan Viral Load' }}"
+                                         data-tanggal="{{ $record->tanggal }}"
+                                         data-standart="{{ $record->standar_klinis ?? '-' }}"
+                                         data-status="{{ $record->status_fungsional ?? '-' }}"
+                                         data-arv="{{ $record->hasil_arv_terakhir ?? '-' }}"
+                                         data-cd4="{{ $record->jumlah_cd4 ?? '-' }}"
+                                         data-bb="{{ $record->berat_badan ?? '-' }}"
+                                         data-catatan="{{ $record->catatan ?? $record->keterangan ?? '-' }}"
+                                         data-vl-nilai="{{ $record->nilai_viral_load ?? '-' }}"
+                                         data-vl-status="{{ $record->status_viral_load ?? '-' }}"
+                                    >
+                                        <i class="fa-solid fa-eye"></i> Detail
+                                    </button>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 60px; background: #ffffff; color: #9ca3af;">
+                                    Belum ada laporan evaluasi klinis.
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
-            </div>
-
-            <div class="evaluasi-footer">
-                <span>Showing data 1 to 8 of 256K entries</span>
-
-                <div class="pagination">
-                    <button class="page-btn">&lt;</button>
-                    <button class="page-btn active">1</button>
-                    <button class="page-btn">2</button>
-                    <button class="page-btn">3</button>
-                    <button class="page-btn">4</button>
-                    <span>...</span>
-                    <button class="page-btn">40</button>
-                    <button class="page-btn">&gt;</button>
-                </div>
             </div>
         </section>
     </div>
 
-    {{-- MODAL DETAIL LAPORAN EVALUASI --}}
-    <div class="evaluasi-modal-overlay" id="evaluasiModal">
-        <div class="evaluasi-modal-box">
-            <button type="button" class="evaluasi-modal-close" id="closeEvaluasiModal">&times;</button>
-
-            <h2 class="evaluasi-modal-title">Laporan Evaluasi Pasien</h2>
-
-            <form>
-                <div class="modal-grid-2">
-                    <div class="modal-group">
-                        <label>Kunjungan :</label>
-                        <input type="text" id="modalKunjungan" disabled>
+    {{-- MODAL DETAIL --}}
+    <div class="modal-overlay" id="evaluasiModal">
+        <div class="modal-box">
+            <button type="button" class="modal-close" id="closeModal"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="modal-header">
+                <h2 id="modalTitle">Rincian Laporan Evaluasi</h2>
+                <div style="display: flex; gap: 20px; margin-bottom: 30px; background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                    <div>
+                        <label style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; display: block; margin-bottom: 4px;">Kunjungan / Agenda</label>
+                        <span id="modalKunjungan" style="font-weight: 800; color: #10b981;">-</span>
                     </div>
-
-                    <div class="modal-group">
-                        <label>Tanggal :</label>
-                        <input type="date" id="modalTanggal" disabled>
-                    </div>
-                </div>
-
-                <div class="modal-grid-2">
-                    <div class="modal-group">
-                        <label>Standart Klinis :</label>
-                        <textarea id="modalStandart" disabled></textarea>
-                    </div>
-
-                    <div class="modal-group">
-                        <label>Status Fungsional (K.Amb.B)</label>
-                        <textarea id="modalStatus" disabled></textarea>
+                    <div style="width: 1px; background: #e2e8f0;"></div>
+                    <div>
+                        <label style="font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; display: block; margin-bottom: 4px;">Tanggal Periksa</label>
+                        <span id="modalTanggal" style="font-weight: 700; color: #1e293b;">-</span>
                     </div>
                 </div>
-
-                <div class="modal-grid-2">
-                    <div class="modal-group">
-                        <label>Lain - Lain :</label>
-                        <textarea id="modalLain" disabled></textarea>
-                    </div>
-
-                    <div class="modal-group">
-                        <label>Jumlah CD 4 :</label>
-                        <textarea id="modalCd4" disabled></textarea>
-                    </div>
+            </div>
+            
+            <div class="modal-grid" id="clinicalFields">
+                <div class="field-group">
+                    <label>Standar Klinis (WHO)</label>
+                    <div class="field-val" id="modalStandart">-</div>
                 </div>
-
-                <div class="modal-group modal-catatan">
-                    <label>Catatan</label>
-                    <textarea id="modalCatatan" disabled></textarea>
+                <div class="field-group">
+                    <label>Hasil ARV Terakhir</label>
+                    <div class="field-val" id="modalArv">-</div>
                 </div>
-            </form>
+                <div class="field-group">
+                    <label>Jumlah CD4</label>
+                    <div class="field-val" id="modalCd4">-</div>
+                </div>
+                <div class="field-group">
+                    <label>Berat Badan (kg)</label>
+                    <div class="field-val" id="modalBb">-</div>
+                </div>
+                <div class="field-group">
+                    <label>Status Viral Load</label>
+                    <div class="field-val" id="modalClinicalVlStatus">-</div>
+                </div>
+                <div class="field-group">
+                    <label>Status Fungsional (K.Amb.B)</label>
+                    <div class="field-val" id="modalStatus">-</div>
+                </div>
+            </div>
+
+            <div class="modal-grid" id="vlFields" style="display: none;">
+                <div class="field-group">
+                    <label>Nilai Viral Load (copies/mL)</label>
+                    <div class="field-val" id="modalVlNilai" style="font-weight: 800; color: #ef4444;">-</div>
+                </div>
+                <div class="field-group">
+                    <label>Status Viral Load</label>
+                    <div class="field-val" id="modalVlStatus" style="font-weight: 800;">-</div>
+                </div>
+            </div>
+
+            <div class="field-group" style="margin-top: 25px;">
+                <label>Catatan Klinis / Keterangan</label>
+                <div class="field-val" id="modalCatatan" style="min-height: 100px;">-</div>
+            </div>
         </div>
     </div>
 
     @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const modal = document.getElementById('evaluasiModal');
-                const closeButton = document.getElementById('closeEvaluasiModal');
-                const detailButtons = document.querySelectorAll('.btn-detail-evaluasi');
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const modal = document.getElementById('evaluasiModal');
+            const closeBtn = document.getElementById('closeModal');
+            const detailBtns = document.querySelectorAll('.btn-detail');
 
-                const modalKunjungan = document.getElementById('modalKunjungan');
-                const modalTanggal = document.getElementById('modalTanggal');
-                const modalStandart = document.getElementById('modalStandart');
-                const modalStatus = document.getElementById('modalStatus');
-                const modalLain = document.getElementById('modalLain');
-                const modalCd4 = document.getElementById('modalCd4');
-                const modalCatatan = document.getElementById('modalCatatan');
+            detailBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const formatDate = (dateStr) => {
+                        if(!dateStr) return '-';
+                        const date = new Date(dateStr);
+                        return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+                    };
 
-                detailButtons.forEach(button => {
-                    button.addEventListener('click', function () {
-                        modalKunjungan.value = this.dataset.kunjungan;
-                        modalTanggal.value = this.dataset.tanggal;
-                        modalStandart.value = this.dataset.standart;
-                        modalStatus.value = this.dataset.status;
-                        modalLain.value = this.dataset.lain;
-                        modalCd4.value = this.dataset.cd4;
-                        modalCatatan.value = this.dataset.catatan;
+                    const type = this.dataset.type;
+                    const clinicalFields = document.getElementById('clinicalFields');
+                    const vlFields = document.getElementById('vlFields');
+                    const modalTitle = document.getElementById('modalTitle');
 
-                        modal.classList.add('show');
-                    });
-                });
+                    document.getElementById('modalKunjungan').textContent = this.dataset.kunjungan;
+                    document.getElementById('modalTanggal').textContent = formatDate(this.dataset.tanggal);
+                    document.getElementById('modalCatatan').textContent = this.dataset.catatan || '-';
 
-                closeButton.addEventListener('click', function () {
-                    modal.classList.remove('show');
-                });
-
-                modal.addEventListener('click', function (event) {
-                    if (event.target === modal) {
-                        modal.classList.remove('show');
+                    if (type === 'clinical') {
+                        clinicalFields.style.display = 'grid';
+                        vlFields.style.display = 'none';
+                        modalTitle.textContent = 'Rincian Evaluasi Klinis';
+                        
+                        document.getElementById('modalStandart').textContent = this.dataset.standart || '-';
+                        
+                        const statusMap = {
+                            'K': 'K (Kerja/Working)',
+                            'Amb': 'Amb (Ambulatory)',
+                            'B': 'B (Bedridden/Tidur)'
+                        };
+                        document.getElementById('modalStatus').textContent = statusMap[this.dataset.status] || this.dataset.status || '-';
+                        
+                        document.getElementById('modalArv').textContent = this.dataset.arv || '-';
+                        document.getElementById('modalCd4').textContent = this.dataset.cd4 || '-';
+                        document.getElementById('modalBb').textContent = (this.dataset.bb || '-') + ' kg';
+                        document.getElementById('modalClinicalVlStatus').textContent = this.dataset.vlStatus || '-';
+                    } else {
+                        clinicalFields.style.display = 'none';
+                        vlFields.style.display = 'grid';
+                        modalTitle.textContent = 'Hasil Pemeriksaan Viral Load';
+                        
+                        document.getElementById('modalVlNilai').textContent = this.dataset.vlNilai + ' copies/mL';
+                        document.getElementById('modalVlStatus').textContent = this.dataset.vlStatus || '-';
+                        
+                        const vlStatusVal = document.getElementById('modalVlStatus');
+                        if (this.dataset.vlStatus.includes('TND') || this.dataset.vlStatus.includes('Rendah')) {
+                            vlStatusVal.style.color = '#10b981';
+                        } else {
+                            vlStatusVal.style.color = '#ef4444';
+                        }
                     }
+                    
+                    modal.classList.add('show');
                 });
             });
-        </script>
+
+            closeBtn.addEventListener('click', () => modal.classList.remove('show'));
+            modal.addEventListener('click', (e) => { if(e.target === modal) modal.classList.remove('show'); });
+        });
+    </script>
     @endpush
 @endsection

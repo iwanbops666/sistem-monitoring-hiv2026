@@ -1,413 +1,357 @@
 @extends('layouts.app')
 
-@section('title', 'Profile')
+@section('title', 'Profil Petugas')
 
 @section('content')
     <style>
-        .profile-page {
-            max-width: 1050px;
+        .profile-container {
+            max-width: 1000px;
+            animation: fadeIn 0.5s ease;
         }
 
-        .profile-topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 70px;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .profile-title {
-            font-size: 42px;
-            font-weight: 900;
-            color: #1f2937;
+        .profile-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(213, 224, 235, 0.3);
+            border: 1px solid #f1f5f9;
         }
 
-        .profile-user-area {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-        }
-
-        .profile-bell {
-            font-size: 28px;
-            color: #000;
-        }
-
-        .profile-mini {
+        .profile-header {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 25px;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #f1f5f9;
         }
 
-        .profile-mini img {
-            width: 68px;
-            height: 68px;
-            border-radius: 50%;
-            object-fit: cover;
-            box-shadow: 0 8px 18px rgba(0,0,0,0.18);
-        }
-
-        .profile-mini h4 {
-            font-size: 16px;
-            font-weight: 800;
-            margin-bottom: 3px;
-            color: #1f2937;
-        }
-
-        .profile-mini span {
-            font-size: 14px;
-            color: #777;
-        }
-
-        .profile-form {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 34px 42px;
-            align-items: start;
-        }
-
-        .profile-column {
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-        }
-
-        .profile-row {
-            display: grid;
-            grid-template-columns: 120px 1fr;
-            align-items: center;
-            gap: 22px;
-        }
-
-        .profile-row label {
-            font-size: 18px;
-            font-weight: 800;
-            color: #14532d;
-        }
-
-        .profile-row input,
-        .profile-row select {
-            width: 100%;
-            height: 46px;
-            border: 1px solid #111;
-            border-radius: 8px;
-            padding: 0 28px;
-            font-size: 17px;
-            color: #14532d;
-            background: #f9fafb;
-            outline: none;
-        }
-
-        .profile-date {
+        .profile-avatar-wrapper {
             position: relative;
         }
 
-        .profile-date i {
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 35px;
+            object-fit: cover;
+            border: 4px solid #ecfdf5;
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.15);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.05);
+            border-color: #10b981;
+        }
+
+        .avatar-edit-badge {
             position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 21px;
-            color: #111;
-        }
-
-        .profile-actions {
-            margin-top: 18px;
+            bottom: -5px;
+            right: -5px;
+            width: 35px;
+            height: 35px;
+            background: #10b981;
+            color: white;
+            border-radius: 12px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            grid-column: 1 / 3;
-        }
-
-        .btn-change-password {
-            border: none;
-            background: #5b5d5c;
-            color: #ffffff;
-            padding: 14px 30px;
-            border-radius: 8px;
-            font-size: 17px;
-            font-weight: 900;
-            cursor: pointer;
-            box-shadow: 0 5px 12px rgba(0,0,0,0.18);
-        }
-
-        .right-actions {
-            display: flex;
-            gap: 16px;
-        }
-
-        .btn-edit-profile {
-            border: none;
-            background: #ff1f1f;
-            color: #ffffff;
-            padding: 14px 34px;
-            border-radius: 8px;
-            font-size: 17px;
-            font-weight: 900;
-            cursor: pointer;
-            box-shadow: 0 5px 12px rgba(0,0,0,0.18);
-        }
-
-        .btn-save-profile {
-            border: none;
-            background: #22b463;
-            color: #ffffff;
-            padding: 14px 40px;
-            border-radius: 8px;
-            font-size: 17px;
-            font-weight: 900;
-            cursor: pointer;
-            box-shadow: 0 5px 12px rgba(0,0,0,0.18);
-        }
-
-        /* MODAL PASSWORD */
-        .password-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.22);
-            display: none;
             justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            padding: 20px;
+            border: 3px solid #ffffff;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
         }
 
-        .password-overlay.show {
-            display: flex;
-        }
-
-        .password-modal {
-            width: 100%;
-            max-width: 620px;
-            background: #ffffff;
-            border: 1px solid #111;
-            border-radius: 8px;
-            padding: 34px 34px 32px;
-            box-shadow: 0 14px 32px rgba(0,0,0,0.18);
-        }
-
-        .password-modal h2 {
+        .profile-info h2 {
             font-size: 24px;
             font-weight: 900;
-            color: #14532d;
-            font-style: italic;
-            margin-bottom: 28px;
+            color: #111827;
+            margin-bottom: 5px;
         }
 
-        .password-row {
-            display: grid;
-            grid-template-columns: 200px 1fr;
+        .profile-info p {
+            font-size: 15px;
+            font-weight: 600;
+            color: #64748b;
+            display: flex;
             align-items: center;
-            gap: 22px;
-            margin-bottom: 18px;
+            gap: 8px;
         }
 
-        .password-row label {
-            font-size: 17px;
-            font-weight: 900;
-            color: #14532d;
-            font-style: italic;
+        .form-section-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #065f46;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .password-row input {
-            height: 46px;
-            border: 1px solid #111;
-            border-radius: 8px;
-            padding: 0 28px;
-            font-size: 17px;
-            color: #14532d;
-            background: #f9fafb;
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px 40px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input,
+        .form-group select {
+            height: 48px;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 0 16px;
+            font-size: 15px;
+            color: #1e293b;
+            background: #f8fafc;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #10b981;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
             outline: none;
         }
 
-        .password-row input::placeholder {
-            color: #8baa9a;
-            font-style: italic;
-        }
-
-        .password-action {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 28px;
-        }
-
-        .btn-submit-password {
-            border: none;
-            background: #5b5d5c;
+        .btn-update {
+            background: #10b981;
             color: #ffffff;
-            padding: 14px 32px;
-            border-radius: 8px;
-            font-size: 17px;
-            font-weight: 900;
+            border: none;
+            padding: 14px 35px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 15px;
             cursor: pointer;
-            box-shadow: 0 5px 12px rgba(0,0,0,0.18);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.2);
+            transition: all 0.3s ease;
         }
 
-        @media (max-width: 900px) {
-            .profile-form {
-                grid-template-columns: 1fr;
-            }
+        .btn-update:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(16, 185, 129, 0.3);
+        }
 
-            .profile-actions {
-                grid-column: 1;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 18px;
-            }
+        .btn-password {
+            background: #f1f5f9;
+            color: #475569;
+            border: none;
+            padding: 14px 25px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
 
-            .profile-row {
-                grid-template-columns: 1fr;
-                gap: 8px;
-            }
+        .btn-password:hover {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
 
-            .password-row {
-                grid-template-columns: 1fr;
-                gap: 8px;
-            }
+        /* MODAL */
+        .password-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .password-overlay.show { display: flex; }
+
+        .password-modal {
+            background: #ffffff;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 24px;
+            padding: 35px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
     </style>
 
-    <div class="profile-page">
-        <div class="profile-topbar">
-            <h1 class="profile-title">Profile</h1>
-
-            <div class="profile-user-area">
-                <i class="fa-regular fa-bell profile-bell"></i>
-
-                <div class="profile-mini">
-                    <img src="https://i.pravatar.cc/150?img=12" alt="Profile">
-                    <div>
-                        <h4>Andri</h4>
-                        <span>Admin</span>
+    <div class="profile-container">
+        <form action="{{ route('petugas.profile.update') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            
+            <div class="profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar-wrapper" onclick="document.getElementById('foto_profil_input').click()">
+                        <img src="{{ Auth::user()->foto_profil ? asset('storage/' . Auth::user()->foto_profil) : 'https://i.pravatar.cc/150?img=12' }}" 
+                             class="profile-avatar" id="profile_preview" alt="Avatar">
+                        <div class="avatar-edit-badge">
+                            <i class="fa-solid fa-camera"></i>
+                        </div>
+                        <input type="file" name="foto_profil" id="foto_profil_input" style="display: none;" accept="image/*">
+                    </div>
+                    <div class="profile-info">
+                        <h2>{{ Auth::user()->name }}</h2>
+                        <p>
+                            <i class="fa-solid fa-user-shield" style="color: #10b981;"></i>
+                            {{ ucfirst(Auth::user()->role) }} Puskesmas Benculuk
+                        </p>
+                    </div>
+                    <div style="margin-left: auto;">
+                        <button type="button" class="btn-password open-password-btn">
+                            <i class="fa-solid fa-lock"></i> Keamanan Akun
+                        </button>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <form action="#" method="POST">
-            @csrf
+                <div class="form-section-title">
+                    <i class="fa-solid fa-id-card-clip"></i>
+                    Informasi Kepegawaian & Pribadi
+                </div>
 
-            <div class="profile-form">
-                <div class="profile-column">
-                    <div class="profile-row">
-                        <label>ID</label>
-                        <input type="text" value="0000">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nama Lengkap</label>
+                        <input type="text" name="nama" value="{{ old('nama', $petugas->nama) }}" required>
                     </div>
 
-                    <div class="profile-row">
-                        <label>Nama</label>
-                        <input type="text" value="Andri">
+                    <div class="form-group">
+                        <label>NIP (Nomor Induk Pegawai)</label>
+                        <input type="text" name="nip" value="{{ old('nip', $petugas->nip ?? '') }}" placeholder="Masukkan NIP">
                     </div>
 
-                    <div class="profile-row">
+                    <div class="form-group">
                         <label>Jenis Kelamin</label>
-                        <select>
-                            <option>Laki-Laki</option>
-                            <option>Perempuan</option>
+                        <select name="jenis_kelamin">
+                            <option value="Laki-laki" {{ old('jenis_kelamin', $petugas->jenis_kelamin ?? '') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                            <option value="Perempuan" {{ old('jenis_kelamin', $petugas->jenis_kelamin ?? '') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
                         </select>
                     </div>
 
-                    <div class="profile-row">
-                        <label>Jabatan</label>
-                        <input type="text" value="Penanggung Jawab HIV">
+                    <div class="form-group">
+                        <label>Tanggal Lahir</label>
+                        <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir', $petugas->tanggal_lahir ?? '') }}">
                     </div>
 
-                    <div class="profile-row">
-                        <label>Alamat</label>
-                        <input type="text" value="Benculuk">
-                    </div>
-                </div>
-
-                <div class="profile-column">
-                    <div class="profile-row">
-                        <label>NIK</label>
-                        <input type="text" value="5175645287987779">
+                    <div class="form-group">
+                        <label>Email Dinas / Login</label>
+                        <input type="email" name="email" value="{{ old('email', Auth::user()->email) }}" required>
                     </div>
 
-                    <div class="profile-row">
-                        <label>Tgl. Lahir</label>
-                        <div class="profile-date">
-                        <input type="date" name="tanggal_lahir" value="1987-04-23">
-                        </div>
+                    <div class="form-group">
+                        <label>Nomor Telepon / WA</label>
+                        <input type="text" name="no_hp" value="{{ old('no_hp', $petugas->no_hp) }}" required>
                     </div>
 
-                    <div class="profile-row">
-                        <label>Email</label>
-                        <input type="email" value="Andri@gmail.com">
-                    </div>
-
-                    <div class="profile-row">
-                        <label>No. Telepon</label>
-                        <input type="text" value="081342564533">
-                    </div>
-
-                    <div class="profile-row">
-                        <label>Status</label>
-                        <input type="text" value="PNS">
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label>Alamat Instansi / Domisili</label>
+                        <input type="text" name="alamat" value="{{ old('alamat', $petugas->alamat) }}">
                     </div>
                 </div>
 
-                <div class="profile-actions">
-                    <button type="button" class="btn-change-password" id="openPasswordModal">
-                        Ubah Password
+                <div style="margin-top: 40px; display: flex; justify-content: flex-end; gap: 15px;">
+                    <button type="button" class="btn-password open-password-btn">
+                         <i class="fa-solid fa-key"></i> Ubah Password
                     </button>
-
-                    <div class="right-actions">
-<button type="button" class="btn-edit-profile btn-confirm-edit">
-    Edit Data
-</button>
-
-                        <button type="submit" class="btn-save-profile">
-                            Simpan
-                        </button>
-                    </div>
+                    <button type="submit" class="btn-update">
+                        <i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan
+                    </button>
                 </div>
             </div>
         </form>
     </div>
 
-    {{-- POPUP UBAH PASSWORD --}}
+    {{-- MODAL UBAH PASSWORD --}}
     <div class="password-overlay" id="passwordModal">
         <div class="password-modal">
-            <h2>Ubah Password</h2>
+            <h3 style="font-size: 20px; font-weight: 900; margin-bottom: 25px; color: #111827;">Ubah Kata Sandi</h3>
 
-            <form action="#" method="POST">
+            <form action="{{ route('petugas.password.update') }}" method="POST">
                 @csrf
-
-                <div class="password-row">
-                    <label>Password Lama</label>
-                    <input type="password" placeholder="Password Lama">
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label>Kata Sandi Saat Ini</label>
+                    <input type="password" name="old_password" placeholder="••••••••" required>
                 </div>
 
-                <div class="password-row">
-                    <label>Password Baru</label>
-                    <input type="password" placeholder="Password Baru">
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label>Kata Sandi Baru</label>
+                    <input type="password" name="new_password" placeholder="Min. 8 karakter" required>
                 </div>
 
-                <div class="password-row">
-                    <label>Konfirmasi Password</label>
-                    <input type="password" placeholder="Konfirmasi Password">
+                <div class="form-group" style="margin-bottom: 25px;">
+                    <label>Konfirmasi Kata Sandi Baru</label>
+                    <input type="password" name="new_password_confirmation" placeholder="Ulangi kata sandi baru" required>
                 </div>
 
-                <div class="password-action">
-                    <button type="submit" class="btn-submit-password">
-                        Ubah Password
-                    </button>
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button type="button" class="btn-password" id="closePasswordModal">Batal</button>
+                    <button type="submit" class="btn-update">Perbarui Sandi</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
-        const passwordModal = document.getElementById('passwordModal');
-        const openPasswordModal = document.getElementById('openPasswordModal');
+        document.addEventListener('DOMContentLoaded', function () {
+            const passwordModal = document.getElementById('passwordModal');
+            const openBtns = document.querySelectorAll('.open-password-btn');
+            const closeBtn = document.getElementById('closePasswordModal');
 
-        openPasswordModal.addEventListener('click', function () {
-            passwordModal.classList.add('show');
-        });
+            openBtns.forEach(btn => {
+                btn.addEventListener('click', () => passwordModal.classList.add('show'));
+            });
 
-        passwordModal.addEventListener('click', function (e) {
-            if (e.target === passwordModal) {
-                passwordModal.classList.remove('show');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', () => passwordModal.classList.remove('show'));
+            }
+
+            passwordModal.addEventListener('click', (e) => {
+                if (e.target === passwordModal) passwordModal.classList.remove('show');
+            });
+
+            // Avatar Preview
+            const avatarInput = document.getElementById('foto_profil_input');
+            const avatarPreview = document.getElementById('profile_preview');
+
+            if (avatarInput) {
+                avatarInput.addEventListener('change', function() {
+                    const file = this.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            avatarPreview.src = e.target.result;
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                });
             }
         });
     </script>

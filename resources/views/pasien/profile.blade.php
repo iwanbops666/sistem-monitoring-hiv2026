@@ -1,697 +1,453 @@
 @extends('layouts.pasien')
 
 @section('title', 'Profile Pasien')
-@section('page-title', '')
 
 @section('content')
     <style>
-        .pasien-topbar {
-            display: none;
+        .profile-container {
+            max-width: 1000px;
+            animation: fadeIn 0.5s ease;
         }
 
-        .profile-page {
-            width: 100%;
-            max-width: 1120px;
-            margin-top: -18px;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .profile-card {
-            width: 100%;
+        .profile-header-banner {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 24px;
+            padding: 40px;
+            color: #ffffff;
+            margin-bottom: 35px;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            box-shadow: 0 15px 35px rgba(16, 185, 129, 0.2);
+        }
+
+        .profile-avatar-large {
+            width: 120px;
+            height: 120px;
+            border-radius: 35px;
+            border: 4px solid rgba(255, 255, 255, 0.4);
+            object-fit: cover;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .profile-avatar-large:hover {
+            transform: scale(1.05);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .avatar-edit-badge {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 38px;
+            height: 38px;
+            background: #ffffff;
+            color: #10b981;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid #10b981;
+        }
+
+        .avatar-wrapper {
+            position: relative;
+        }
+
+        .profile-info-text h1 {
+            font-size: 26px;
+            font-weight: 900;
+            margin-bottom: 5px;
+        }
+
+        .profile-info-text p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .profile-section-card {
             background: #ffffff;
             border-radius: 24px;
-            padding: 34px 50px 34px;
-            box-shadow: 0 18px 35px rgba(213, 224, 235, 0.68);
+            padding: 35px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(213, 224, 235, 0.3);
+            border: 1px solid #f1f5f9;
         }
 
-        .profile-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 42px;
-        }
-
-        .profile-title {
-            font-size: 38px;
-            font-weight: 900;
-            color: #1f2937;
-            line-height: 1;
-        }
-
-        .profile-header-right {
+        .section-title {
             display: flex;
             align-items: center;
-            gap: 28px;
-        }
-
-        .profile-bell-btn {
-            border: none;
-            background: transparent;
-            font-size: 30px;
-            color: #000000;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .profile-bell-btn::after {
-            content: "";
-            position: absolute;
-            right: 0;
-            top: 3px;
-            width: 10px;
-            height: 10px;
-            background: #22c55e;
-            border-radius: 50%;
-            border: 2px solid #ffffff;
-        }
-
-        .profile-mini-user {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .profile-mini-user img {
-            width: 66px;
-            height: 66px;
-            border-radius: 50%;
-            object-fit: cover;
-            box-shadow: 0 8px 18px rgba(0,0,0,0.18);
-        }
-
-        .profile-mini-user h4 {
-            font-size: 16px;
+            gap: 12px;
+            font-size: 18px;
             font-weight: 900;
             color: #111827;
-            margin-bottom: 4px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f1f5f9;
         }
 
-        .profile-mini-user span {
-            font-size: 14px;
-            font-weight: 600;
-            color: #8b8b8b;
+        .section-title i {
+            color: #10b981;
+            font-size: 20px;
         }
 
-        .profile-form-grid {
-            display: grid;
-            grid-template-columns: 1.1fr 1.1fr 1fr;
-            gap: 24px 36px;
-            align-items: start;
-        }
-
-        .profile-column {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-
-        .profile-group label {
-            display: block;
-            font-size: 16px;
-            font-weight: 500;
-            color: #111827;
-            margin-bottom: 7px;
-        }
-
-        .profile-group input,
-        .profile-group select {
-            width: 100%;
-            height: 43px;
-            border: 1px solid #d8d8d8;
-            border-radius: 8px;
-            padding: 0 13px;
-            background: #ffffff;
-            color: #111827;
-            font-size: 15px;
-            outline: none;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.06);
-        }
-
-        .profile-group input:focus,
-        .profile-group select:focus {
-            border-color: #10b981;
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.14);
-        }
-
-        .profile-group input:disabled,
-        .profile-group select:disabled,
-        .readonly-field {
-            background: #bebaba !important;
-            color: #111827 !important;
-            cursor: not-allowed;
-            opacity: 1;
-        }
-
-        .profile-inline-small {
-            display: grid;
-            grid-template-columns: auto 70px auto 70px;
-            align-items: end;
-            gap: 10px;
-        }
-
-        .profile-inline-small label {
-            margin-bottom: 10px;
-        }
-
-        .profile-inline-two {
+        .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 14px;
+            gap: 25px 40px;
         }
 
-        .phone-wrapper {
-            position: relative;
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
-        .phone-wrapper span {
-            position: absolute;
-            left: 13px;
-            bottom: 11px;
-            color: #111827;
+        .form-group label {
+            font-size: 14px;
+            font-weight: 700;
+            color: #374151;
+        }
+
+        .form-group input, 
+        .form-group select {
+            height: 48px;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 0 16px;
             font-size: 15px;
+            color: #111827;
+            background: #f8fafc;
+            transition: all 0.2s;
         }
 
-        .phone-wrapper input {
-            padding-left: 48px;
+        .form-group input:focus {
+            border-color: #10b981;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+            outline: none;
+        }
+
+        .form-group input:disabled {
+            background: #f1f5f9;
+            color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .phone-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .phone-input-wrapper span {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-weight: 700;
+            color: #475569;
+            font-size: 15px;
+            z-index: 10;
+            padding-right: 12px;
+            border-right: 1.5px solid #e2e8f0;
+            height: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .phone-input-wrapper input {
+            padding-left: 65px !important;
+            width: 100%;
         }
 
         .profile-actions {
+            position: sticky;
+            bottom: 30px;
+            background: #ffffff;
+            padding: 20px 35px;
+            border-radius: 20px;
+            box-shadow: 0 -10px 25px rgba(0,0,0,0.05);
             display: flex;
             justify-content: flex-end;
-            align-items: center;
-            gap: 14px;
-            margin-top: 26px;
+            gap: 15px;
+            z-index: 100;
+            border: 1px solid #f1f5f9;
         }
 
-        .btn-profile-edit,
-        .btn-profile-save {
+        .btn-save {
+            background: #10b981;
+            color: #ffffff;
             border: none;
-            min-width: 120px;
-            height: 42px;
-            border-radius: 5px;
-            font-size: 14px;
+            padding: 12px 35px;
+            border-radius: 12px;
             font-weight: 800;
+            font-size: 15px;
             cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 9px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.16);
-        }
-
-        .btn-profile-edit {
-            background: #ffc1c1;
-            color: #ff1f1f;
-        }
-
-        .btn-profile-save {
-            background: #00b889;
-            color: #ffffff;
-        }
-
-        .profile-toast {
-            position: fixed;
-            top: 30px;
-            right: 40px;
-            width: 285px;
-            min-height: 74px;
-            background: #65a87d;
-            color: #ffffff;
-            border-radius: 2px;
-            padding: 14px 18px;
-            display: none;
-            align-items: center;
-            gap: 12px;
-            z-index: 100000;
-            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
-        }
-
-        .profile-toast.show {
-            display: flex;
-            animation: toastSlide 0.25s ease;
-        }
-
-        @keyframes toastSlide {
-            from {
-                opacity: 0;
-                transform: translateY(-12px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .profile-toast-icon {
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            background: #2fd07c;
-            color: #ffffff;
             display: flex;
             align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+            gap: 10px;
+            transition: all 0.2s;
         }
 
-        .profile-toast h4 {
-            font-size: 14px;
-            font-weight: 800;
-            margin-bottom: 3px;
+        .btn-save:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
         }
 
-        .profile-toast p {
-            font-size: 11px;
-            margin: 0;
-        }
-
-        .edit-confirm-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.32);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 100001;
-        }
-
-        .edit-confirm-overlay.show {
-            display: flex;
-        }
-
-        .edit-confirm-box {
-            width: 420px;
-            background: #ffffff;
-            border-radius: 4px;
-            padding: 32px 28px 28px;
-            text-align: center;
-            box-shadow: 0 14px 35px rgba(0,0,0,0.18);
-        }
-
-        .edit-warning-icon {
-            width: 86px;
-            height: 76px;
-            margin: 0 auto 20px;
-            position: relative;
-        }
-
-        .edit-warning-icon::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: #ff1f2d;
-            clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-        }
-
-        .edit-warning-icon::after {
-            content: "!";
-            position: absolute;
-            left: 50%;
-            top: 58%;
-            transform: translate(-50%, -50%);
-            color: #ffffff;
-            font-size: 46px;
-            font-weight: 900;
-        }
-
-        .edit-confirm-text {
-            font-size: 18px;
-            color: #4b4b4b;
-            font-weight: 600;
-            line-height: 1.35;
-            margin-bottom: 28px;
-        }
-
-        .edit-confirm-actions {
-            display: flex;
-            justify-content: center;
-            gap: 28px;
-        }
-
-        .edit-confirm-yes,
-        .edit-confirm-no {
-            border: none;
-            color: #ffffff;
-            padding: 9px 42px;
-            border-radius: 18px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .edit-confirm-yes {
-            background: #23ad5c;
-        }
-
-        .edit-confirm-no {
-            background: #ff1f2d;
-        }
-
-        @media (max-width: 1100px) {
-            .profile-form-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media (max-width: 760px) {
-            .profile-card {
-                padding: 32px 24px;
-            }
-
-            .profile-card-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 22px;
-            }
-
-            .profile-form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .profile-inline-small,
-            .profile-inline-two {
-                grid-template-columns: 1fr;
-            }
-
-            .profile-actions {
-                justify-content: flex-start;
-                flex-wrap: wrap;
-            }
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .profile-header-banner { flex-direction: column; text-align: center; }
         }
     </style>
 
-    <div class="profile-page">
-        <section class="profile-card">
-            <div class="profile-card-header">
-                <h1 class="profile-title">Profile Pasien</h1>
+    <div class="profile-container">
+        <div class="profile-header-banner">
+            <div class="avatar-wrapper" onclick="document.getElementById('foto_profil_input').click()">
+                <img src="{{ Auth::user()->foto_profil ? asset('storage/' . Auth::user()->foto_profil) : 'https://i.pravatar.cc/150?img=12' }}" 
+                     class="profile-avatar-large" id="profile_preview" alt="Avatar">
+                <div class="avatar-edit-badge">
+                    <i class="fa-solid fa-camera"></i>
+                </div>
+                <input type="file" name="foto_profil" form="profileForm" id="foto_profil_input" style="display: none;" accept="image/*">
+            </div>
+            <div class="profile-info-text">
+                <h1>{{ Auth::user()->name }}</h1>
+                <p>Pasien Terdaftar • No. RM: {{ $pasien->nomor_rm }}</p>
+            </div>
+        </div>
 
-                <div class="profile-header-right">
-                    <button type="button" class="profile-bell-btn" id="profileBellButton">
-                        <i class="fa-regular fa-bell"></i>
-                    </button>
+        <form action="{{ route('pasien.profile.update') }}" method="POST" id="profileForm" enctype="multipart/form-data">
+            @csrf
 
-                    <div class="profile-mini-user">
-                        <img src="https://i.pravatar.cc/150?img=12" alt="Profile Pasien">
-                        <div>
-                            <h4>Jono Widodo</h4>
-                            <span>Pasien</span>
-                        </div>
+            {{-- DATA PRIBADI --}}
+            <section class="profile-section-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-user-gear"></i>
+                    Informasi Pribadi
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nama Lengkap</label>
+                        <input type="text" name="nama" value="{{ old('nama', $pasien->nama) }}">
+                    </div>
+                    <div class="form-group">
+                        <label>NIK (Nomor Induk Kependudukan)</label>
+                        <input type="text" name="nik" value="{{ old('nik', $pasien->nik) }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Tempat Lahir</label>
+                        <input type="text" name="tempat_lahir" value="{{ old('tempat_lahir', $pasien->tempat_lahir) }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal Lahir</label>
+                        <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir', $pasien->tanggal_lahir) }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Jenis Kelamin</label>
+                        <select name="jenis_kelamin">
+                            <option value="Laki-laki" {{ old('jenis_kelamin', $pasien->jenis_kelamin) == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                            <option value="Perempuan" {{ old('jenis_kelamin', $pasien->jenis_kelamin) == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Agama</label>
+                        <select name="agama">
+                            <option value="Islam" {{ old('agama', $pasien->agama ?? '') == 'Islam' ? 'selected' : '' }}>Islam</option>
+                            <option value="Kristen" {{ old('agama', $pasien->agama ?? '') == 'Kristen' ? 'selected' : '' }}>Kristen</option>
+                            <option value="Katolik" {{ old('agama', $pasien->agama ?? '') == 'Katolik' ? 'selected' : '' }}>Katolik</option>
+                            <option value="Hindu" {{ old('agama', $pasien->agama ?? '') == 'Hindu' ? 'selected' : '' }}>Hindu</option>
+                            <option value="Buddha" {{ old('agama', $pasien->agama ?? '') == 'Buddha' ? 'selected' : '' }}>Buddha</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Status Perkawinan</label>
+                        <select name="status_perkawinan">
+                            <option value="Belum Kawin" {{ old('status_perkawinan', $pasien->status_perkawinan ?? '') == 'Belum Kawin' ? 'selected' : '' }}>Belum Kawin</option>
+                            <option value="Kawin" {{ old('status_perkawinan', $pasien->status_perkawinan ?? '') == 'Kawin' ? 'selected' : '' }}>Kawin</option>
+                            <option value="Cerai Hidup" {{ old('status_perkawinan', $pasien->status_perkawinan ?? '') == 'Cerai Hidup' ? 'selected' : '' }}>Cerai Hidup</option>
+                            <option value="Cerai Mati" {{ old('status_perkawinan', $pasien->status_perkawinan ?? '') == 'Cerai Mati' ? 'selected' : '' }}>Cerai Mati</option>
+                        </select>
                     </div>
                 </div>
-            </div>
+            </section>
 
-            <form action="#" method="POST" id="profilePasienForm">
-                @csrf
-
-                <div class="profile-form-grid">
-                    <div class="profile-column">
-                        <div class="profile-group">
-                            <label>Nama</label>
-                            <input type="text" name="nama" value="Jono Widodo">
-                        </div>
-
-                        <div class="profile-group">
-                            <label>Nomor RM</label>
-                            <input type="text" name="nomor_rm" value="RM-0001" class="readonly-field" disabled>
-                        </div>
-
-                        <div class="profile-group">
-                            <label>NIK</label>
-                            <input type="text" name="nik" value="3510123456789001">
-                        </div>
-
-                        <div class="profile-group">
-                            <label>Tempat Lahir</label>
-                            <input type="text" name="tempat_lahir" value="Banyuwangi">
-                        </div>
-
-                        <div class="profile-group">
-                            <label>Tanggal Lahir</label>
-                            <input type="date" name="tanggal_lahir" value="1987-04-23">
-                        </div>
-
-                        <div class="profile-group">
-                            <label>Jenis Kelamin</label>
-                            <select name="jenis_kelamin">
-                                <option value="Laki-laki" selected>Laki-laki</option>
-                                <option value="Perempuan">Perempuan</option>
-                            </select>
-                        </div>
-
-                        <div class="profile-group">
-                            <label>Agama</label>
-                            <select name="agama">
-                                <option value="Islam" selected>Islam</option>
-                                <option value="Kristen">Kristen</option>
-                                <option value="Katolik">Katolik</option>
-                                <option value="Hindu">Hindu</option>
-                                <option value="Buddha">Buddha</option>
-                            </select>
-                        </div>
-
-                        <div class="profile-group">
-                            <label>Status Perkawinan</label>
-                            <select name="status_perkawinan">
-                                <option value="Belum Kawin">Belum Kawin</option>
-                                <option value="Kawin" selected>Kawin</option>
-                                <option value="Cerai Hidup">Cerai Hidup</option>
-                                <option value="Cerai Mati">Cerai Mati</option>
-                            </select>
+            {{-- ALAMAT & KONTAK --}}
+            <section class="profile-section-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                    Alamat & Kontak
+                </div>
+                <div class="form-grid">
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label>Alamat Lengkap (Domisili)</label>
+                        <input type="text" name="alamat_lengkap" value="{{ old('alamat_lengkap', $pasien->alamat_lengkap) }}">
+                    </div>
+                    <div class="form-group">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div class="form-group">
+                                <label>RT</label>
+                                <input type="text" name="rt" value="{{ old('rt', $pasien->rt ?? '') }}">
+                            </div>
+                            <div class="form-group">
+                                <label>RW</label>
+                                <input type="text" name="rw" value="{{ old('rw', $pasien->rw ?? '') }}">
+                            </div>
                         </div>
                     </div>
-
-                    <div class="profile-column">
-                        <div class="profile-group">
-                            <label>Alamat Lengkap</label>
-                            <input type="text" name="alamat_lengkap" value="Benculuk">
-                        </div>
-
-                        <div class="profile-group profile-inline-small">
-                            <label>RT:</label>
-                            <input type="text" name="rt" value="01">
-
-                            <label>RW:</label>
-                            <input type="text" name="rw" value="02">
-                        </div>
-
-                        <div class="profile-group profile-inline-two">
-                            <div>
-                                <label>Kab:</label>
-                                <input type="text" name="kabupaten" value="Banyuwangi">
-                            </div>
-
-                            <div>
-                                <label>Kec:</label>
-                                <input type="text" name="kecamatan" value="Cluring">
-                            </div>
-                        </div>
-
-                        <div class="profile-group">
-                            <label>Alamat Keluarga</label>
-                            <input type="text" name="alamat_keluarga" value="Benculuk">
-                        </div>
-
-                        <div class="profile-group profile-inline-small">
-                            <label>RT:</label>
-                            <input type="text" name="rt_keluarga" value="01">
-
-                            <label>RW:</label>
-                            <input type="text" name="rw_keluarga" value="02">
-                        </div>
-
-                        <div class="profile-group profile-inline-two">
-                            <div>
-                                <label>Kab:</label>
-                                <input type="text" name="kabupaten_keluarga" value="Banyuwangi">
-                            </div>
-
-                            <div>
-                                <label>Kec:</label>
-                                <input type="text" name="kecamatan_keluarga" value="Cluring">
-                            </div>
-                        </div>
-
-                        <div class="profile-group phone-wrapper">
-                            <label>No.HP</label>
+                    <div class="form-group">
+                        <label>Kecamatan</label>
+                        <input type="text" name="kecamatan" value="{{ old('kecamatan', $pasien->kecamatan ?? '') }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Kabupaten / Kota</label>
+                        <input type="text" name="kabupaten" value="{{ old('kabupaten', $pasien->kabupaten ?? 'Banyuwangi') }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Provinsi</label>
+                        <input type="text" name="provinsi" value="{{ old('provinsi', $pasien->provinsi ?? 'Jawa Timur') }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Kode Pos</label>
+                        <input type="text" name="kode_pos" value="{{ old('kode_pos', $pasien->kode_pos ?? '') }}">
+                    </div>
+                    <div class="form-group">
+                        <label>Nomor WhatsApp</label>
+                        <div class="phone-input-wrapper">
                             <span>+62</span>
-                            <input type="text" name="no_hp" value="81342564533">
-                        </div>
-
-                        <div class="profile-group phone-wrapper">
-                            <label>No.HP Keluarga</label>
-                            <span>+62</span>
-                            <input type="text" name="no_hp_keluarga" value="81234567890">
-                        </div>
-
-                        <div class="profile-group">
-                            <label>No Registrasi Nasional</label>
-                            <input type="text" name="no_registrasi_nasional" value="REG-0001" class="readonly-field" disabled>
-                        </div>
-
-                        <div class="profile-group">
-                            <label>Status Pasien :</label>
-                            <select name="status_pasien" class="readonly-field" disabled>
-                                <option value="Aktif" selected>Aktif</option>
-                                <option value="Inactive">Inactive</option>
-                                <option value="LTFU">LTFU</option>
-                            </select>
+                            <input type="text" name="no_hp" value="{{ old('no_hp', substr($pasien->no_hp, 1)) }}">
                         </div>
                     </div>
-
-                    <div class="profile-column">
-                        <div class="profile-group">
-                            <label>Kode Pos :</label>
-                            <input type="text" name="kode_pos" value="68482">
-                        </div>
-
-                        <div class="profile-group">
-                            <label>Kec:</label>
-                            <input type="text" name="kec_kanan" value="Cluring">
-                        </div>
-
-                        <div class="profile-group">
-                            <label>Prov:</label>
-                            <input type="text" name="provinsi" value="Jawa Timur">
-                        </div>
-
-                        <div class="profile-group">
-                            <label>Kec:</label>
-                            <input type="text" name="kec_keluarga_kanan" value="Cluring">
-                        </div>
-
-                        <div class="profile-group">
-                            <label>Prov:</label>
-                            <input type="text" name="provinsi_keluarga" value="Jawa Timur">
-                        </div>
-
-                        <div class="profile-group">
-                            <label>Tanggal Awal Pengobatan</label>
-                            <input type="text" name="tanggal_awal_pengobatan" value="16/04/2026" class="readonly-field" disabled>
-                        </div>
-
-                        <div class="profile-group">
-                            <label>Lokasi Diagnosa</label>
-                            <input type="text" name="lokasi_diagnosa" value="Puskesmas Benculuk" class="readonly-field" disabled>
-                        </div>
-
-                        <div class="profile-group">
-                            <label>Email</label>
-                            <input type="email" name="email" value="jono@gmail.com">
-                        </div>
-
-                        <div class="profile-group">
-                            <label>Password</label>
-                            <input type="password" name="password" value="password">
-                        </div>
+                    <div class="form-group">
+                        <label>Email Utama</label>
+                        <input type="email" name="email" value="{{ old('email', Auth::user()->email) }}">
                     </div>
                 </div>
+            </section>
 
-                <div class="profile-actions">
-                    <button type="button" class="btn-profile-edit" id="btnEditProfilePasien">
-                        <i class="fa-regular fa-pen-to-square"></i>
-                        Edit
-                    </button>
-
-                    <button type="submit" class="btn-profile-save" id="btnSaveProfilePasien">
-                        <i class="fa-regular fa-square-check"></i>
-                        Simpan
-                    </button>
+            {{-- INFORMASI PENGOBATAN --}}
+            <section class="profile-section-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-clipboard-medical"></i>
+                    Informasi Klinis & Pengobatan
                 </div>
-            </form>
-        </section>
-    </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nomor RM</label>
+                        <input type="text" value="{{ $pasien->nomor_rm }}" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Nomor Registrasi Nasional</label>
+                        <input type="text" value="{{ $pasien->no_registrasi_nasional }}" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal Mulai Pengobatan</label>
+                        <input type="text" value="{{ $pasien->tanggal_awal_pengobatan ?? '-' }}" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Lokasi Diagnosa Awal</label>
+                        <input type="text" value="{{ $pasien->lokasi_diagnosa ?? '-' }}" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Status Pasien </label>
+                        <input type="text" value="{{ $pasien->status_pasien }}" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Status Monitoring</label>
+                        <input type="text" value="{{ $pasien->display_status }}" disabled>
+                    </div>
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label>Keterangan Pasien</label>
+                        <input type="text" value="{{ $pasien->keterangan_pasien ?? '-' }}" disabled>
+                    </div>
+                </div>
+            </section>
 
-    <div class="profile-toast" id="profileSuccessToast">
-        <div class="profile-toast-icon">
-            <i class="fa-regular fa-circle-check"></i>
-        </div>
+            {{-- DATA KELUARGA --}}
+            @if($pasien->keluarga)
+            <section class="profile-section-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-people-roof"></i>
+                    Data Keluarga / PMO (Pengawas Menelan Obat)
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nama Keluarga</label>
+                        <input type="text" value="{{ $pasien->keluarga->nama }}" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Hubungan</label>
+                        <input type="text" value="{{ $pasien->keluarga->hubungan ?? '-' }}" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Nomor WhatsApp Keluarga</label>
+                        <input type="text" value="{{ $pasien->keluarga->no_hp }}" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Alamat Keluarga</label>
+                        <input type="text" value="{{ $pasien->keluarga->alamat }}" disabled>
+                    </div>
+                </div>
+            </section>
+            @endif
 
-        <div>
-            <h4>Berhasil Tersimpan</h4>
-            <p>Telah Tersimpan</p>
-        </div>
-    </div>
+            {{-- KEAMANAN --}}
+            <section class="profile-section-card">
+                <div class="section-title">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    Keamanan Akun
+                </div>
+                <div class="form-grid">
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label>Ganti Password (Kosongkan jika tidak ingin mengubah)</label>
+                        <input type="password" name="password" placeholder="Masukkan password baru...">
+                    </div>
+                </div>
+            </section>
 
-    <div class="edit-confirm-overlay" id="profileEditConfirm">
-        <div class="edit-confirm-box">
-            <div class="edit-warning-icon"></div>
-
-            <div class="edit-confirm-text">
-                Perubahan akan disimpan.<br>
-                Lanjutkan edit data ini?
+            <div class="profile-actions">
+                <button type="submit" class="btn-save">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    Simpan Perubahan
+                </button>
             </div>
-
-            <div class="edit-confirm-actions">
-                <button type="button" class="edit-confirm-yes" id="profileEditYes">Ya</button>
-                <button type="button" class="edit-confirm-no" id="profileEditNo">Tidak</button>
-            </div>
-        </div>
+        </form>
     </div>
 
     @push('scripts')
         <script>
             document.addEventListener('DOMContentLoaded', function () {
-                const form = document.getElementById('profilePasienForm');
-                const toast = document.getElementById('profileSuccessToast');
-                const editButton = document.getElementById('btnEditProfilePasien');
-                const editConfirm = document.getElementById('profileEditConfirm');
-                const editYes = document.getElementById('profileEditYes');
-                const editNo = document.getElementById('profileEditNo');
-
-                let toastTimer = null;
-
-                function showToast() {
-                    if (!toast) return;
-
-                    toast.classList.add('show');
-
-                    if (toastTimer) {
-                        clearTimeout(toastTimer);
-                    }
-
-                    toastTimer = setTimeout(function () {
-                        toast.classList.remove('show');
-                    }, 1800);
-                }
-
+                const form = document.getElementById('profileForm');
                 if (form) {
-                    form.addEventListener('submit', function (event) {
-                        event.preventDefault();
-                        showToast();
+                    form.addEventListener('submit', function() {
+                        // Optional: trigger a sweetalert or toast if you have one global
                     });
                 }
 
-                if (editButton && editConfirm) {
-                    editButton.addEventListener('click', function () {
-                        editConfirm.classList.add('show');
-                    });
-                }
+                // Avatar Preview
+                const avatarInput = document.getElementById('foto_profil_input');
+                const avatarPreview = document.getElementById('profile_preview');
 
-                if (editYes && editConfirm) {
-                    editYes.addEventListener('click', function () {
-                        editConfirm.classList.remove('show');
-                    });
-                }
-
-                if (editNo && editConfirm) {
-                    editNo.addEventListener('click', function () {
-                        editConfirm.classList.remove('show');
-                    });
-                }
-
-                if (editConfirm) {
-                    editConfirm.addEventListener('click', function (event) {
-                        if (event.target === editConfirm) {
-                            editConfirm.classList.remove('show');
+                if (avatarInput) {
+                    avatarInput.addEventListener('change', function() {
+                        const file = this.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = function(e) {
+                                avatarPreview.src = e.target.result;
+                            }
+                            reader.readAsDataURL(file);
                         }
-                    });
-                }
-
-                const profileBellButton = document.getElementById('profileBellButton');
-                const pasienBellButton = document.getElementById('pasienBellButton');
-
-                if (profileBellButton && pasienBellButton) {
-                    profileBellButton.addEventListener('click', function () {
-                        pasienBellButton.click();
                     });
                 }
             });

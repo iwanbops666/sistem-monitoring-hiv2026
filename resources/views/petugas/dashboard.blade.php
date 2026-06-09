@@ -1,299 +1,223 @@
 @extends('layouts.app')
 
-@section('title', 'Dashboard')
+@section('title', 'Dashboard Overview')
 
 @section('content')
     <style>
-        .dashboard-topbar {
-            max-width: 1120px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .welcome-banner {
+            background: linear-gradient(135deg, #065f46 0%, #059669 100%);
+            border-radius: 24px;
+            padding: 40px;
+            color: #ffffff;
             margin-bottom: 35px;
-        }
-
-        .dashboard-topbar .page-title {
-            margin-bottom: 0;
-        }
-
-        .dashboard-user-area {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-        }
-
-        .notification-bell-btn {
             position: relative;
-            border: none;
-            background: transparent;
-            font-size: 28px;
-            color: #000000;
-            cursor: pointer;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(6, 95, 70, 0.2);
+            animation: fadeIn 0.6s ease;
         }
 
-        .notification-bell-btn::after {
-            content: "";
+        .welcome-banner::after {
+            content: '';
             position: absolute;
-            right: 1px;
-            top: 2px;
-            width: 9px;
-            height: 9px;
-            background: #22c55e;
+            right: -50px;
+            top: -50px;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
-            border: 2px solid #ffffff;
         }
 
-        .dashboard-profile {
-            display: flex;
-            align-items: center;
-            gap: 14px;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .dashboard-profile img {
-            width: 68px;
-            height: 68px;
-            border-radius: 50%;
-            object-fit: cover;
-            box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
         }
 
-        .dashboard-profile h4 {
-            font-size: 17px;
-            font-weight: 800;
-            color: #1f2937;
-            margin-bottom: 4px;
-        }
-
-        .dashboard-profile span {
-            font-size: 14px;
-            color: #777;
-        }
-
-        .dashboard-stats {
+        .stat-card {
             background: #ffffff;
             border-radius: 24px;
-            padding: 34px 46px;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            max-width: 1040px;
-            box-shadow: 0 18px 35px rgba(213, 224, 235, 0.58);
-            margin-bottom: 42px;
-        }
-
-        .stat-item {
+            padding: 30px;
             display: flex;
             align-items: center;
-            gap: 24px;
-            padding: 0 34px;
-            border-right: 1px solid #edf0f3;
+            gap: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(213, 224, 235, 0.3);
+            border: 1px solid #f1f5f9;
         }
 
-        .stat-item:first-child {
-            padding-left: 0;
-        }
-
-        .stat-item:last-child {
-            border-right: none;
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(213, 224, 235, 0.5);
         }
 
         .stat-icon {
-            width: 82px;
-            height: 82px;
-            min-width: 82px;
-            border-radius: 50%;
-            background: #dffdec;
-            color: #08ad59;
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 34px;
+            font-size: 24px;
+            flex-shrink: 0;
         }
 
-        .stat-text small {
-            display: block;
-            color: #a7a9b0;
-            font-size: 15px;
+        .icon-emerald { background: #ecfdf5; color: #10b981; }
+        .icon-blue { background: #eff6ff; color: #3b82f6; }
+        .icon-amber { background: #fffbeb; color: #f59e0b; }
+        .icon-rose { background: #fff1f2; color: #f43f5e; }
+
+        .stat-info h3 {
+            font-size: 13px;
+            font-weight: 700;
+            color: #64748b;
             margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .stat-text h2 {
-            font-size: 32px;
+        .stat-info p {
+            font-size: 24px;
             font-weight: 900;
-            color: #222;
-            line-height: 1;
-            margin-bottom: 7px;
+            color: #1e293b;
         }
 
-        .stat-change {
-            font-size: 14px;
-            font-weight: 800;
+        .chart-container {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 35px;
+            box-shadow: 0 10px 25px rgba(213, 224, 235, 0.3);
+            border: 1px solid #f1f5f9;
+            margin-bottom: 30px;
         }
 
-        .up {
-            color: #00a95a;
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
         }
 
-        .down {
-            color: #ff3b67;
-        }
-
-        @media (max-width: 1000px) {
-            .dashboard-topbar {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 20px;
-            }
-
-            .dashboard-stats {
-                grid-template-columns: 1fr;
-                gap: 24px;
-            }
-
-            .stat-item {
-                border-right: none;
-                border-bottom: 1px solid #edf0f3;
-                padding: 0 0 22px;
-            }
-
-            .stat-item:last-child {
-                border-bottom: none;
-                padding-bottom: 0;
-            }
+        .chart-header h2 {
+            font-size: 20px;
+            font-weight: 900;
+            color: #1e293b;
         }
     </style>
 
-    <div class="dashboard-topbar">
-        <h1 class="page-title">Dashboard</h1>
+    <div class="welcome-banner">
+        <h1 style="font-size: 32px; font-weight: 900; margin-bottom: 10px;">Halo, {{ Auth::user()->name }}!</h1>
+        <p style="font-size: 18px; opacity: 0.9; font-weight: 500;">
+            Selamat datang di sistem monitoring kesehatan. Pantau dan kelola data pasien dengan mudah.
+        </p>
+    </div>
 
-        <div class="dashboard-user-area">
-            <button type="button" class="notification-bell-btn">
-                <i class="fa-regular fa-bell"></i>
-            </button>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon icon-emerald">
+                <i class="fa-solid fa-users"></i>
+            </div>
+            <div class="stat-info">
+                <h3>Total Pasien</h3>
+                <p>{{ $totalPasien }}</p>
+            </div>
+        </div>
 
-            <div class="dashboard-profile">
-                <img src="https://i.pravatar.cc/150?img=12" alt="Profile Admin">
-                <div>
-                    <h4>Andri</h4>
-                    <span>Admin</span>
-                </div>
+        <div class="stat-card">
+            <div class="stat-icon icon-blue">
+                <i class="fa-solid fa-user-check"></i>
+            </div>
+            <div class="stat-info">
+                <h3>Pasien Aktif</h3>
+                <p>{{ $pasienAktif }}</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon icon-amber">
+                <i class="fa-solid fa-user-clock"></i>
+            </div>
+            <div class="stat-info">
+                <h3>Pasien LTFU</h3>
+                <p>{{ $pasienLtfu }}</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon icon-rose">
+                <i class="fa-solid fa-user-minus"></i>
+            </div>
+            <div class="stat-info">
+                <h3>Pasien Meninggal</h3>
+                <p>{{ $pasienMeninggal }}</p>
             </div>
         </div>
     </div>
 
-    <section class="dashboard-stats">
-        <div class="stat-item">
-            <div class="stat-icon">
-                <i class="fa-solid fa-users"></i>
-            </div>
-
-            <div class="stat-text">
-                <small>Total Pasien</small>
-                <h2>5,423</h2>
-                <div class="stat-change up">
-                    <i class="fa-solid fa-arrow-up"></i>
-                    16% this month
-                </div>
+    <div class="chart-container">
+        <div class="chart-header">
+            <h2 style="font-size: 20px; font-weight: 900; color: #1e293b;">
+                <i class="fa-solid fa-bell" style="color: #f59e0b; margin-right: 8px;"></i>
+                Pasien Belum Kontrol Minggu Ini
+            </h2>
+            <div class="badge badge-warning" style="background: #fffbeb; color: #d97706; border: 1px solid #fde68a; font-weight: 800; font-size: 11px; padding: 6px 12px; border-radius: 8px;">
+                <i class="fa-solid fa-clock-rotate-left"></i> > 7 Hari Belum Update
             </div>
         </div>
-
-        <div class="stat-item">
-            <div class="stat-icon">
-                <i class="fa-solid fa-user-clock"></i>
-            </div>
-
-            <div class="stat-text">
-                <small>Pasien Belum Kontrol</small>
-                <h2>1,893</h2>
-                <div class="stat-change down">
-                    <i class="fa-solid fa-arrow-down"></i>
-                    1% this month
-                </div>
-            </div>
-        </div>
-
-        <div class="stat-item">
-            <div class="stat-icon">
-                <i class="fa-solid fa-desktop"></i>
-            </div>
-
-            <div class="stat-text">
-                <small>Pasien Baru</small>
-                <h2>189</h2>
-            </div>
-        </div>
-    </section>
-
-    <section class="table-card">
-        <div class="table-header">
-            <div class="table-title">
-                <h3>Pasien Belum Kontrol</h3>
-                <span>Data Pasien</span>
-            </div>
-
-            <div class="table-actions">
-                <div class="search-box">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" placeholder="Search">
-                </div>
-
-                <select class="sort-box">
-                    <option>Short by : Newest</option>
-                    <option>Oldest</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="table-responsive">
-            <table>
+        
+        <div class="table-responsive" style="border: none; margin: 0; overflow: visible;">
+            <table style="width: 100%; border-collapse: separate; border-spacing: 0 10px;">
                 <thead>
-                    <tr>
-                        <th>Nama</th>
-                        <th>No RM</th>
-                        <th>No Regis Nasional</th>
-                        <th>No Handphone</th>
-                        <th>Jenis Kelamin</th>
-                        <th>Status</th>
+                    <tr style="background: transparent;">
+                        <th style="padding: 10px 15px; font-size: 12px; color: #64748b; font-weight: 800; border: none; text-transform: uppercase; letter-spacing: 0.5px;">Nama Pasien</th>
+                        <th style="padding: 10px 15px; font-size: 12px; color: #64748b; font-weight: 800; border: none; text-transform: uppercase; letter-spacing: 0.5px;">Nomor RM</th>
+                        <th style="padding: 10px 15px; font-size: 12px; color: #64748b; font-weight: 800; border: none; text-transform: uppercase; letter-spacing: 0.5px;">Kunjungan Terakhir</th>
+                        <th style="padding: 10px 15px; font-size: 12px; color: #64748b; font-weight: 800; border: none; text-align: right; text-transform: uppercase; letter-spacing: 0.5px;">Aksi</th>
                     </tr>
                 </thead>
-
                 <tbody>
-                    @foreach ([
-                        ['Jane Cooper', '1234567', '(225) 555-0118', '085xxxxxxxxx', 'Laki-laki', 'LTFU', 'danger'],
-                        ['Floyd Miles', '1234', '(205) 555-0100', '085xxxxxxxxx', 'Laki-laki', 'Inactive', 'warning'],
-                        ['Ronald Richards', '1234', '(302) 555-0107', '085xxxxxxxxx', 'Laki-laki', 'Inactive', 'warning'],
-                        ['Marvin McKinney', '1234', '(252) 555-0126', '085xxxxxxxxx', 'Laki-laki', 'Active', 'success'],
-                        ['Jerome Bell', '1234', '(629) 555-0129', '085xxxxxxxxx', 'Laki-laki', 'Active', 'success'],
-                    ] as $pasien)
-                        <tr>
-                            <td>{{ $pasien[0] }}</td>
-                            <td>{{ $pasien[1] }}</td>
-                            <td>{{ $pasien[2] }}</td>
-                            <td>{{ $pasien[3] }}</td>
-                            <td>{{ $pasien[4] }}</td>
-                            <td>
-                                <span class="badge badge-{{ $pasien[6] }}">
-                                    {{ $pasien[5] }}
-                                </span>
+                    @forelse($pasienBelumKontrol as $pbk)
+                        <tr style="background: #f8fafc; transition: all 0.2s; border-radius: 12px;">
+                            <td style="padding: 15px; border-radius: 15px 0 0 15px; border: none; font-weight: 800; color: #1e293b;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <div style="width: 32px; height: 32px; background: #ffffff; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #64748b; font-size: 12px; border: 1px solid #e2e8f0;">
+                                        {{ substr($pbk->nama, 0, 1) }}
+                                    </div>
+                                    {{ $pbk->nama }}
+                                </div>
+                            </td>
+                            <td style="padding: 15px; border: none;"><code style="background: #ffffff; padding: 4px 8px; border-radius: 6px; font-weight: 700; border: 1.5px solid #e2e8f0; color: #475569;">{{ $pbk->nomor_rm }}</code></td>
+                            <td style="padding: 15px; border: none; color: #64748b; font-weight: 700; font-size: 13px;">
+                                @php
+                                    $lastVisit = $pbk->kartuKendali()->orderByDesc('tanggal_kunjungan')->first();
+                                @endphp
+                                <i class="fa-regular fa-calendar-check" style="margin-right: 5px; opacity: 0.5;"></i>
+                                {{ $lastVisit ? \Carbon\Carbon::parse($lastVisit->tanggal_kunjungan)->translatedFormat('d F Y') : 'Belum Ada Data' }}
+                            </td>
+                            <td style="padding: 15px; border-radius: 0 15px 15px 0; border: none; text-align: right;">
+                                <a href="{{ route('petugas.data-kepatuhan-pasien', ['search' => $pbk->nomor_rm]) }}" class="badge badge-warning" style="background: #fff7ed; color: #ea580c; padding: 8px 14px; border-radius: 10px; font-size: 11px; font-weight: 800; text-decoration: none; border: 1px solid #ffedd5; transition: all 0.2s;">
+                                    <i class="fa-solid fa-arrow-right"></i> Cek Pasien
+                                </a>
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="4" style="text-align: center; padding: 60px; color: #94a3b8; background: #f8fafc; border-radius: 20px; border: 2px dashed #e2e8f0;">
+                                <div style="width: 60px; height: 60px; background: #f0fdf4; color: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-size: 24px;">
+                                    <i class="fa-solid fa-check-double"></i>
+                                </div>
+                                <h4 style="color: #1e293b; font-weight: 800; margin-bottom: 5px;">Semua Pasien Aman</h4>
+                                <p style="font-size: 14px; font-weight: 500;">Semua pasien sudah melakukan kontrol dalam 7 hari terakhir.</p>
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
-
-        <div class="table-footer">
-            <span>Showing data 1 to 8 of 256K entries</span>
-
-            <div class="pagination">
-                <button class="page-btn">&lt;</button>
-                <button class="page-btn active">1</button>
-                <button class="page-btn">2</button>
-                <button class="page-btn">3</button>
-                <button class="page-btn">4</button>
-                <span>...</span>
-                <button class="page-btn">40</button>
-                <button class="page-btn">&gt;</button>
-            </div>
-        </div>
-    </section>
+    </div>
 @endsection

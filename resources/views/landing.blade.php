@@ -3,630 +3,581 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Monitoring Pasien HIV</title>
+    <title>Sistem Monitoring Pasien HIV - Puskesmas Benculuk</title>
 
-    {{-- Font Awesome CDN untuk icon --}}
+    {{-- Font Awesome --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    {{-- Google Fonts --}}
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
+        :root {
+            --primary: #059669;
+            --primary-dark: #064e3b;
+            --primary-light: #34d399;
+            --slate-900: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --slate-600: #475569;
+            --slate-50: #f8fafc;
+            --white: #ffffff;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            scroll-behavior: smooth;
         }
 
         body {
-            background: #f3fff8;
-            color: #123524;
-        }
-
-        .landing-page {
-            width: 100%;
-            min-height: 100vh;
+            background: var(--slate-50);
+            color: var(--slate-800);
             overflow-x: hidden;
         }
 
         /* ================= HERO SECTION ================= */
-
         .hero {
+            min-height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), 
+                        url('{{ asset("assets/puskesmas-bg.png") }}');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             position: relative;
-            min-height: 470px;
-            background: linear-gradient(135deg, #006b3c 0%, #10a75d 60%, #55d28a 100%);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
-            color: #ffffff;
         }
 
+        /* Abstract Decoration */
         .hero::before {
-            content: "";
+            content: '';
             position: absolute;
-            inset: 0;
-            background:
-                radial-gradient(circle at 85% 30%, rgba(255,255,255,0.12) 0 2px, transparent 3px),
-                radial-gradient(circle at 70% 65%, rgba(255,255,255,0.10), transparent 25%),
-                linear-gradient(160deg, transparent 55%, rgba(255,255,255,0.16) 55%);
-            opacity: 0.9;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(5, 150, 105, 0.3) 0%, transparent 50%);
+            z-index: 1;
         }
 
         .hero::after {
-            content: "";
+            content: '';
             position: absolute;
-            left: -10%;
-            right: -10%;
-            bottom: -80px;
-            height: 170px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 50% 50% 0 0;
-            transform: rotate(-3deg);
-        }
-
-        .medical-plus {
-            position: absolute;
-            color: rgba(255,255,255,0.18);
-            font-size: 64px;
-            font-weight: bold;
-            z-index: 1;
-        }
-
-        .plus-1 { top: 90px; left: 42px; }
-        .plus-2 { top: 150px; right: 355px; font-size: 76px; }
-        .plus-3 { top: 195px; right: 210px; font-size: 72px; }
-        .plus-4 { bottom: 95px; left: 35px; font-size: 58px; }
-        .plus-5 { bottom: 75px; right: 28px; font-size: 60px; }
-
-        .circle-pattern {
-            position: absolute;
-            right: 70px;
-            top: 80px;
-            width: 270px;
-            height: 270px;
-            border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.15);
-            box-shadow:
-                0 0 0 18px rgba(255,255,255,0.04),
-                0 0 0 36px rgba(255,255,255,0.04),
-                0 0 0 54px rgba(255,255,255,0.035),
-                0 0 0 72px rgba(255,255,255,0.03);
-            z-index: 1;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(to top, var(--slate-50) 20%, transparent);
+            z-index: 2;
         }
 
         /* ================= NAVBAR ================= */
-
         .navbar {
-            position: relative;
-            z-index: 5;
-            width: calc(100% - 96px);
-            margin: 18px auto 0;
-            padding: 14px 24px;
-            background: rgba(0, 69, 37, 0.88);
-            border-radius: 10px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 20px 80px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            box-shadow: 0 12px 28px rgba(0,0,0,0.16);
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            animation: slideDown 0.8s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         .brand {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 15px;
         }
 
         .brand img {
-            height: 52px;
-            width: auto;
-            object-fit: contain;
+            height: 50px;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));
         }
 
         .brand-text h3 {
-            font-size: 17px;
+            font-size: 18px;
             font-weight: 800;
             line-height: 1.1;
-            color: #ffffff;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
         .brand-text span {
-            display: block;
-            font-size: 13px;
-            font-weight: 700;
-            margin-top: 2px;
-            color: #ffffff;
+            font-size: 12px;
+            font-weight: 600;
+            opacity: 0.9;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
-        .nav-menu {
+        .nav-links {
             display: flex;
-            align-items: center;
-            gap: 42px;
+            gap: 40px;
             list-style: none;
         }
 
-        .nav-menu a {
+        .nav-links a {
             text-decoration: none;
-            color: #ffffff;
+            color: var(--white);
             font-size: 15px;
-            font-weight: 600;
-            padding-bottom: 8px;
+            font-weight: 700;
+            opacity: 0.9;
+            transition: all 0.3s;
             position: relative;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
-        .nav-menu a.active::after {
-            content: "";
+        .nav-links a:hover {
+            opacity: 1;
+            color: var(--primary-light);
+        }
+
+        .nav-links a::after {
+            content: '';
             position: absolute;
-            width: 48px;
-            height: 3px;
-            background: #3ee17a;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: 0;
-            border-radius: 20px;
+            bottom: -8px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-light);
+            transition: width 0.3s;
         }
 
-        .login-btn-top {
-            display: inline-flex;
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .btn-login-nav {
+            padding: 12px 24px;
+            background: var(--primary);
+            border: none;
+            border-radius: 14px;
+            color: var(--white);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 800;
+            transition: all 0.3s;
+            display: flex;
             align-items: center;
             gap: 10px;
-            padding: 11px 24px;
-            background: #35cc70;
-            color: #ffffff;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 700;
-            box-shadow: 0 6px 14px rgba(0,0,0,0.15);
-            transition: 0.2s ease;
+            box-shadow: 0 4px 15px rgba(5, 150, 105, 0.4);
         }
 
-        .login-btn-top:hover {
-            background: #2fbb66;
-            transform: translateY(-1px);
-        }
-
-        /* ================= HERO CONTENT ================= */
-
-        .hero-content {
-            position: relative;
-            z-index: 4;
-            max-width: 850px;
-            margin-left: 70px;
-            margin-top: 78px;
-        }
-
-        .hero-content h1 {
-            font-size: 44px;
-            line-height: 1.18;
-            font-weight: 800;
-            margin-bottom: 22px;
-            letter-spacing: -0.5px;
-        }
-
-        .hero-content p {
-            width: 720px;
-            max-width: 90%;
-            font-size: 19px;
-            line-height: 1.55;
-            margin-bottom: 28px;
-            color: rgba(255,255,255,0.95);
-        }
-
-        .main-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 14px;
-            padding: 14px 28px;
-            background: #34c86c;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: 700;
-            box-shadow: 0 8px 18px rgba(0,0,0,0.15);
-            transition: 0.2s ease;
-        }
-
-        .main-btn:hover {
-            background: #2dbf64;
+        .btn-login-nav:hover {
+            background: var(--primary-light);
             transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(5, 150, 105, 0.5);
         }
 
-        /* ================= CONTENT SECTION ================= */
-
-        .content {
-            background: linear-gradient(180deg, #f6fff9 0%, #effbf5 100%);
-            padding: 28px 18px 26px;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 26px;
-            font-weight: 800;
-            color: #075f35;
-            margin: 0 auto 24px;
+        /* ================= HERO BODY ================= */
+        .hero-body {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            padding: 0 80px 100px;
             position: relative;
-            width: fit-content;
+            z-index: 10;
         }
 
-        .section-title::before,
-        .section-title::after {
-            content: "";
-            position: absolute;
-            top: 50%;
-            width: 64px;
-            height: 2px;
-            background: #0d6b3c;
+        .hero-text {
+            max-width: 750px;
+            animation: fadeInRight 1s ease-out;
         }
 
-        .section-title::before {
-            right: calc(100% + 22px);
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
-        .section-title::after {
-            left: calc(100% + 22px);
+        .hero-text h1 {
+            font-size: 56px;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 25px;
+            letter-spacing: -2px;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .feature-grid {
-            max-width: 1450px;
-            margin: 0 auto 34px;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
+        .hero-text p {
+            font-size: 18px;
+            line-height: 1.6;
+            opacity: 1;
+            margin-bottom: 40px;
+            font-weight: 500;
+            color: #f1f5f9;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            max-width: 600px;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn-main {
+            padding: 22px 45px;
+            background: var(--primary);
+            color: var(--white);
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 800;
+            box-shadow: 0 20px 40px rgba(5, 150, 105, 0.4);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
             gap: 12px;
         }
 
-        .benefit-grid {
-            max-width: 1420px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
+        .btn-main:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(5, 150, 105, 0.5);
+            background: var(--primary-light);
         }
 
-        .card {
-            background: #ffffff;
-            border-radius: 6px;
-            padding: 22px 20px;
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            box-shadow: 0 5px 12px rgba(0,0,0,0.15);
-            min-height: 110px;
-        }
-
-        .benefit-grid .card {
-            min-height: 105px;
-        }
-
-        .icon-box {
-            width: 74px;
-            height: 74px;
-            min-width: 74px;
-            background: #e9f7ef;
-            color: #078743;
-            border-radius: 7px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 42px;
+        /* ================= SECTIONS ================= */
+        section {
+            padding: 120px 80px;
             position: relative;
         }
 
-        .icon-box .badge {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: #ff4d58;
-            color: #fff;
-            font-size: 15px;
-            font-weight: 800;
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-header h2 {
+            font-size: 42px;
+            font-weight: 900;
+            color: var(--slate-900);
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .section-header p {
+            color: var(--slate-600);
+            font-weight: 600;
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 50px 40px;
+            border-radius: 32px;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+        }
+
+        .card:hover {
+            transform: translateY(-15px);
+            border-color: var(--primary-light);
+            box-shadow: 0 40px 80px rgba(5, 150, 105, 0.1);
+        }
+
+        .card-icon {
+            width: 70px;
+            height: 70px;
+            background: #ecfdf5;
+            color: var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
+            border-radius: 20px;
+            font-size: 30px;
+            margin-bottom: 30px;
+            transition: all 0.3s;
         }
 
-        .card-text h4 {
-            font-size: 16px;
-            color: #064b2c;
-            margin-bottom: 6px;
+        .card:hover .card-icon {
+            background: var(--primary);
+            color: var(--white);
+            transform: rotate(10deg);
+        }
+
+        .card h3 {
+            font-size: 22px;
             font-weight: 800;
+            margin-bottom: 18px;
+            color: var(--slate-900);
         }
 
-        .card-text p {
-            font-size: 13.5px;
-            line-height: 1.45;
-            color: #33443c;
+        .card p {
+            color: var(--slate-600);
+            line-height: 1.7;
+            font-size: 15px;
+            font-weight: 500;
         }
 
         /* ================= FOOTER ================= */
+        footer {
+            background: var(--slate-900);
+            color: var(--white);
+            padding: 100px 80px 40px;
+            position: relative;
+        }
 
-        .footer {
-            background: #005b34;
-            color: #ffffff;
-            min-height: 52px;
-            padding: 15px 10px;
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1.5fr;
+            gap: 80px;
+            max-width: 1400px;
+            margin: 0 auto 80px;
+        }
+
+        .footer-brand h2 {
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 25px;
+            letter-spacing: -0.5px;
+        }
+
+        .footer-brand p {
+            opacity: 0.6;
+            line-height: 1.8;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .footer-links h4 {
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 30px;
+            color: var(--primary-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 18px;
+        }
+
+        .footer-links a {
+            color: var(--white);
+            opacity: 0.6;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+            color: var(--primary-light);
+            padding-left: 5px;
+        }
+
+        .contact-info li {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 20px;
-            font-size: 12px;
+            gap: 15px;
+            opacity: 0.7;
+            font-size: 15px;
+            font-weight: 500;
+            line-height: 1.6;
         }
 
-        .footer strong {
-            font-size: 13px;
+        .contact-info i {
+            color: var(--primary-light);
+            font-size: 18px;
+            margin-top: 3px;
         }
 
-        .footer-item {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-        }
-
-        .footer i {
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 40px;
+            text-align: center;
             font-size: 14px;
+            font-weight: 600;
+            opacity: 0.4;
+            letter-spacing: 0.5px;
         }
 
         /* ================= RESPONSIVE ================= */
-
         @media (max-width: 1100px) {
-            .navbar {
-                width: calc(100% - 36px);
-            }
-
-            .nav-menu {
-                gap: 22px;
-            }
-
-            .hero-content {
-                margin-left: 38px;
-            }
-
-            .feature-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .benefit-grid {
-                grid-template-columns: 1fr;
-            }
+            .navbar, .hero-body, section, footer { padding: 40px 40px; }
+            .hero-text h1 { font-size: 48px; }
+            .nav-links { display: none; }
+            .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+            .footer-brand { grid-column: span 2; }
         }
 
         @media (max-width: 768px) {
-            .navbar {
-                flex-wrap: wrap;
-                gap: 18px;
-            }
-
-            .nav-menu {
-                order: 3;
-                width: 100%;
-                justify-content: center;
-                flex-wrap: wrap;
-                gap: 18px;
-            }
-
-            .brand img {
-                height: 44px;
-            }
-
-            .brand-text h3 {
-                font-size: 14px;
-            }
-
-            .brand-text span {
-                font-size: 11px;
-            }
-
-            .hero-content {
-                margin: 55px 24px 0;
-            }
-
-            .hero-content h1 {
-                font-size: 32px;
-            }
-
-            .hero-content p {
-                font-size: 16px;
-            }
-
-            .feature-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .footer {
-                flex-direction: column;
-                text-align: center;
-            }
+            .hero-text h1 { font-size: 38px; }
+            .hero-btns { flex-direction: column; }
+            .btn-main { justify-content: center; }
+            .section-header h2 { font-size: 32px; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .footer-brand { grid-column: span 1; }
         }
     </style>
 </head>
-
 <body>
-<div class="landing-page">
 
-    {{-- HERO --}}
-    <section class="hero">
-
-        {{-- Dekorasi background --}}
-        <div class="medical-plus plus-1">+</div>
-        <div class="medical-plus plus-2">+</div>
-        <div class="medical-plus plus-3">+</div>
-        <div class="medical-plus plus-4">+</div>
-        <div class="medical-plus plus-5">+</div>
-        <div class="circle-pattern"></div>
-
-        {{-- NAVBAR --}}
+    {{-- HERO SECTION --}}
+    <div class="hero">
         <nav class="navbar">
             <div class="brand">
-                {{-- Ganti path logo sesuai folder public kamu --}}
-                <img src="{{ asset('assets/logo-banyuwangi.png') }}" alt="Logo Banyuwangi">
-                <img src="{{ asset('assets/logo-puskesmas.png') }}" alt="Logo Puskesmas">
-
+                <img src="{{ asset('assets/logo-banyuwangi.png') }}" alt="Logo Kab. Banyuwangi">
+                <img src="{{ asset('assets/logo-puskesmas.png') }}" alt="Logo Puskesmas Benculuk">
                 <div class="brand-text">
                     <h3>PUSKESMAS BENCULUK</h3>
                     <span>KABUPATEN BANYUWANGI</span>
                 </div>
             </div>
-
-            <ul class="nav-menu">
-                <li><a href="#" class="active">Beranda</a></li>
-                <li><a href="#tentang">Tentang Sistem</a></li>
-                <li><a href="#fitur">Fitur</a></li>
+            
+            <ul class="nav-links">
+                <li><a href="#">Beranda</a></li>
+                <li><a href="#fitur">Fitur Utama</a></li>
+                <li><a href="#tentang">Manfaat</a></li>
                 <li><a href="#kontak">Kontak</a></li>
             </ul>
 
-            <a href="{{ url('/login') }}" class="login-btn-top">
-                <i class="fa-regular fa-user"></i>
-                Login
+            <a href="{{ url('/login') }}" class="btn-login-nav">
+                <i class="fa-solid fa-lock"></i>
+                Login System
             </a>
         </nav>
 
-        {{-- HERO CONTENT --}}
-        <div class="hero-content">
-            <h1>
-                Sistem Monitoring Pasien HIV<br>
-                Kabupaten Benculuk Banyuwangi
-            </h1>
+        <div class="hero-body">
+            <div class="hero-text">
+                <span style="background: rgba(5, 150, 105, 0.2); padding: 8px 20px; border-radius: 100px; font-size: 14px; font-weight: 700; color: var(--primary-light); margin-bottom: 20px; display: inline-block; backdrop-filter: blur(5px); border: 1px solid rgba(52, 211, 153, 0.3);">
+                    Digital Health Solutions
+                </span>
+                <h1>Sistem Monitoring Pasien HIV Terintegrasi</h1>
+                <p>Platform digital modern yang dirancang untuk memperkuat pengawasan kepatuhan minum obat, jadwal kontrol berkala, dan manajemen data klinis secara aman dan efisien.</p>
+                
+                <div class="hero-btns">
+                    <a href="{{ url('/login') }}" class="btn-main">
+                        Dapatkan Akses Sekarang
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-            <p>
-                Platform digital untuk monitoring pasien HIV, pengelolaan data pasien,
-                evaluasi pengobatan, dan notifikasi tindak lanjut secara terintegrasi.
-            </p>
+    {{-- FEATURES SECTION --}}
+    <section id="fitur">
+        <div class="section-header">
+            <h2>Fitur Unggulan</h2>
+            <p>Dibangun dengan fokus pada kemudahan penggunaan dan akurasi data untuk mendukung operasional tenaga kesehatan.</p>
+        </div>
 
-            <a href="{{ url('/login') }}" class="main-btn">
-                <i class="fa-regular fa-user"></i>
-                Masuk ke Sistem
-            </a>
+        <div class="grid">
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-chart-pie"></i></div>
+                <h3>Dashboard Real-time</h3>
+                <p>Pantau status kesehatan dan tingkat kepatuhan seluruh pasien dalam satu tampilan dashboard yang komprehensif.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-notes-medical"></i></div>
+                <h3>Kartu Kendali Digital</h3>
+                <p>Pencatatan riwayat kunjungan dan stok obat ARV yang terorganisir, menggantikan sistem manual yang rentan kesalahan.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-file-waveform"></i></div>
+                <h3>Laporan Otomatis</h3>
+                <p>Hasilkan laporan evaluasi bulanan dan tahunan secara instan untuk kebutuhan pelaporan internal maupun dinas kesehatan.</p>
+            </div>
         </div>
     </section>
 
-    {{-- CONTENT --}}
-    <main class="content">
+    {{-- BENEFITS SECTION --}}
+    <section id="tentang" style="background: var(--white);">
+        <div class="section-header">
+            <h2>Manfaat Sistem</h2>
+            <p>Memberikan nilai tambah bagi seluruh pihak yang terlibat dalam ekosistem perawatan pasien.</p>
+        </div>
 
-        {{-- FITUR UTAMA --}}
-        <section id="fitur">
-            <h2 class="section-title">Fitur Utama</h2>
-
-            <div class="feature-grid">
-<div class="card">
-    <div class="icon-box">
-        <i class="fa-solid fa-user"></i>
-    </div>
-    <div class="card-text">
-        <h4>Monitoring Data Pasien</h4>
-        <p>
-            Pantau data pasien HIV secara real-time dan terintegrasi
-            untuk mendukung layanan yang lebih baik.
-        </p>
-    </div>
-</div>
-                <div class="card">
-                    <div class="icon-box">
-                        <i class="fa-solid fa-id-card"></i>
-                    </div>
-                    <div class="card-text">
-                        <h4>Kartu Kendali Pasien</h4>
-                        <p>
-                            Kelola kartu kendali pasien untuk memantau perkembangan
-                            pengobatan dan kepatuhan kontrol.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="icon-box">
-                        <i class="fa-solid fa-chart-column"></i>
-                    </div>
-                    <div class="card-text">
-                        <h4>Laporan Evaluasi</h4>
-                        <p>
-                            Hasilkan laporan evaluasi pengobatan dan capaian program
-                            secara cepat, akurat, dan terstruktur.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="icon-box">
-                        <i class="fa-solid fa-bell"></i>
-                        <span class="badge">1</span>
-                    </div>
-                    <div class="card-text">
-                        <h4>Notifikasi & Pengingat</h4>
-                        <p>
-                            Sistem pengingat otomatis untuk kontrol pasien, pengambilan obat,
-                            dan tindak lanjut lainnya.
-                        </p>
-                    </div>
-                </div>
+        <div class="grid">
+            <div class="card" style="background: var(--slate-50);">
+                <div class="card-icon"><i class="fa-solid fa-user-doctor"></i></div>
+                <h3>Tenaga Kesehatan</h3>
+                <p>Efisiensi waktu dalam pendataan dan kemudahan mengidentifikasi pasien yang berisiko mangkir dari pengobatan (LTFU).</p>
             </div>
-        </section>
-
-        {{-- MANFAAT SISTEM --}}
-        <section id="tentang">
-            <h2 class="section-title">Manfaat Sistem</h2>
-
-            <div class="benefit-grid">
-                <div class="card">
-                    <div class="icon-box">
-                        <i class="fa-solid fa-user-doctor"></i>
-                    </div>
-                    <div class="card-text">
-                        <h4>Untuk Petugas Kesehatan</h4>
-                        <p>
-                            Mempermudah pencatatan, monitoring, dan evaluasi pasien secara efisien
-                            dan terintegrasi sehingga meningkatkan kualitas pelayanan.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="icon-box">
-                        <i class="fa-solid fa-users"></i>
-                    </div>
-                    <div class="card-text">
-                        <h4>Untuk Pasien</h4>
-                        <p>
-                            Membantu pasien mendapatkan layanan yang terpantau,
-                            pengingat kontrol, dan pengobatan yang lebih terarah.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="icon-box">
-                        <i class="fa-solid fa-people-group"></i>
-                    </div>
-                    <div class="card-text">
-                        <h4>Untuk Keluarga</h4>
-                        <p>
-                            Memberikan informasi dan pengingat yang membantu keluarga
-                            mendukung kepatuhan pengobatan pasien.
-                        </p>
-                    </div>
-                </div>
+            <div class="card" style="background: var(--slate-50);">
+                <div class="card-icon"><i class="fa-solid fa-hospital-user"></i></div>
+                <h3>Bagi Pasien</h3>
+                <p>Memperoleh pengawasan medis yang lebih terstruktur dan pengingat kontrol rutin untuk menjaga kesehatan yang stabil.</p>
             </div>
-        </section>
-
-    </main>
+            <div class="card" style="background: var(--slate-50);">
+                <div class="card-icon"><i class="fa-solid fa-hand-holding-heart"></i></div>
+                <h3>Bagi Keluarga</h3>
+                <p>Memudahkan keluarga atau pendamping minum obat (PMO) dalam mendukung dan memotivasi kepatuhan pasien.</p>
+            </div>
+        </div>
+    </section>
 
     {{-- FOOTER --}}
-    <footer class="footer" id="kontak">
-        <div>
-            <strong>Sistem Monitoring Pasien HIV di Kabupaten Benculuk Banyuwangi</strong>
+    <footer id="kontak">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h2>PUSKESMAS BENCULUK</h2>
+                <p>Berkomitmen untuk terus berinovasi dalam memberikan pelayanan kesehatan berkualitas tinggi melalui integrasi teknologi informasi yang inklusif bagi masyarakat Kabupaten Banyuwangi.</p>
+            </div>
+            
+            <div class="footer-links">
+                <h4>Navigasi</h4>
+                <ul>
+                    <li><a href="#">Beranda</a></li>
+                    <li><a href="#fitur">Fitur Utama</a></li>
+                    <li><a href="#tentang">Manfaat</a></li>
+                    <li><a href="{{ url('/login') }}">Akses Login</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-links">
+                <h4>Informasi Kontak</h4>
+                <ul class="contact-info">
+                    <li>
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>Jl. Raya Benculuk No.1, Benculuk, Cluring, Kabupaten Banyuwangi, Jawa Timur</span>
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-phone"></i>
+                        <span>(0333) 123456</span>
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-envelope"></i>
+                        <span>puskesmas.benculuk@banyuwangikab.go.id</span>
+                    </li>
+                </ul>
+            </div>
         </div>
 
-        <div class="footer-item">
-            <span>Puskesmas Benculuk</span>
-            <span>•</span>
-            <span>Jl. Raya Benculuk No.1, Benculuk, Banyuwangi</span>
-        </div>
-
-        <div class="footer-item">
-            <i class="fa-solid fa-phone"></i>
-            <span>(0333) 123456</span>
-            <span>•</span>
-            <span>puskesmas.benculuk@banyuwangikab.go.id</span>
+        <div class="footer-bottom">
+            &copy; 2026 Puskesmas Benculuk Banyuwangi. Seluruh Hak Cipta Dilindungi.
         </div>
     </footer>
 
-</div>
 </body>
 </html>

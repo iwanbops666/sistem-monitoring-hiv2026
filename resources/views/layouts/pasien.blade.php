@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Dashboard Pasien')</title>
+
+    <link rel="manifest" href="/manifest.json">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -29,90 +32,105 @@
         .pasien-sidebar {
             width: 280px;
             min-height: 100vh;
-            background: #56a66b;
+            background: #065f46; /* Darker, more premium emerald */
             position: fixed;
             left: 0;
             top: 0;
             bottom: 0;
-            padding: 32px 14px 24px;
+            padding: 40px 20px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             z-index: 50;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.05);
         }
 
         .pasien-logo {
             text-align: center;
-            margin-bottom: 42px;
+            margin-bottom: 50px;
         }
 
         .pasien-logo img {
-            width: 105px;
-            height: 105px;
+            width: 90px;
+            height: 90px;
             object-fit: contain;
-            margin-bottom: 14px;
+            margin-bottom: 18px;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
         }
 
         .pasien-logo h3 {
             color: #ffffff;
-            font-size: 17px;
-            line-height: 1.15;
-            font-weight: 900;
+            font-size: 15px;
+            line-height: 1.4;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            opacity: 0.95;
         }
 
         .pasien-menu {
             list-style: none;
+            margin-top: 10px;
         }
 
         .pasien-menu li {
-            margin-bottom: 8px;
+            margin-bottom: 12px;
         }
 
         .pasien-menu a {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
             width: 100%;
-            padding: 8px 14px;
-            border-radius: 7px;
-            color: #123b25;
+            padding: 12px 18px;
+            border-radius: 14px;
+            color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
-            font-size: 18px;
-            font-weight: 500;
-            transition: 0.2s ease;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
         }
 
         .pasien-menu a i {
-            width: 18px;
-            font-size: 17px;
+            font-size: 18px;
+            transition: transform 0.3s ease;
         }
 
         .pasien-menu a:hover {
-            background: rgba(7, 89, 47, 0.14);
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .pasien-menu a:hover i {
+            transform: scale(1.1);
         }
 
         .pasien-menu a.active {
-            background: #07592f;
-            color: #ffffff;
-            font-weight: 900;
+            background: #ffffff;
+            color: #065f46;
+            font-weight: 800;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
         .pasien-logout {
             width: 100%;
-            background: #24713f;
+            background: rgba(255, 255, 255, 0.08);
             color: #ffffff;
-            border-radius: 7px;
-            padding: 16px 22px;
+            border-radius: 14px;
+            padding: 14px 20px;
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 16px;
-            font-size: 22px;
-            font-weight: 900;
+            gap: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .pasien-logout i {
-            font-size: 28px;
+        .pasien-logout:hover {
+            background: #ef4444;
+            border-color: #ef4444;
+            box-shadow: 0 8px 15px rgba(239, 68, 68, 0.3);
         }
 
         /* CONTENT */
@@ -120,297 +138,200 @@
             margin-left: 280px;
             width: calc(100% - 280px);
             min-height: 100vh;
-            padding: 70px 52px 40px;
+            padding: 45px 50px;
         }
 
         .pasien-topbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 46px;
-            max-width: 1050px;
+            margin-bottom: 45px;
         }
 
         .pasien-page-title {
-            font-size: 42px;
+            font-size: 32px;
             font-weight: 900;
-            color: #1f2937;
+            color: #111827;
+            letter-spacing: -0.5px;
         }
 
         .pasien-user-area {
             display: flex;
             align-items: center;
-            gap: 30px;
-            position: relative;
+            gap: 25px;
         }
 
-        .pasien-bell-btn {
-            border: none;
-            background: transparent;
-            font-size: 30px;
-            color: #000000;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .pasien-bell-btn::after {
-            content: "";
-            position: absolute;
-            right: 1px;
-            top: 3px;
-            width: 9px;
-            height: 9px;
-            background: #22c55e;
-            border: 2px solid #ffffff;
-            border-radius: 50%;
-        }
-
-        .pasien-profile-mini {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .pasien-profile-mini img {
-            width: 66px;
-            height: 66px;
-            border-radius: 50%;
-            object-fit: cover;
-            box-shadow: 0 8px 18px rgba(0,0,0,0.18);
-        }
-
-        .pasien-profile-mini h4 {
-            font-size: 16px;
-            font-weight: 900;
-            color: #1f2937;
-            margin-bottom: 4px;
-        }
-
-        .pasien-profile-mini span {
-            font-size: 14px;
-            font-weight: 600;
-            color: #8b8b8b;
-        }
-
-        /* PANEL NOTIFIKASI PASIEN */
-        .pasien-notification-panel {
-            position: fixed;
-            top: 90px;
-            right: 135px;
-            width: 380px;
+        .pasien-bell {
+            width: 48px;
+            height: 48px;
             background: #ffffff;
-            border: 1px solid #d1d5db;
-            border-radius: 5px;
-            display: none;
-            z-index: 99999;
-            box-shadow: 0 18px 35px rgba(0, 0, 0, 0.16);
-        }
-
-        .pasien-notification-panel.show {
-            display: block;
-            animation: notifSlide 0.2s ease;
-        }
-
-        @keyframes notifSlide {
-            from {
-                opacity: 0;
-                transform: translateY(-8px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .notif-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 18px 8px;
-        }
-
-        .notif-header h3 {
-            font-size: 20px;
-            font-weight: 600;
-            color: #111827;
-        }
-
-        .notif-header button {
-            border: none;
-            background: transparent;
-            font-size: 15px;
-            cursor: pointer;
-            color: #111827;
-        }
-
-        .notif-tabs {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 0 18px 12px;
-            color: #4b5563;
-            font-size: 13px;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .notif-tabs small {
-            background: #6d7dfc;
-            color: #ffffff;
-            padding: 1px 6px;
-            border-radius: 8px;
-            font-size: 10px;
-        }
-
-        .notif-list {
-            max-height: 390px;
-            overflow-y: auto;
-            padding: 8px 18px 0;
-        }
-
-        .notif-item {
-            display: flex;
-            gap: 12px;
-            padding: 14px 0;
-            border-bottom: 1px solid #f1f1f1;
-            position: relative;
-        }
-
-        .notif-item::after {
-            content: "";
-            position: absolute;
-            right: 0;
-            top: 20px;
-            width: 7px;
-            height: 7px;
-            background: #4ade80;
-            border-radius: 50%;
-        }
-
-        .notif-avatar {
-            position: relative;
-            flex-shrink: 0;
-        }
-
-        .notif-avatar img {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .notif-avatar span {
-            position: absolute;
-            right: -2px;
-            bottom: 2px;
-            width: 8px;
-            height: 8px;
-            background: #facc15;
-            border-radius: 50%;
-        }
-
-        .notif-content {
-            flex: 1;
-            padding-right: 12px;
-        }
-
-        .notif-content small {
-            color: #9ca3af;
-            font-size: 11px;
-        }
-
-        .notif-content h4 {
-            color: #111827;
-            font-size: 13px;
-            font-weight: 700;
-            margin: 4px 0 8px;
-        }
-
-        .notif-box {
-            background: #f3f4f6;
-            border-radius: 5px;
-            padding: 9px 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #111827;
-            font-size: 11px;
-        }
-
-        .notif-box i:first-child {
-            width: 24px;
-            height: 24px;
-            border-radius: 4px;
-            background: #e5f7eb;
-            color: #16a34a;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 20px;
+            color: #64748b;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
         }
 
-        .notif-box i:last-child {
-            margin-left: auto;
-            color: #6b7280;
-            background: transparent;
-            width: auto;
-            height: auto;
+        .pasien-bell:hover {
+            border-color: #10b981;
+            color: #10b981;
+            background: #f0fdf4;
+            transform: translateY(-2px);
         }
 
-        .notif-footer {
+        .pasien-bell-dot {
+            position: absolute;
+            top: 13px;
+            right: 13px;
+            width: 10px;
+            height: 10px;
+            background: #ef4444;
+            border: 2.5px solid #ffffff;
+            border-radius: 50%;
+            display: {{ ($global_notifications ?? collect())->count() > 0 ? 'block' : 'none' }};
+        }
+
+        .pasien-user {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 6px 18px 6px 6px;
+            background: #ffffff;
+            border-radius: 18px;
+            border: 1.5px solid #e5e7eb;
+        }
+
+        .pasien-user img {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            object-fit: cover;
+        }
+
+        .pasien-user h4 {
+            font-size: 14px;
+            font-weight: 800;
+            color: #111827;
+        }
+
+        .pasien-user span {
+            font-size: 12px;
+            font-weight: 600;
+            color: #94a3b8;
+        }
+
+        .pasien-notif-panel {
+            position: fixed;
+            top: 105px;
+            right: 50px;
+            width: 380px;
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            display: none;
+            z-index: 100000;
+            border: 1px solid #f1f5f9;
+        }
+
+        .pasien-notif-panel.show {
+            display: block;
+            animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .pasien-notif-header {
+            padding: 22px 25px;
+            border-bottom: 1px solid #f1f5f9;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 18px;
-            border-top: 1px solid #e5e7eb;
         }
 
-        .notif-footer button {
+        .pasien-notif-header h3 {
+            font-size: 18px;
+            font-weight: 900;
+            color: #111827;
+        }
+
+        .pasien-notif-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
             border: none;
-            background: transparent;
-            color: #6b7280;
-            font-size: 11px;
+            background: #f1f5f9;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pasien-notif-close:hover { background: #fee2e2; color: #ef4444; }
+
+        .pasien-notif-body {
+            max-height: 450px;
+            overflow-y: auto;
+        }
+
+        .pasien-notif-item {
+            display: flex;
+            gap: 15px;
+            padding: 20px 25px;
+            border-bottom: 1px solid #f8fafc;
+            transition: background 0.2s;
             cursor: pointer;
         }
 
-        .notif-footer .view-all-btn {
-            background: #57a66b;
-            color: #ffffff;
-            padding: 6px 10px;
-            border-radius: 4px;
-            font-size: 10px;
-            font-weight: 700;
+        .pasien-notif-item:hover { background: #f8fafc; }
+
+        .pasien-notif-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: #ecfdf5;
+            color: #10b981;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
         }
 
-        @stack('styles')
+        .pasien-notif-content h5 {
+            font-size: 14px;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 4px;
+        }
+
+        .pasien-notif-content p {
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.5;
+            margin-bottom: 6px;
+        }
+
+        .pasien-notif-content small {
+            font-size: 11px;
+            font-weight: 700;
+            color: #94a3b8;
+        }
+
+        @media (max-width: 1024px) {
+            .pasien-main { padding: 40px 30px; }
+        }
 
         @media (max-width: 900px) {
-            .pasien-wrapper {
-                flex-direction: column;
-            }
-
-            .pasien-sidebar {
-                position: relative;
-                width: 100%;
-                min-height: auto;
-            }
-
-            .pasien-main {
-                margin-left: 0;
-                width: 100%;
-                padding: 35px 22px;
-            }
-
-            .pasien-topbar {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 20px;
-            }
-
-            .pasien-notification-panel {
-                left: 20px;
-                right: 20px;
-                width: auto;
-            }
+            .pasien-sidebar { display: none; }
+            .pasien-main { margin-left: 0; width: 100%; }
         }
     </style>
 </head>
@@ -418,69 +339,63 @@
 
 <div class="pasien-wrapper">
     <aside class="pasien-sidebar">
-        <div>
+        <div class="sidebar-top">
             <div class="pasien-logo">
-                <img src="{{ asset('assets/logo-puskesmas.png') }}" alt="Logo Puskesmas">
+                <img src="{{ asset('assets/logo-puskesmas.png') }}" alt="Logo">
                 <h3>
                     PUSKESMAS BENCULUK<br>
-                    KABUPATEN BANYUWANGI
+                    <span style="font-size: 12px; opacity: 0.7;">KAB. BANYUWANGI</span>
                 </h3>
             </div>
 
             <ul class="pasien-menu">
                 <li>
-                    <a href="{{ url('/pasien/dashboard') }}"
-                       class="{{ request()->is('pasien/dashboard') ? 'active' : '' }}">
-                        <i class="fa-solid fa-table-cells-large"></i>
-                        Dashboard
+                    <a href="{{ url('/pasien/dashboard') }}" class="{{ request()->is('pasien/dashboard') ? 'active' : '' }}">
+                        <i class="fa-solid fa-house-chimney"></i>
+                        <span>Dashboard</span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="{{ url('/pasien/profile') }}"
-                       class="{{ request()->is('pasien/profile') ? 'active' : '' }}">
-                        <i class="fa-regular fa-circle-user"></i>
-                        Profile
+                    <a href="{{ url('/pasien/profile') }}" class="{{ request()->is('pasien/profile') ? 'active' : '' }}">
+                        <i class="fa-solid fa-user-pen"></i>
+                        <span>Profile Pasien</span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="{{ url('/pasien/kartu-kendali') }}"
-                       class="{{ request()->is('pasien/kartu-kendali') ? 'active' : '' }}">
-                        <i class="fa-solid fa-folder-open"></i>
-                        Kartu Kendali Pasien
+                    <a href="{{ url('/pasien/kartu-kendali') }}" class="{{ request()->is('pasien/kartu-kendali') ? 'active' : '' }}">
+                        <i class="fa-solid fa-book-medical"></i>
+                        <span>Kartu Kendali</span>
                     </a>
                 </li>
-
                 <li>
-                    <a href="{{ url('/pasien/laporan-evaluasi') }}"
-                       class="{{ request()->is('pasien/laporan-evaluasi') ? 'active' : '' }}">
-                        <i class="fa-regular fa-clipboard"></i>
-                        Laporan Evaluasi Pasien
+                    <a href="{{ url('/pasien/laporan-evaluasi') }}" class="{{ request()->is('pasien/laporan-evaluasi') ? 'active' : '' }}">
+                        <i class="fa-solid fa-notes-medical"></i>
+                        <span>Laporan Evaluasi</span>
                     </a>
                 </li>
             </ul>
         </div>
 
         <a href="{{ url('/logout') }}" class="pasien-logout">
-            <i class="fa-solid fa-right-from-bracket"></i>
-            Log Out
+            <i class="fa-solid fa-power-off"></i>
+            <span>Keluar Sistem</span>
         </a>
     </aside>
 
     <main class="pasien-main">
         <div class="pasien-topbar">
-            <h1 class="pasien-page-title">@yield('page-title', 'Dashboard')</h1>
+            <h1 class="pasien-page-title">@yield('page-title', 'Overview')</h1>
 
             <div class="pasien-user-area">
-                <button type="button" class="pasien-bell-btn" id="pasienBellButton">
+                <button type="button" class="pasien-bell" id="pasienBellButton">
                     <i class="fa-regular fa-bell"></i>
+                    <span class="pasien-bell-dot"></span>
                 </button>
 
-                <div class="pasien-profile-mini">
-                    <img src="https://i.pravatar.cc/150?img=12" alt="Profile Pasien">
+                <div class="pasien-user">
+                    <img src="{{ Auth::user()->foto_profil ? asset('storage/' . Auth::user()->foto_profil) : 'https://i.pravatar.cc/150?img=12' }}" alt="User">
                     <div>
-                        <h4>Jono Widodo</h4>
+                        <h4>{{ Auth::user()->name }}</h4>
                         <span>Pasien</span>
                     </div>
                 </div>
@@ -491,122 +406,136 @@
     </main>
 </div>
 
-{{-- PANEL NOTIFIKASI PASIEN --}}
-<div class="pasien-notification-panel" id="pasienNotificationPanel">
-    <div class="notif-header">
-        <h3>Notifications</h3>
-        <button type="button" id="closePasienNotification">
+{{-- NOTIFICATION PANEL --}}
+<div class="pasien-notif-panel" id="pasienNotifPanel">
+    <div class="pasien-notif-header">
+        <h3>Notifikasi Baru</h3>
+        <button type="button" class="pasien-notif-close" id="pasienNotifClose">
             <i class="fa-solid fa-xmark"></i>
         </button>
     </div>
-
-    <div class="notif-tabs">
-        <span>Inbox</span>
-        <small>3</small>
-    </div>
-
-    <div class="notif-list">
-        <div class="notif-item">
-            <div class="notif-avatar">
-                <img src="https://i.pravatar.cc/80?img=11" alt="Petugas">
-                <span></span>
-            </div>
-
-            <div class="notif-content">
-                <small>2 days ago • Petugas</small>
-                <h4>Waktunya Anda Kontrol Dan Pengambilan Obat</h4>
-
-                <div class="notif-box">
-                    <i class="fa-solid fa-user-doctor"></i>
-                    <span>Saatnya Kontrol Dan Pengambilan Obat</span>
-                    <i class="fa-solid fa-ellipsis-vertical"></i>
+    <div class="pasien-notif-body">
+        @forelse($global_notifications ?? [] as $notif)
+            <div class="pasien-notif-item">
+                <div class="pasien-notif-icon">
+                    <i class="fa-solid fa-circle-info"></i>
+                </div>
+                <div class="pasien-notif-content">
+                    <h5>{{ $notif->title }}</h5>
+                    <p>{{ $notif->message }}</p>
+                    <small><i class="fa-regular fa-clock"></i> {{ $notif->created_at->diffForHumans() }}</small>
                 </div>
             </div>
-        </div>
-
-        <div class="notif-item">
-            <div class="notif-avatar">
-                <img src="https://i.pravatar.cc/80?img=11" alt="Petugas">
-                <span></span>
+        @empty
+            <div style="padding: 40px 20px; text-align: center; color: #94a3b8;">
+                <i class="fa-regular fa-bell-slash" style="font-size: 30px; margin-bottom: 10px; display: block;"></i>
+                <p style="font-size: 14px; font-weight: 600;">Belum ada notifikasi baru</p>
             </div>
-
-            <div class="notif-content">
-                <small>2 days ago • Petugas</small>
-                <h4>Waktunya Minum Obat</h4>
-
-                <div class="notif-box">
-                    <i class="fa-solid fa-tablets"></i>
-                    <span>Saatnya Minum Obat</span>
-                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                </div>
-            </div>
-        </div>
-
-        <div class="notif-item">
-            <div class="notif-avatar">
-                <img src="https://i.pravatar.cc/80?img=11" alt="Petugas">
-                <span></span>
-            </div>
-
-            <div class="notif-content">
-                <small>2 days ago • Petugas</small>
-                <h4>Waktunya Anda Melakukan Viral Load</h4>
-
-                <div class="notif-box">
-                    <i class="fa-solid fa-briefcase-medical"></i>
-                    <span>Saatnya Viral Load</span>
-                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="notif-footer">
-        <button type="button">
-            <i class="fa-regular fa-square-check"></i>
-            Mark all as read
-        </button>
-
-        <button type="button" class="view-all-btn">
-            View all Notifications
-        </button>
+        @endforelse
     </div>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const pasienBellButton = document.getElementById('pasienBellButton');
-        const pasienNotificationPanel = document.getElementById('pasienNotificationPanel');
-        const closePasienNotification = document.getElementById('closePasienNotification');
+        const bell = document.getElementById('pasienBellButton');
+        const panel = document.getElementById('pasienNotifPanel');
+        const close = document.getElementById('pasienNotifClose');
 
-        if (pasienBellButton && pasienNotificationPanel) {
-            pasienBellButton.addEventListener('click', function (event) {
-                event.preventDefault();
-                event.stopPropagation();
-                pasienNotificationPanel.classList.toggle('show');
+        if (bell && panel) {
+            bell.addEventListener('click', (e) => {
+                e.stopPropagation();
+                panel.classList.toggle('show');
+            });
+
+            close.addEventListener('click', () => panel.classList.remove('show'));
+
+            document.addEventListener('click', (e) => {
+                if (!panel.contains(e.target) && !bell.contains(e.target)) {
+                    panel.classList.remove('show');
+                }
             });
         }
-
-        if (closePasienNotification && pasienNotificationPanel) {
-            closePasienNotification.addEventListener('click', function () {
-                pasienNotificationPanel.classList.remove('show');
-            });
-        }
-
-        document.addEventListener('click', function (event) {
-            if (
-                pasienNotificationPanel &&
-                pasienNotificationPanel.classList.contains('show') &&
-                !event.target.closest('#pasienNotificationPanel') &&
-                !event.target.closest('#pasienBellButton')
-            ) {
-                pasienNotificationPanel.classList.remove('show');
-            }
-        });
     });
 </script>
 
 @stack('scripts')
+    <script>
+        // PWA & Push Notification Logic
+        if ('serviceWorker' in navigator && 'PushManager' in window) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    initializePush(registration);
+                }, function(err) {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
 
+        function initializePush(registration) {
+            registration.pushManager.getSubscription()
+            .then(function(subscription) {
+                if (subscription) {
+                    sendSubscriptionToServer(subscription);
+                } else {
+                    subscribeUser(registration);
+                }
+            });
+        }
+
+        function subscribeUser(registration) {
+            const applicationServerKey = urlB64ToUint8Array('{{ config('webpush.vapid.public_key') }}');
+            registration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: applicationServerKey
+            })
+            .then(function(subscription) {
+                sendSubscriptionToServer(subscription);
+            })
+            .catch(function(err) {
+                console.log('Failed to subscribe the user: ', err);
+            });
+        }
+
+        function sendSubscriptionToServer(subscription) {
+            const key = subscription.getKey('p256dh');
+            const token = subscription.getKey('auth');
+            const contentEncoding = (PushManager.supportedContentEncodings || ['aesgcm'])[0];
+
+            fetch('/push-subscriptions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    endpoint: subscription.endpoint,
+                    keys: {
+                        p256dh: key ? btoa(String.fromCharCode.apply(null, new Uint8Array(key))) : null,
+                        auth: token ? btoa(String.fromCharCode.apply(null, new Uint8Array(token))) : null
+                    },
+                    content_encoding: contentEncoding
+                })
+            })
+            .then(res => res.json())
+            .then(data => console.log('Subscription saved on server:', data))
+            .catch(err => console.error('Error saving subscription:', err));
+        }
+
+        function urlB64ToUint8Array(base64String) {
+            const padding = '='.repeat((4 - base64String.length % 4) % 4);
+            const base64 = (base64String + padding)
+                .replace(/\-/g, '+')
+                .replace(/_/g, '/');
+
+            const rawData = window.atob(base64);
+            const outputArray = new Uint8Array(rawData.length);
+
+            for (let i = 0; i < rawData.length; ++i) {
+                outputArray[i] = rawData.charCodeAt(i);
+            }
+            return outputArray;
+        }
+    </script>
 </body>
-</html>s
+</html>

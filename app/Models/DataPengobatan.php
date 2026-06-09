@@ -10,9 +10,13 @@ class DataPengobatan extends Model
     protected $primaryKey = 'id_pengobatan';
 
     protected $fillable = [
+        'id_pasien',
         'id_petugas',
+        'kategori_viral_load',
         'tanggal',
         'status_viral_load',
+        'nilai_viral_load',
+        'keterangan',
     ];
 
     protected $casts = [

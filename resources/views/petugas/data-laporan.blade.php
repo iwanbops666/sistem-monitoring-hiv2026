@@ -1,116 +1,79 @@
 @extends('layouts.app')
 
-@section('title', 'Data Laporan')
+@section('title', 'Data Laporan Statistik')
 
 @section('content')
     <style>
-        .laporan-wrapper {
-            max-width: 1180px;
+        .laporan-container {
+            max-width: 1200px;
+            animation: fadeIn 0.5s ease;
         }
 
-        .filter-card {
+        .filter-section {
             background: #ffffff;
-            border-radius: 8px;
-            padding: 16px 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            margin-bottom: 18px;
-        }
-
-        .filter-title {
-            color: #00b889;
-            font-size: 18px;
-            font-weight: 800;
-            margin-bottom: 10px;
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(213, 224, 235, 0.3);
+            border: 1px solid #f1f5f9;
         }
 
         .filter-grid {
             display: grid;
-            grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;
-            gap: 12px;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            gap: 20px;
             align-items: end;
         }
 
         .filter-group label {
-            display: block;
             font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: #111827;
+            font-weight: 800;
+            color: #64748b;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .filter-group select,
         .filter-group input {
             width: 100%;
-            height: 32px;
-            border: 1px solid #cfcfcf;
-            border-radius: 6px;
-            padding: 0 10px;
-            outline: none;
-            font-size: 13px;
-            background: #ffffff;
-            color: #6b7280;
+            height: 45px;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 0 15px;
+            font-size: 14px;
+            background: #f8fafc;
+            color: #1e293b;
         }
 
-        .filter-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 12px;
-        }
-
-        .btn-filter {
-            border: none;
-            background: #00b889;
-            color: #ffffff;
-            height: 32px;
-            padding: 0 18px;
-            border-radius: 4px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn-reset {
-            border: none;
-            background: #d9d9d9;
-            color: #222;
-            height: 32px;
-            padding: 0 18px;
-            border-radius: 4px;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .summary-grid {
+        .summary-row {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 12px;
-            margin-bottom: 18px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-bottom: 35px;
         }
 
-        .summary-card {
+        .summary-card-mini {
             background: #ffffff;
-            border-radius: 10px;
-            padding: 14px 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            border-radius: 24px;
+            padding: 30px;
             display: flex;
             align-items: center;
-            gap: 14px;
-            min-height: 74px;
+            gap: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(213, 224, 235, 0.3);
+            border: 1px solid #f1f5f9;
         }
 
-        .summary-icon {
-            width: 54px;
-            height: 54px;
-            border-radius: 50%;
-            background: #dffdec;
-            color: #08ad59;
+        .summary-card-mini:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(213, 224, 235, 0.5);
+        }
+
+        .mini-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -118,435 +81,287 @@
             flex-shrink: 0;
         }
 
-        .summary-text small {
-            display: block;
-            font-size: 12px;
-            color: #a7a9b0;
-            margin-bottom: 4px;
-        }
-
-        .summary-text h3 {
-            font-size: 28px;
-            color: #333;
-            font-weight: 900;
-        }
-
-        .chart-grid {
+        .chart-row {
             display: grid;
-            grid-template-columns: 1.4fr 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 18px;
+            grid-template-columns: 1.5fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
         }
 
-        .chart-card {
+        .chart-box {
             background: #ffffff;
-            min-height: 250px;
-            padding: 18px 18px 14px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        }
-
-        .chart-title {
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(213, 224, 235, 0.3);
+            border: 1px solid #f1f5f9;
             text-align: center;
-            font-size: 13px;
+        }
+
+        .chart-box h4 {
+            font-size: 15px;
             font-weight: 800;
-            color: #4b5563;
-            margin-bottom: 12px;
+            color: #1e293b;
+            margin-bottom: 20px;
         }
 
-        .line-chart {
-            width: 100%;
-            height: 190px;
-        }
-
-        .donut-wrap {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        .donut-container {
+            width: 160px;
             height: 160px;
-        }
-
-        .donut {
-            width: 145px;
-            height: 145px;
-            border-radius: 50%;
+            margin: 0 auto 15px;
             position: relative;
+            border-radius: 50%;
         }
 
-        .donut.kepatuhan {
-            background: conic-gradient(#4df45f 0 58%, #ff5a4f 58% 78%, #e5ff00 78% 100%);
-        }
-
-        .donut.status {
-            background: conic-gradient(#4df45f 0 68%, #ff5a4f 68% 100%);
-        }
-
-        .donut::after {
-            content: "";
+        .donut-center {
             position: absolute;
-            width: 74px;
-            height: 74px;
-            border-radius: 50%;
+            width: 80px;
+            height: 80px;
             background: #ffffff;
-            left: 50%;
+            border-radius: 50%;
             top: 50%;
+            left: 50%;
             transform: translate(-50%, -50%);
-        }
-
-        .legend {
             display: flex;
-            justify-content: center;
-            gap: 18px;
-            font-size: 12px;
-            color: #6b7280;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-
-        .legend-item {
-            display: inline-flex;
             align-items: center;
-            gap: 6px;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 18px;
+            color: #1e293b;
         }
 
-        .dot {
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-
-        .dot-green {
-            background: #4df45f;
-        }
-
-        .dot-red {
-            background: #ff5a4f;
-        }
-
-        .dot-yellow {
-            background: #e5ff00;
-        }
-
-        .export-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
-            margin-bottom: 14px;
-        }
-
-        .btn-export {
+        .export-btn {
             background: #ffffff;
-            border: 1px solid #00a97d;
-            color: #008a68;
-            border-radius: 4px;
-            height: 34px;
-            padding: 0 18px;
+            border: 1.5px solid #10b981;
+            color: #10b981;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 800;
             font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.18);
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
         }
 
-        .laporan-table-card {
-            background: #ffffff;
-            border-radius: 10px;
-            padding: 18px 28px 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-
-        .laporan-table-title {
-            color: #00b889;
-            font-size: 14px;
-            font-weight: 800;
-            margin-bottom: 22px;
+        .export-btn:hover {
+            background: #10b981;
+            color: #ffffff;
         }
 
         @media (max-width: 1100px) {
-            .filter-grid,
-            .summary-grid,
-            .chart-grid {
-                grid-template-columns: 1fr 1fr;
-            }
+            .chart-row { grid-template-columns: 1fr; }
+            .summary-row { grid-template-columns: repeat(2, 1fr); }
+            .filter-grid { grid-template-columns: 1fr 1fr; }
         }
 
-        @media (max-width: 700px) {
-            .filter-grid,
-            .summary-grid,
-            .chart-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .export-actions {
-                justify-content: flex-start;
-                flex-wrap: wrap;
-            }
+        @media (max-width: 650px) {
+            .summary-row { grid-template-columns: 1fr; }
         }
     </style>
 
-    <div class="laporan-wrapper">
-        <h1 class="page-title">Data Laporan</h1>
-
+    <div class="laporan-container">
         {{-- FILTER --}}
-        <section class="filter-card">
-            <div class="filter-title">Filter Laporan</div>
-
-            <div class="filter-grid">
-                <div class="filter-group">
-                    <label>Jenis Laporan:</label>
-                    <select>
-                        <option>Jumlah Pasien Baru</option>
-                        <option>Jumlah Pasien Mulai Pengobatan</option>
-                        <option>Jumlah Pasien Active</option>
-                        <option>Jumlah Pasien Inactive</option>
-                        <option>Jumlah Pasien Lost Follow Up (LTFU)</option>
-                        <option>Jumlah Pasien Berobat</option>
-                        <option>Jumlah Pasien Meninggal</option>
-                        <option>Jumlah Pasien Pindahan</option>
-                        <option>Jumlah Pasien Pindah Pengobatan</option>
-                    </select>
+        <section class="filter-section">
+            <h3 style="font-size: 18px; font-weight: 900; color: #111827; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                <i class="fa-solid fa-filter" style="color: #10b981;"></i> Filter Laporan
+            </h3>
+            <form action="{{ route('petugas.data-laporan') }}" method="GET">
+                <div class="filter-grid" style="grid-template-columns: 2fr 1fr 1.2fr 1.2fr auto;">
+                    <div class="filter-group">
+                        <label>Jenis Laporan</label>
+                        <select name="jenis_laporan">
+                            <option value="Laporan Jumlah Pasien Baru" {{ request('jenis_laporan') == 'Laporan Jumlah Pasien Baru' ? 'selected' : '' }}>1. Laporan Jumlah Pasien Baru</option>
+                            <option value="Jumlah Pasien Mulai Pengobatan" {{ request('jenis_laporan') == 'Jumlah Pasien Mulai Pengobatan' ? 'selected' : '' }}>2. Jumlah Pasien Mulai Pengobatan</option>
+                            <option value="Jumlah Pasien Active" {{ request('jenis_laporan') == 'Jumlah Pasien Active' ? 'selected' : '' }}>3. Jumlah Pasien Active</option>
+                            <option value="Jumlah Pasien Inactive" {{ request('jenis_laporan') == 'Jumlah Pasien Inactive' ? 'selected' : '' }}>4. Jumlah Pasien Inactive</option>
+                            <option value="Jumlah Pasien Lost Follow Up (LTFU)" {{ request('jenis_laporan') == 'Jumlah Pasien Lost Follow Up (LTFU)' ? 'selected' : '' }}>5. Jumlah Pasien Lost Follow Up (LTFU)</option>
+                            <option value="Jumlah Pasien Berobat" {{ request('jenis_laporan') == 'Jumlah Pasien Berobat' ? 'selected' : '' }}>6. Jumlah Pasien Berobat</option>
+                            <option value="Jumlah Pasien Meninggal" {{ request('jenis_laporan') == 'Jumlah Pasien Meninggal' ? 'selected' : '' }}>7. Jumlah Pasien Meninggal</option>
+                            <option value="Jumlah Pasien Pindahan" {{ request('jenis_laporan') == 'Jumlah Pasien Pindahan' ? 'selected' : '' }}>8. Jumlah Pasien Pindahan</option>
+                            <option value="Jumlah Pasien Pindah Pengobatan" {{ request('jenis_laporan') == 'Jumlah Pasien Pindah Pengobatan' ? 'selected' : '' }}>9. Jumlah Pasien Pindah Pengobatan</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Periode</label>
+                        <select name="periode">
+                            <option value="Bulan" {{ request('periode') == 'Bulan' ? 'selected' : '' }}>Bulanan</option>
+                            <option value="Tahun" {{ request('periode') == 'Tahun' ? 'selected' : '' }}>Tahunan</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Mulai Tanggal</label>
+                        <input type="date" name="dari_tanggal" value="{{ request('dari_tanggal', date('Y-m-01')) }}">
+                    </div>
+                    <div class="filter-group">
+                        <label>Sampai Tanggal</label>
+                        <input type="date" name="sampai_tanggal" value="{{ request('sampai_tanggal', date('Y-m-t')) }}">
+                    </div>
+                    <div class="filter-group" style="display: flex; gap: 10px;">
+                        <button type="submit" style="height: 45px; padding: 0 25px; background: linear-gradient(135deg, #065f46 0%, #059669 100%); color: white; border: none; border-radius: 12px; font-weight: 800; font-size: 14px; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 8px; box-shadow: 0 8px 20px rgba(6, 95, 70, 0.25);">
+                            <i class="fa-solid fa-sync"></i> Terapkan
+                        </button>
+                        <a href="{{ route('petugas.data-laporan') }}" title="Reset Filter" style="height: 45px; width: 45px; background: #f1f5f9; color: #64748b; border-radius: 12px; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s;">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </a>
+                    </div>
                 </div>
-
-                <div class="filter-group">
-                    <label>Periode :</label>
-                    <select>
-                        <option>Bulan</option>
-                        <option>Tahun</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-    <label>Dari Tanggal :</label>
-    <input type="date" name="dari_tanggal" value="2026-04-30">
-</div>
-
-<div class="filter-group">
-    <label>Sampai Tanggal :</label>
-    <input type="date" name="sampai_tanggal" value="2026-05-31">
-</div>
-
-                <div class="filter-group">
-                    <label>Status Pasien :</label>
-                    <select>
-                        <option>Hidup</option>
-                        <option>Meninggal</option>
-
-                    </select>
-                </div>
-            </div>
-
-            <div class="filter-actions">
-                <button class="btn-filter">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    Tampilkan
-                </button>
-
-                <button class="btn-reset">
-                    <i class="fa-solid fa-rotate-left"></i>
-                    Reset
-                </button>
-            </div>
+            </form>
         </section>
 
         {{-- SUMMARY --}}
-        <section class="summary-grid">
-            <div class="summary-card">
-                <div class="summary-icon">
-                    <i class="fa-solid fa-users"></i>
-                </div>
-                <div class="summary-text">
-                    <small>Total Pasien</small>
-                    <h3>100</h3>
+        <section class="summary-row">
+            <div class="summary-card-mini">
+                <div class="mini-icon" style="background: #f1f5f9; color: #475569;"><i class="fa-solid fa-users"></i></div>
+                <div>
+                    <h3 style="font-size: 13px; font-weight: 700; color: #64748b; margin: 0 0 5px; text-transform: uppercase; letter-spacing: 0.5px;">Total Register</h3>
+                    <p style="font-size: 24px; font-weight: 900; color: #1e293b; margin: 0;">{{ $total_semua }}</p>
                 </div>
             </div>
-
-            <div class="summary-card">
-                <div class="summary-icon">
-                    <i class="fa-solid fa-user-check"></i>
-                </div>
-                <div class="summary-text">
-                    <small>Pasien Active</small>
-                    <h3>70</h3>
+            <div class="summary-card-mini">
+                <div class="mini-icon" style="background: #ecfdf5; color: #10b981;"><i class="fa-solid fa-user-shield"></i></div>
+                <div>
+                    <h3 style="font-size: 13px; font-weight: 700; color: #64748b; margin: 0 0 5px; text-transform: uppercase; letter-spacing: 0.5px;">Pasien Hidup</h3>
+                    <p style="font-size: 24px; font-weight: 900; color: #1e293b; margin: 0;">{{ $total_pasien }}</p>
                 </div>
             </div>
-
-            <div class="summary-card">
-                <div class="summary-icon">
-                    <i class="fa-solid fa-user-minus"></i>
-                </div>
-                <div class="summary-text">
-                    <small>Pasien Inactive</small>
-                    <h3>20</h3>
+            <div class="summary-card-mini">
+                <div class="mini-icon" style="background: #eff6ff; color: #3b82f6;"><i class="fa-solid fa-user-check"></i></div>
+                <div>
+                    <h3 style="font-size: 13px; font-weight: 700; color: #64748b; margin: 0 0 5px; text-transform: uppercase; letter-spacing: 0.5px;">Aktif</h3>
+                    <p style="font-size: 24px; font-weight: 900; color: #1e293b; margin: 0;">{{ $pasien_aktif }}</p>
                 </div>
             </div>
-
-            <div class="summary-card">
-                <div class="summary-icon">
-                    <i class="fa-solid fa-user-slash"></i>
-                </div>
-                <div class="summary-text">
-                    <small>Pasien LFO</small>
-                    <h3>10</h3>
+            <div class="summary-card-mini">
+                <div class="mini-icon" style="background: #fffbeb; color: #f59e0b;"><i class="fa-solid fa-user-minus"></i></div>
+                <div>
+                    <h3 style="font-size: 13px; font-weight: 700; color: #64748b; margin: 0 0 5px; text-transform: uppercase; letter-spacing: 0.5px;">Meninggal</h3>
+                    <p style="font-size: 24px; font-weight: 900; color: #1e293b; margin: 0;">{{ $pasien_inactive }}</p>
                 </div>
             </div>
-
-            <div class="summary-card">
-                <div class="summary-icon">
-                    <i class="fa-solid fa-user-plus"></i>
+            <div class="summary-card-mini">
+                <div class="mini-icon" style="background: #fff1f2; color: #f43f5e;"><i class="fa-solid fa-user-slash"></i></div>
+                <div>
+                    <h3 style="font-size: 13px; font-weight: 700; color: #64748b; margin: 0 0 5px; text-transform: uppercase; letter-spacing: 0.5px;">Pasien Lost Follow Up</h3>
+                    <p style="font-size: 24px; font-weight: 900; color: #1e293b; margin: 0;">{{ $pasien_ltfu }}</p>
                 </div>
-                <div class="summary-text">
-                    <small>Pasien Baru</small>
-                    <h3>5</h3>
+            </div>
+            <div class="summary-card-mini">
+                <div class="mini-icon" style="background: #f0fdf4; color: #15803d;"><i class="fa-solid fa-user-plus"></i></div>
+                <div>
+                    <h3 style="font-size: 13px; font-weight: 700; color: #64748b; margin: 0 0 5px; text-transform: uppercase; letter-spacing: 0.5px;">Pasien Baru</h3>
+                    <p style="font-size: 24px; font-weight: 900; color: #1e293b; margin: 0;">{{ $pasien_baru }}</p>
                 </div>
             </div>
         </section>
 
-        {{-- CHART --}}
-        <section class="chart-grid">
-            <div class="chart-card">
-                <div class="chart-title">Jumlah Pasien Per Bulan (Tahun 2026)</div>
-
-                <svg class="line-chart" viewBox="0 0 420 210">
-                    <line x1="40" y1="20" x2="40" y2="180" stroke="#e5e7eb" />
-                    <line x1="40" y1="180" x2="400" y2="180" stroke="#e5e7eb" />
-                    <line x1="40" y1="140" x2="400" y2="140" stroke="#e5e7eb" />
-                    <line x1="40" y1="100" x2="400" y2="100" stroke="#e5e7eb" />
-                    <line x1="40" y1="60" x2="400" y2="60" stroke="#e5e7eb" />
-
-                    <text x="15" y="183" font-size="11" fill="#6b7280">0</text>
-                    <text x="10" y="143" font-size="11" fill="#6b7280">10</text>
-                    <text x="10" y="103" font-size="11" fill="#6b7280">20</text>
-                    <text x="10" y="63" font-size="11" fill="#6b7280">30</text>
-
-                    <polyline
-                        points="55,170 88,160 122,125 155,90 188,58 222,64 255,95 288,135 322,158 355,176"
-                        fill="none"
-                        stroke="#6bd12d"
-                        stroke-width="6"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    />
-
-                    <polyline
-                        points="55,150 88,145 122,120 155,88 188,78 222,83 255,105 288,138 322,152 355,160"
-                        fill="none"
-                        stroke="#ff3b32"
-                        stroke-width="6"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    />
-
-                    <text x="45" y="202" font-size="11" fill="#6b7280">Jan</text>
-                    <text x="77" y="202" font-size="11" fill="#6b7280">Feb</text>
-                    <text x="110" y="202" font-size="11" fill="#6b7280">Mar</text>
-                    <text x="145" y="202" font-size="11" fill="#6b7280">Apr</text>
-                    <text x="178" y="202" font-size="11" fill="#6b7280">May</text>
-                    <text x="212" y="202" font-size="11" fill="#6b7280">Jun</text>
-                    <text x="245" y="202" font-size="11" fill="#6b7280">Jul</text>
-                    <text x="278" y="202" font-size="11" fill="#6b7280">Aug</text>
-                    <text x="312" y="202" font-size="11" fill="#6b7280">Sep</text>
-                    <text x="348" y="202" font-size="11" fill="#6b7280">Oct</text>
-                </svg>
-            </div>
-
-            <div class="chart-card">
-                <div class="chart-title">Tingkat Kepatuhan Pasien</div>
-
-                <div class="donut-wrap">
-                    <div class="donut kepatuhan"></div>
-                </div>
-
-                <div class="legend">
-                    <span class="legend-item"><span class="dot dot-green"></span>Aktif</span>
-                    <span class="legend-item"><span class="dot dot-yellow"></span>Tidak Aktif</span>
-                    <span class="legend-item"><span class="dot dot-red"></span>LFO</span>
+        {{-- CHARTS --}}
+        <section class="chart-row">
+            <div class="chart-box">
+                <h4>Statistik Pasien Baru ({{ $tahun_grafik }})</h4>
+                <div style="height: 200px; display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; padding: 20px 10px; background: #f8fafc; border-radius: 18px; position: relative;">
+                    @php
+                        $maxVal = max($chart_data_baru) ?: 1;
+                        $monthLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+                    @endphp
+                    @foreach($chart_data_baru as $idx => $val)
+                        <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; height: 100%; justify-content: flex-end;">
+                            <div style="width: 100%; height: {{ ($val / $maxVal) * 100 }}%; background: linear-gradient(to top, #059669, #34d399); border-radius: 6px 6px 4px 4px; position: relative; min-height: 2px; transition: all 0.3s;" title="{{ $val }} Pasien">
+                                @if($val > 0)
+                                    <span style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: 900; color: #065f46;">{{ $val }}</span>
+                                @endif
+                            </div>
+                            <span style="font-size: 9px; font-weight: 800; color: #94a3b8; text-transform: uppercase;">{{ $monthLabels[$idx] }}</span>
+                        </div>
+                    @endforeach
                 </div>
             </div>
 
-            <div class="chart-card">
-                <div class="chart-title">Status Pasien</div>
-
-                <div class="donut-wrap">
-                    <div class="donut status"></div>
+            <div class="chart-box">
+                <h4>Tingkat Kepatuhan</h4>
+                @php
+                    $total = $total_pasien ?: 1;
+                    $pAktif = ($pasien_aktif / $total) * 100;
+                    $pLtfu = ($pasien_ltfu / $total) * 100;
+                    $pInactive = ($pasien_inactive / $total) * 100;
+                @endphp
+                <div class="donut-container" style="background: conic-gradient(#10b981 0% {{ $pAktif }}%, #f43f5e {{ $pAktif }}% {{ $pAktif + $pLtfu }}%, #f59e0b {{ $pAktif + $pLtfu }}% 100%);">
+                    <div class="donut-center">{{ round($pAktif) }}%</div>
                 </div>
+                <div style="display: flex; flex-direction: column; gap: 8px; font-size: 12px; font-weight: 700; color: #64748b;">
+                    <div style="display: flex; justify-content: space-between;"><span><i class="fa-solid fa-circle" style="color: #10b981; font-size: 10px;"></i> Aktif</span><span>{{ $pasien_aktif }}</span></div>
+                    <div style="display: flex; justify-content: space-between;"><span><i class="fa-solid fa-circle" style="color: #f43f5e; font-size: 10px;"></i> LTFU</span><span>{{ $pasien_ltfu }}</span></div>
+                    <div style="display: flex; justify-content: space-between;"><span><i class="fa-solid fa-circle" style="color: #f59e0b; font-size: 10px;"></i> Inaktif</span><span>{{ $pasien_inactive }}</span></div>
+                </div>
+            </div>
 
-                <div class="legend">
-                    <span class="legend-item"><span class="dot dot-green"></span>Hidup</span>
-                    <span class="legend-item"><span class="dot dot-red"></span>Meninggal</span>
+            <div class="chart-box">
+                <h4>Status Kelangsungan</h4>
+                @php
+                    $p_hidup = ($total_pasien - $pasien_inactive) / $total * 100;
+                    $p_mati = ($pasien_inactive / $total) * 100;
+                @endphp
+                <div class="donut-container" style="background: conic-gradient(#3b82f6 0% {{ $p_hidup }}%, #94a3b8 {{ $p_hidup }}% 100%);">
+                    <div class="donut-center">{{ round($p_hidup) }}%</div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 8px; font-size: 12px; font-weight: 700; color: #64748b;">
+                    <div style="display: flex; justify-content: space-between;"><span><i class="fa-solid fa-circle" style="color: #3b82f6; font-size: 10px;"></i> Hidup</span><span>{{ $total_pasien - $pasien_inactive }}</span></div>
+                    <div style="display: flex; justify-content: space-between;"><span><i class="fa-solid fa-circle" style="color: #94a3b8; font-size: 10px;"></i> Meninggal</span><span>{{ $pasien_inactive }}</span></div>
                 </div>
             </div>
         </section>
-
-        {{-- EXPORT --}}
-        <div class="export-actions">
-            <button class="btn-export">
-                <i class="fa-regular fa-file-pdf"></i>
-                Export PDF
-            </button>
-
-            <button class="btn-export">
-                <i class="fa-regular fa-file-excel"></i>
-                Export Excel
-            </button>
-        </div>
 
         {{-- TABLE --}}
-        <section class="laporan-table-card">
-            <div class="laporan-table-title">Data Laporan Pasien</div>
-
+        <section class="table-card">
+            <div class="table-top" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; gap: 20px;">
+                <h2 style="font-size: 18px; font-weight: 900; color: #1e293b; margin: 0;">Rincian Data Pasien Terfilter</h2>
+                <div style="display: flex; gap: 12px;">
+                    <a href="{{ route('petugas.laporan.export', array_merge(request()->query(), ['format' => 'pdf'])) }}" target="_blank" class="export-btn" style="border-color: #ef4444; color: #ef4444;">
+                        <i class="fa-solid fa-file-pdf"></i> Unduh PDF
+                    </a>
+                    <a href="{{ route('petugas.laporan.export', array_merge(request()->query(), ['format' => 'excel'])) }}" class="export-btn">
+                        <i class="fa-solid fa-file-excel"></i> Unduh Excel
+                    </a>
+                </div>
+            </div>
             <div class="table-responsive">
                 <table>
                     <thead>
                         <tr>
-                            <th>Nama</th>
+                            <th>Nama Pasien</th>
                             <th>No RM</th>
-                            <th>No Regis Nasional</th>
-                            <th>No Handphone</th>
-                            <th>Jenis Kelamin</th>
-                            <th>Aksi</th>
+                            <th>Regis Nasional</th>
+                            <th>Gender</th>
+                            <th>Status Monitoring</th>
                         </tr>
                     </thead>
-
                     <tbody>
-                        <tr>
-                            <td>Jane Cooper</td>
-                            <td>Microsoft</td>
-                            <td>(225) 555-0118</td>
-                            <td>jane@microsoft.com</td>
-                            <td>United States</td>
-                            <td>
-                                <button class="btn-detail">Detail</button>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>Floyd Miles</td>
-                            <td>Yahoo</td>
-                            <td>(205) 555-0100</td>
-                            <td>floyd@yahoo.com</td>
-                            <td>Kiribati</td>
-                            <td>
-                                <button class="btn-detail">Detail</button>
-                            </td>
-                        </tr>
+                        @foreach ($pasiens as $pasien)
+                            <tr>
+                                <td>{{ $pasien->nama }}</td>
+                                <td><code style="background: #f1f5f9; padding: 3px 6px; border-radius: 5px;">{{ $pasien->nomor_rm }}</code></td>
+                                <td>{{ $pasien->no_registrasi_nasional }}</td>
+                                <td>{{ $pasien->jenis_kelamin }}</td>
+                                <td>
+                                    @php
+                                        $status = $pasien->display_status;
+                                        $bClass = 'badge-success';
+                                        if ($status == 'Inactive') $bClass = 'badge-warning';
+                                        if ($status == 'LTFU') $bClass = 'badge-danger';
+                                        if ($status == 'Meninggal') $bClass = 'badge-danger';
+                                    @endphp
+                                    <span class="badge {{ $bClass }}">{{ $status }}</span>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
-
             <div class="table-footer">
-                <span>Showing data 1 to 8 of 256K entries</span>
-
+                <span style="font-weight: 600;">Data {{ $pasiens->firstItem() ?? 0 }} - {{ $pasiens->lastItem() ?? 0 }} dari {{ $pasiens->total() }}</span>
                 <div class="pagination">
-                    <button class="page-btn">&lt;</button>
-                    <button class="page-btn active">1</button>
-                    <button class="page-btn">2</button>
-                    <button class="page-btn">3</button>
-                    <button class="page-btn">4</button>
-                    <span>...</span>
-                    <button class="page-btn">40</button>
-                    <button class="page-btn">&gt;</button>
+                    {{ $pasiens->appends(request()->query())->links('pagination::bootstrap-4') }}
                 </div>
             </div>
         </section>

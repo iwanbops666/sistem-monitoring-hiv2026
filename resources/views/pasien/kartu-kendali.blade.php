@@ -5,149 +5,322 @@
 
 @section('content')
     <style>
-        .kartu-page {
-            width: 100%;
+        .kartu-container {
             max-width: 1080px;
-            margin-top: -24px;
+            animation: fadeIn 0.5s ease;
         }
 
-        .kartu-subtitle {
-            font-size: 18px;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .kartu-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 35px;
+            box-shadow: 0 10px 25px rgba(213, 224, 235, 0.3);
+            border: 1px solid #f1f5f9;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+        }
+
+        .section-header h2 {
+            font-size: 22px;
             font-weight: 900;
             color: #111827;
-            margin-bottom: 46px;
         }
 
-        .kartu-form {
+        .custom-table {
             width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 12px;
         }
 
-        .kartu-grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px 68px;
+        .custom-table th {
+            text-align: left;
+            padding: 0 15px 10px;
+            color: #9ca3af;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .custom-table tr td {
+            background: #f8fafc;
+            padding: 20px 15px;
+            color: #374151;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .custom-table tr td:first-child { border-radius: 12px 0 0 12px; font-weight: 700; }
+        .custom-table tr td:last-child { border-radius: 0 12px 12px 0; }
+
+        .custom-table tr:hover td { background: #f1f5f9; }
+
+        .btn-detail {
+            background: #ffffff;
+            color: #10b981;
+            border: 1.5px solid #10b981;
+            padding: 8px 20px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-detail:hover {
+            background: #10b981;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+        }
+
+        /* MODAL */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            z-index: 10000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.show { display: flex; }
+
+        .modal-box {
+            width: 100%;
+            max-width: 900px;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 40px;
+            position: relative;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: modalPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-close {
+            position: absolute;
+            right: 25px;
+            top: 25px;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            border: none;
+            background: #f1f5f9;
+            color: #64748b;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover { background: #fee2e2; color: #ef4444; }
+
+        .modal-header h2 {
+            font-size: 24px;
+            font-weight: 900;
+            color: #111827;
             margin-bottom: 30px;
         }
 
-        .kartu-group label {
+        .modal-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px 35px;
+        }
+
+        .field-group label {
             display: block;
-            font-size: 16px;
-            color: #111827;
+            font-size: 14px;
             font-weight: 700;
-            margin-bottom: 11px;
+            color: #64748b;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .kartu-group input,
-        .kartu-group textarea {
-            width: 100%;
-            border: 1px solid #d8d8d8;
-            border-radius: 8px;
-            background: #ffffff;
-            outline: none;
-            font-size: 15px;
-            color: #111827;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.06);
-        }
-
-        .kartu-group input {
-            height: 54px;
-            padding: 0 16px;
-        }
-
-        .kartu-group input[type="date"] {
-            cursor: pointer;
-        }
-
-        .kartu-group textarea {
-            height: 120px;
-            resize: none;
+        .field-val {
+            background: #f8fafc;
+            border-radius: 12px;
             padding: 16px;
+            border: 1.5px solid #e2e8f0;
+            color: #1e293b;
+            font-size: 15px;
             line-height: 1.5;
+            min-height: 52px;
         }
 
-        .kartu-group input:focus,
-        .kartu-group textarea:focus {
-            border-color: #10b981;
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.14);
-        }
-
-        .readonly-field,
-        .kartu-group input:disabled,
-        .kartu-group textarea:disabled {
-            background: #f7f7f7 !important;
-            color: #111827 !important;
-            cursor: not-allowed;
-            opacity: 1;
-        }
-
-        .kartu-catatan {
-            margin-top: 4px;
-        }
-
-        .kartu-catatan textarea {
-            height: 150px;
-        }
-
-        @media (max-width: 900px) {
-            .kartu-page {
-                margin-top: 0;
-            }
-
-            .kartu-grid-2 {
-                grid-template-columns: 1fr;
-                gap: 22px;
-            }
+        @media (max-width: 768px) {
+            .modal-grid { grid-template-columns: 1fr; }
+            .section-header { flex-direction: column; align-items: flex-start; gap: 15px; }
         }
     </style>
 
-    <div class="kartu-page">
-        <p class="kartu-subtitle">
-            Tanggal Perjanjian mengambil Obat, Konsultasi Dokter, Pemeriksaan Lain
-        </p>
-
-        <form action="#" method="POST" id="kartuKendaliPasienForm" class="kartu-form">
-            @csrf
-
-            <div class="kartu-grid-2">
-                <div class="kartu-group">
-                    <label>Tanggal Kunjungan :</label>
-                    <input type="date" name="tanggal_kunjungan" value="2027-04-16">
-                </div>
-
-                <div class="kartu-group">
-                    <label>Rencana Tanggal Kunjungan Selanjutnya:</label>
-                    <input type="text" name="rencana_kunjungan" value="17/05/2027" class="readonly-field" disabled>
-                </div>
+    <div class="kartu-container">
+        <section class="kartu-card">
+            <div class="section-header">
+                <h2>Kartu Kendali & Riwayat</h2>
             </div>
 
-            <div class="kartu-grid-2">
-                <div class="kartu-group">
-                    <label>Rejiman dan Jumlah Obat ARV yang : Tersisa :</label>
-                    <textarea name="rejiman_arv" class="readonly-field" disabled>ARV tersisa cukup sampai jadwal kunjungan berikutnya.</textarea>
-                </div>
-
-                <div class="kartu-group">
-                    <label>Jumlah INH yang Tersisa :</label>
-                    <textarea name="inh_tersisa" class="readonly-field" disabled>10 tablet</textarea>
-                </div>
+            <div style="overflow-x: auto;">
+                <table class="custom-table">
+                    <thead>
+                        <tr>
+                            <th>Tanggal Kunjungan</th>
+                            <th>Jadwal Berikutnya</th>
+                            <th>Catatan</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($records as $record)
+                            <tr>
+                                <td>{{ \Carbon\Carbon::parse($record->tanggal_kunjungan)->format('d M Y') }}</td>
+                                <td>
+                                    <span style="color: #3b82f6; font-weight: 600;">
+                                        {{ $record->rencana_tanggal_kunjungan_selanjutnya ? \Carbon\Carbon::parse($record->rencana_tanggal_kunjungan_selanjutnya)->format('d M Y') : '-' }}
+                                    </span>
+                                </td>
+                                <td>{{ Str::limit($record->catatan, 30) }}</td>
+                                <td>
+                                    <span style="padding: 4px 10px; background: #f1f5f9; border-radius: 6px; font-size: 12px; font-weight: 700; color: #475569;">
+                                        Tercatat
+                                    </span>
+                                </td>
+                                <td style="text-align: right;">
+                                    <button 
+                                        type="button" 
+                                        class="btn-detail"
+                                         data-tgl="{{ $record->tanggal_kunjungan }}"
+                                         data-rencana="{{ $record->rencana_tanggal_kunjungan_selanjutnya }}"
+                                         data-obat-diberikan="{{ json_encode($record->obat_yang_diberikan) }}"
+                                         data-inh="{{ $record->jumlah_inh_yang_tersisa }}"
+                                         data-inh-next="{{ $record->jumlah_inh_yang_diberikan_untuk_bulan_berikutnya }}"
+                                         data-efek="{{ $record->efek_samping_dan_lab_profilaksis }}"
+                                         data-catatan="{{ $record->catatan }}"
+                                    >
+                                        <i class="fa-solid fa-eye"></i> Detail
+                                    </button>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 60px; background: #ffffff; color: #9ca3af;">
+                                    Belum ada data kunjungan yang tercatat.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
-
-            <div class="kartu-grid-2">
-                <div class="kartu-group">
-                    <label>Jumlah INH yang Diberikan Untuk Bulan Berikutnya :</label>
-                    <textarea name="inh_diberikan" class="readonly-field" disabled>30 tablet</textarea>
-                </div>
-
-                <div class="kartu-group">
-                    <label>Efek Samping ARV / IO / Proflaksis O :</label>
-                    <textarea name="efek_samping" class="readonly-field" disabled>Tidak ada efek samping berat yang dilaporkan.</textarea>
-                </div>
-            </div>
-
-            <div class="kartu-group kartu-catatan">
-                <label>Catatan</label>
-                <textarea name="catatan" class="readonly-field" disabled>Pasien diharapkan datang sesuai jadwal dan membawa kartu kendali saat kunjungan berikutnya.</textarea>
-            </div>
-        </form>
+        </section>
     </div>
+
+    {{-- MODAL DETAIL --}}
+    <div class="modal-overlay" id="kartuModal">
+        <div class="modal-box">
+            <button type="button" class="modal-close" id="closeModal"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="modal-header">
+                <h2>Rincian Kartu Kendali</h2>
+            </div>
+            
+            <div class="modal-grid">
+                <div class="field-group">
+                    <label>Tanggal Kunjungan</label>
+                    <div class="field-val" id="modalTgl">-</div>
+                </div>
+                <div class="field-group">
+                    <label>Jadwal Kontrol Berikutnya</label>
+                    <div class="field-val" id="modalRencana" style="color: #3b82f6; font-weight: 700;">-</div>
+                </div>
+                <div class="field-group" style="grid-column: span 2;">
+                    <label>Rejiman dan Jumlah Obat ARV yang tersisa</label>
+                    <div class="field-val" id="modalObat" style="color: #10b981; font-weight: 700; min-height: 80px;">-</div>
+                </div>
+                <div class="field-group">
+                    <label>Jumlah INH Tersisa</label>
+                    <div class="field-val" id="modalInh">-</div>
+                </div>
+                <div class="field-group">
+                    <label>INH Untuk Bulan Depan</label>
+                    <div class="field-val" id="modalInhNext">-</div>
+                </div>
+                <div class="field-group">
+                    <label>Efek Samping / Lab</label>
+                    <div class="field-val" id="modalEfek">-</div>
+                </div>
+                <div class="field-group" style="grid-column: span 2;">
+                    <label>Catatan Tambahan</label>
+                    <div class="field-val" id="modalCatatan" style="min-height: 100px;">-</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const modal = document.getElementById('kartuModal');
+            const closeBtn = document.getElementById('closeModal');
+            const detailBtns = document.querySelectorAll('.btn-detail');
+
+            detailBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const formatDate = (dateStr) => {
+                        if(!dateStr) return '-';
+                        const date = new Date(dateStr);
+                        return date.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+                    };
+
+                    document.getElementById('modalTgl').textContent = formatDate(this.dataset.tgl);
+                    document.getElementById('modalRencana').textContent = formatDate(this.dataset.rencana);
+                    
+                    // Handle Medication List
+                    const obatData = JSON.parse(this.dataset.obatDiberikan || '[]');
+                    const modalObat = document.getElementById('modalObat');
+                    
+                    if (obatData.length > 0) {
+                        modalObat.innerHTML = obatData.map(o => {
+                            if (typeof o === 'string') return `<div style="margin-bottom: 5px;">• ${o}</div>`;
+                            return `<div style="margin-bottom: 5px; display: flex; justify-content: space-between;">
+                                        <span>• ${o.nama}</span>
+                                        <span style="color: #64748b;">Sisa: ${o.jumlah || 0}</span>
+                                    </div>`;
+                        }).join('');
+                    } else {
+                        modalObat.textContent = '-';
+                    }
+
+                    document.getElementById('modalInh').textContent = (this.dataset.inh || '0') + ' Unit';
+                    document.getElementById('modalInhNext').textContent = (this.dataset.inhNext || '0') + ' Unit';
+                    document.getElementById('modalEfek').textContent = this.dataset.efek || '-';
+                    document.getElementById('modalCatatan').textContent = this.dataset.catatan || '-';
+                    
+                    modal.classList.add('show');
+                });
+            });
+
+            closeBtn.addEventListener('click', () => modal.classList.remove('show'));
+            modal.addEventListener('click', (e) => { if(e.target === modal) modal.classList.remove('show'); });
+        });
+    </script>
+    @endpush
 @endsection

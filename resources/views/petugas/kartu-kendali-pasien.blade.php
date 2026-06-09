@@ -1,186 +1,229 @@
 @extends('layouts.app')
 
-@section('title', 'Data Kartu Kendali Pasien')
+@section('title', 'Kartu Kendali Pasien')
 
 @section('content')
     <style>
         .modal-box-kartu {
             background: #ffffff;
             width: 100%;
-            max-width: 1100px;
-            border-radius: 18px;
-            padding: 34px 40px 28px;
+            max-width: 1000px;
+            border-radius: 24px;
+            padding: 40px;
             position: relative;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.16);
-            max-height: 95vh;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            max-height: 90vh;
             overflow-y: auto;
+            animation: modalSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .modal-title-kartu {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 900;
             color: #111827;
-            margin-bottom: 34px;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f1f5f9;
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
-        .kartu-grid-2 {
+        .modal-title-kartu i { color: #10b981; }
+
+        .kartu-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 28px 34px;
-            margin-bottom: 22px;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        .kartu-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
         .kartu-group label {
-            display: block;
-            font-size: 16px;
-            color: #111827;
-            margin-bottom: 9px;
+            font-size: 14px;
             font-weight: 700;
+            color: #374151;
         }
 
         .kartu-group input,
         .kartu-group textarea {
-            width: 100%;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            padding: 10px 12px;
-            outline: none;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 12px 16px;
             font-size: 14px;
-            background: #ffffff;
-        }
-
-        .kartu-group input {
-            height: 54px;
-        }
-
-        .kartu-group input[type="date"] {
-            cursor: pointer;
+            color: #1e293b;
+            background: #f8fafc;
+            transition: all 0.2s;
         }
 
         .kartu-group input:focus,
         .kartu-group textarea:focus {
             border-color: #10b981;
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.14);
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+            outline: none;
         }
 
         .kartu-group textarea {
-            height: 110px;
+            height: 100px;
             resize: none;
-        }
-
-        .catatan-action-row {
-            display: grid;
-            grid-template-columns: 1fr 260px;
-            gap: 28px;
-            align-items: end;
-        }
-
-        .kartu-group textarea.catatan {
-            height: 150px;
         }
 
         .modal-actions-kartu {
             display: flex;
             justify-content: flex-end;
-            gap: 14px;
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1.5px solid #f1f5f9;
+        }
+
+        .obat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 12px;
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 16px;
+            border: 1.5px solid #e5e7eb;
+            margin-bottom: 25px;
+        }
+
+        .obat-item {
+            display: flex;
             align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 10px;
+            transition: all 0.2s;
         }
 
-        .modal-actions-kartu .btn-edit,
-        .modal-actions-kartu .btn-save {
-            min-width: 110px;
-            height: 48px;
-            border-radius: 7px;
-            font-size: 16px;
+        .obat-item:hover {
+            background: rgba(16, 185, 129, 0.05);
         }
 
-        @media (max-width: 900px) {
-            .kartu-grid-2 {
-                grid-template-columns: 1fr;
-            }
+        .obat-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #10b981;
+        }
 
-            .catatan-action-row {
-                grid-template-columns: 1fr;
-            }
+        .obat-item span {
+            font-size: 14px;
+            font-weight: 600;
+            color: #475569;
+            flex: 1;
+        }
 
-            .modal-actions-kartu {
-                justify-content: flex-end;
-            }
+        .obat-qty-input {
+            width: 80px;
+            padding: 6px 10px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 13px;
+            text-align: center;
+            background: #ffffff;
+            transition: all 0.2s;
+        }
+
+        .obat-qty-input:focus {
+            border-color: #10b981;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .obat-qty-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            margin-right: 5px;
         }
     </style>
 
-    <h1 class="page-title">Data Kartu Kendali Pasien</h1>
-
     <section class="table-card">
-        <div class="table-top">
-            <span class="table-label">Status Kunjungan Pasien</span>
+        <div class="table-top" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; gap: 20px;">
+            <h2 style="font-size: 20px; font-weight: 900; color: #1e293b; margin: 0;">Daftar Kontrol Kartu Kendali</h2>
 
-            <div class="table-actions">
+            <form action="{{ route('petugas.kartu-kendali-pasien') }}" method="GET" style="display: flex; align-items: center; gap: 15px;">
                 <div class="search-box">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" placeholder="Search">
+                    <i class="fa-solid fa-magnifying-glass" style="color: #94a3b8;"></i>
+                    <input type="text" name="search" placeholder="Cari Nama / RM..." value="{{ request('search') }}">
                 </div>
 
-                <select class="sort-box">
-                    <option>Short by : Newest</option>
-                    <option>Oldest</option>
+                <select name="limit" class="search-box" style="width: auto; cursor: pointer;" onchange="this.form.submit()">
+                    <option value="10" {{ request('limit') == 10 ? 'selected' : '' }}>10 Baris</option>
+                    <option value="25" {{ request('limit') == 25 ? 'selected' : '' }}>25 Baris</option>
+                    <option value="50" {{ request('limit') == 50 ? 'selected' : '' }}>50 Baris</option>
+                    <option value="100" {{ request('limit') == 100 ? 'selected' : '' }}>100 Baris</option>
                 </select>
-            </div>
+            </form>
         </div>
 
         <div class="table-responsive">
             <table>
                 <thead>
                     <tr>
-                        <th>Nama</th>
-                        <th>No RM</th>
-                        <th>No Regis Nasional</th>
-                        <th>No Handphone</th>
-                        <th>Jenis Kelamin</th>
-                        <th>Status</th>
+                        <th style="padding-left: 20px; width: 250px;">Nama Pasien</th>
+                        <th style="text-align: center; width: 130px;">No RM</th>
+                        <th style="text-align: center; width: 150px;">Regis Nasional</th>
+                        <th style="text-align: center; width: 150px;">WhatsApp</th>
+                        <th style="text-align: center; width: 180px;">Aksi</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    @foreach ([
-                        ['Jane Cooper', '1234', '(225) 555-0118', '086786987664', 'Perempuan'],
-                        ['Floyd Miles', '1234', '(205) 555-0100', '086786987664', 'Perempuan'],
-                        ['Ronald Richards', '1234', '(302) 555-0107', '086786987664', 'Perempuan'],
-                        ['Marvin McKinney', '1234', '(252) 555-0126', '086786987664', 'Laki - Laki'],
-                        ['Jerome Bell', '1234', '(629) 555-0129', '086786987664', 'Laki - Laki'],
-                        ['Kathryn Murphy', '1234', '(406) 555-0120', '086786987664', 'Laki - Laki'],
-                        ['Jacob Jones', '1234', '(208) 555-0112', '086786987664', 'Laki - Laki'],
-                        ['Kristin Watson', '1234', '(704) 555-0127', '086786987664', 'Perempuan'],
-                    ] as $pasien)
+                    @forelse ($pasiens as $pasien)
                         <tr>
-                            <td>{{ $pasien[0] }}</td>
-                            <td>{{ $pasien[1] }}</td>
-                            <td>{{ $pasien[2] }}</td>
-                            <td>{{ $pasien[3] }}</td>
-                            <td>{{ $pasien[4] }}</td>
                             <td>
-                                <button type="button" class="btn-detail open-kartu-modal">
-                                    Detail
-                                </button>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 35px; height: 35px; background: #ecfdf5; color: #10b981; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px;">
+                                        {{ substr($pasien->nama, 0, 1) }}
+                                    </div>
+                                    {{ $pasien->nama }}
+                                </div>
+                            </td>
+                            <td style="text-align: center;"><code style="background: #f8fafc; padding: 4px 8px; border-radius: 6px; font-weight: 700; color: #64748b; font-size: 12px; border: 1px solid #e2e8f0; white-space: nowrap;">{{ $pasien->nomor_rm }}</code></td>
+                            <td style="text-align: center;"><span style="color: #94a3b8; font-weight: 600; font-size: 13px;">{{ $pasien->no_registrasi_nasional ?? '-' }}</span></td>
+                            <td style="text-align: center;"><span style="color: #64748b; font-weight: 600; font-size: 13px;">{{ $pasien->no_hp }}</span></td>
+                            <td style="text-align: center;">
+                                <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                    <button type="button" class="btn-compact-action open-kartu-modal" data-id="{{ $pasien->user_id }}" style="height: 32px; padding: 0 12px; border-radius: 8px; font-size: 12px;">
+                                        <i class="fa-solid fa-file-pen" style="font-size: 12px;"></i> Isi Kartu
+                                    </button>
+                                    <button type="button" class="btn-detail open-riwayat-modal" 
+                                            data-id="{{ $pasien->user_id }}" 
+                                            title="View Detail"
+                                            style="width: 32px; height: 32px; border-radius: 8px; border: 1px solid #e2e8f0; background: #ffffff; color: #64748b; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center;">
+                                        <i class="fa-solid fa-eye" style="font-size: 14px;"></i>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="6" style="text-align:center; padding: 50px; color: #94a3b8;">
+                                <i class="fa-solid fa-folder-open" style="font-size: 30px; display: block; margin-bottom: 10px;"></i>
+                                Data tidak ditemukan
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
 
         <div class="table-footer">
-            <span>Showing data 1 to 8 of 256K entries</span>
+            <span style="font-weight: 600;">Menampilkan {{ $pasiens->firstItem() ?? 0 }} - {{ $pasiens->lastItem() ?? 0 }} dari {{ $pasiens->total() }} Entri</span>
 
             <div class="pagination">
-                <button class="page-btn">&lt;</button>
-                <button class="page-btn active">1</button>
-                <button class="page-btn">2</button>
-                <button class="page-btn">3</button>
-                <button class="page-btn">4</button>
-                <span>...</span>
-                <button class="page-btn">40</button>
-                <button class="page-btn">&gt;</button>
+                {{ $pasiens->appends(request()->query())->links('pagination::bootstrap-4') }}
             </div>
         </div>
     </section>
@@ -190,66 +233,143 @@
         <div class="modal-box-kartu">
             <button class="modal-close" id="closeKartuModal">&times;</button>
 
-            <h2 class="modal-title-kartu">Formulir Kartu Kendali Pasien</h2>
+            <h2 class="modal-title-kartu">
+                <i class="fa-solid fa-book-medical"></i>
+                Formulir Kartu Kendali
+            </h2>
 
-            <form action="#" method="POST">
+            <form action="{{ route('petugas.kartu-kendali.store') }}" method="POST">
                 @csrf
+                <input type="hidden" name="id_pasien" id="modal_id_pasien">
 
-                <div class="kartu-grid-2">
+                <div class="kartu-grid">
                     <div class="kartu-group">
-                        <label>Tanggal Kunjungan :</label>
-                        <input type="date" name="tanggal_kunjungan">
+                        <label>Tanggal Kunjungan</label>
+                        <input type="date" name="tanggal_kunjungan" id="input_tanggal_kunjungan" required>
                     </div>
 
                     <div class="kartu-group">
-                        <label>Rencana Tanggal Kunjungan Selanjutnya:</label>
-                        <input type="date" name="rencana_tanggal_kunjungan_selanjutnya">
+                        <label>Rencana Kunjungan Selanjutnya</label>
+                        <input type="date" name="rencana_tanggal_kunjungan_selanjutnya" id="input_rencana_kunjungan">
                     </div>
                 </div>
 
-                <div class="kartu-grid-2">
-                    <div class="kartu-group">
-                        <label>Rejiman dan Jumlah Obat ARV yang : Tersisa :</label>
-                        <textarea name="rejiman_jumlah_obat_arv_tersisa"></textarea>
-                    </div>
-
-                    <div class="kartu-group">
-                        <label>Jumlah INH yang Tersisa :</label>
-                        <textarea name="jumlah_inh_tersisa"></textarea>
+                <div class="kartu-group" style="margin-bottom: 25px;">
+                    <label>Rejiman dan Jumlah Obat ARV yang tersisa</label>
+                    <div class="obat-grid">
+                        @php
+                            $daftar_obat = [
+                                'TDF(300)/3TC(300)/EFV(600)',
+                                'TDF(300)/3TC(300)/DTG(50)',
+                                'OAT KDT Kategori 1',
+                                'TPT 3HP KDT',
+                                'Sulfamethoxazole: 800 mg / Trimethoprim: 160 mg'
+                            ];
+                        @endphp
+                        @foreach($daftar_obat as $obat)
+                            <div class="obat-item">
+                                <input type="checkbox" name="obat_selected[]" value="{{ $obat }}" class="obat-cb">
+                                <span>{{ $obat }}</span>
+                                <div style="display: flex; align-items: center;">
+                                    <span class="obat-qty-label">Sisa:</span>
+                                    <input type="number" name="obat_jumlah[{{ $obat }}]" class="obat-qty-input" placeholder="0" min="0">
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
 
-                <div class="kartu-grid-2">
+                <div class="kartu-grid">
                     <div class="kartu-group">
-                        <label>Jumlah INH yang Diberikan Untuk Bulan Berikutnya :</label>
-                        <textarea name="jumlah_inh_diberikan_bulan_berikutnya"></textarea>
+                        <label>Jumlah INH Tersisa</label>
+                        <input type="number" name="jumlah_inh_tersisa" id="input_inh_sisa" placeholder="0">
                     </div>
 
                     <div class="kartu-group">
-                        <label>Efek Samping ARV / IO / Proflaksis O :</label>
-                        <textarea name="efek_samping_arv_io_proflaksis"></textarea>
+                        <label>INH yang Diberikan (Bulan Depan)</label>
+                        <input type="number" name="jumlah_inh_diberikan_untuk_bulan_berikutnya" id="input_inh_diberikan" placeholder="0">
                     </div>
                 </div>
 
-                <div class="catatan-action-row">
-                    <div class="kartu-group">
-                        <label>Catatan</label>
-                        <textarea name="catatan" class="catatan"></textarea>
-                    </div>
+                <div class="kartu-group">
+                    <label>Efek Samping ARV / IO / Proflaksis</label>
+                    <textarea name="efek_samping_arv_io_proflaksis" id="input_efek_samping" placeholder="Catatan efek samping..."></textarea>
+                </div>
 
-                    <div class="modal-actions-kartu">
-                        <button type="button" class="btn-edit btn-confirm-edit">
-                            <i class="fa-regular fa-pen-to-square"></i>
-                            Edit
-                        </button>
+                <div class="kartu-group">
+                    <label>Catatan Petugas (Update ke Pasien)</label>
+                    <textarea name="catatan" id="input_catatan" style="height: 120px;" placeholder="Pesan untuk pasien..."></textarea>
+                </div>
 
-                        <button type="submit" class="btn-save">
-                            <i class="fa-regular fa-square-check"></i>
-                            Simpan
-                        </button>
-                    </div>
+                <div class="modal-actions-kartu">
+                    <button type="submit" class="btn-modal-save" id="btn_save_kartu">
+                        <i class="fa-solid fa-circle-check"></i>
+                        <span id="text_save_kartu">Simpan Kartu Kendali</span>
+                    </button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    {{-- MODAL RIWAYAT KARTU KENDALI --}}
+    <div class="modal-overlay" id="riwayatModal">
+        <div class="modal-box-kartu" style="max-width: 1200px;">
+            <button class="modal-close" id="closeRiwayatModal">&times;</button>
+
+            <h2 class="modal-title-kartu">
+                <i class="fa-solid fa-eye"></i>
+                Detail & Riwayat Kartu Kendali
+            </h2>
+
+            <div id="riwayat_pasien_info" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; background: #f8fafc; padding: 25px; border-radius: 20px; border: 1.5px solid #e2e8f0; margin-bottom: 30px;">
+                <div class="info-item">
+                    <label style="display: block; font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 5px;">Nama Pasien</label>
+                    <div id="info_nama" style="font-weight: 700; color: #1e293b;">-</div>
+                </div>
+                <div class="info-item">
+                    <label style="display: block; font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 5px;">No. Rekam Medis</label>
+                    <div id="info_rm" style="font-weight: 700; color: #1e293b;">-</div>
+                </div>
+                <div class="info-item">
+                    <label style="display: block; font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 5px;">Regis Nasional</label>
+                    <div id="info_regis" style="font-weight: 700; color: #1e293b;">-</div>
+                </div>
+                <div class="info-item">
+                    <label style="display: block; font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 5px;">Jenis Kelamin</label>
+                    <div id="info_gender" style="font-weight: 700; color: #1e293b;">-</div>
+                </div>
+                <div class="info-item">
+                    <label style="display: block; font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 5px;">WhatsApp</label>
+                    <div id="info_hp" style="font-weight: 700; color: #1e293b;">-</div>
+                </div>
+                <div class="info-item">
+                    <label style="display: block; font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; margin-bottom: 5px;">Status Pasien</label>
+                    <div id="info_status" style="font-weight: 700; color: #1e293b;">-</div>
+                </div>
+            </div>
+
+            <h3 style="font-size: 16px; font-weight: 800; color: #1e293b; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                <i class="fa-solid fa-clock-rotate-left" style="color: #10b981;"></i>
+                Log Riwayat Kunjungan
+            </h3>
+
+            <div class="table-responsive" style="margin-top: 20px; max-height: 60vh; overflow-y: auto;">
+                <table style="width: 100%; border-collapse: separate; border-spacing: 0 10px;">
+                    <thead style="position: sticky; top: 0; background: white; z-index: 10;">
+                        <tr>
+                            <th style="padding: 15px; border-bottom: 2px solid #f1f5f9; text-align: left;">Tanggal</th>
+                            <th style="padding: 15px; border-bottom: 2px solid #f1f5f9; text-align: left;">Rencana Kembali</th>
+                            <th style="padding: 15px; border-bottom: 2px solid #f1f5f9; text-align: left;">Rejiman dan Jumlah Obat ARV yang tersisa</th>
+                            <th style="padding: 15px; border-bottom: 2px solid #f1f5f9; text-align: left;">INH Sisa/Diberikan</th>
+                            <th style="padding: 15px; border-bottom: 2px solid #f1f5f9; text-align: left;">Efek Samping</th>
+                            <th style="padding: 15px; border-bottom: 2px solid #f1f5f9; text-align: left;">Catatan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="riwayat_table_body">
+                        {{-- Data will be loaded here via AJAX --}}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -257,23 +377,173 @@
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 const kartuModal = document.getElementById('kartuModal');
+                const riwayatModal = document.getElementById('riwayatModal');
                 const openButtons = document.querySelectorAll('.open-kartu-modal');
+                const openRiwayatButtons = document.querySelectorAll('.open-riwayat-modal');
                 const closeButton = document.getElementById('closeKartuModal');
+                const closeRiwayatButton = document.getElementById('closeRiwayatModal');
+                const riwayatTableBody = document.getElementById('riwayat_table_body');
+                const riwayatNamaPasien = document.getElementById('riwayat_nama_pasien');
+
+                // State untuk menyimpan riwayat pasien yang sedang dibuka
+                let currentPatientHistory = [];
+
+                // Elements form kartu
+                const inputTanggal = document.getElementById('input_tanggal_kunjungan');
+                const inputRencana = document.getElementById('input_rencana_kunjungan');
+                const inputRejimen = document.getElementById('input_rejimen_arv');
+                const inputArvSisa = document.getElementById('input_arv_sisa');
+                const inputInhSisa = document.getElementById('input_inh_sisa');
+                const inputInhBeri = document.getElementById('input_inh_diberikan');
+                const inputEfek = document.getElementById('input_efek_samping');
+                const inputCatatan = document.getElementById('input_catatan');
+                
+                const obatItems = document.querySelectorAll('.obat-item');
+                const textSave = document.getElementById('text_save_kartu');
+
+                function resetForm() {
+                    inputRencana.value = '';
+                    inputInhSisa.value = '';
+                    inputInhBeri.value = '';
+                    inputEfek.value = '';
+                    inputCatatan.value = '';
+                    
+                    obatItems.forEach(item => {
+                        item.querySelector('.obat-cb').checked = false;
+                        item.querySelector('.obat-qty-input').value = '';
+                    });
+                    
+                    textSave.textContent = 'Simpan Kartu Kendali';
+                }
 
                 openButtons.forEach(button => {
-                    button.addEventListener('click', function () {
+                    button.addEventListener('click', async function () {
+                        const id = this.getAttribute('data-id');
+                        document.getElementById('modal_id_pasien').value = id;
+                        
+                        // Reset form dan set tanggal hari ini
+                        resetForm();
+                        const today = new Date().toISOString().split('T')[0];
+                        inputTanggal.value = today;
+
+                        // Fetch riwayat untuk auto-fill
+                        try {
+                            const response = await fetch(`/kartu-kendali/riwayat-kartu-kendali/${id}`);
+                            const data = await response.json();
+                            currentPatientHistory = data.riwayat;
+                            
+                            // Cek jika ada data untuk tanggal hari ini
+                            checkAndFillData(today);
+                        } catch (error) {
+                            console.error('Gagal mengambil riwayat:', error);
+                        }
+
                         kartuModal.classList.add('show');
                     });
                 });
 
-                closeButton.addEventListener('click', function () {
-                    kartuModal.classList.remove('show');
+                inputTanggal.addEventListener('change', function() {
+                    checkAndFillData(this.value);
                 });
 
-                kartuModal.addEventListener('click', function (event) {
-                    if (event.target === kartuModal) {
-                        kartuModal.classList.remove('show');
+                function checkAndFillData(date) {
+                    const existing = currentPatientHistory.find(item => {
+                        const itemDate = new Date(item.tanggal_kunjungan).toISOString().split('T')[0];
+                        return itemDate === date;
+                    });
+
+                    if (existing) {
+                        inputInhSisa.value = existing.jumlah_inh_yang_tersisa || '';
+                        inputInhBeri.value = existing.jumlah_inh_yang_diberikan_untuk_bulan_berikutnya || '';
+                        inputEfek.value = existing.efek_samping_dan_lab_profilaksis || '';
+                        inputCatatan.value = existing.catatan || '';
+                        
+                        // Fill medications
+                        const obats = existing.obat_yang_diberikan || [];
+                        obatItems.forEach(item => {
+                            const cb = item.querySelector('.obat-cb');
+                            const qtyInput = item.querySelector('.obat-qty-input');
+                            
+                            // Data bisa berupa array string (lama) atau array objek (baru)
+                            const found = obats.find(o => (typeof o === 'string' ? o : o.nama) === cb.value);
+                            
+                            if (found) {
+                                cb.checked = true;
+                                qtyInput.value = typeof found === 'object' ? found.jumlah : '';
+                            } else {
+                                cb.checked = false;
+                                qtyInput.value = '';
+                            }
+                        });
+
+                        textSave.textContent = 'Update Kartu Kendali';
+                        
+                        // Highlight effect
+                        [inputRencana, inputInhSisa, inputInhBeri, inputEfek, inputCatatan].forEach(el => {
+                            el.style.backgroundColor = '#ecfdf5';
+                            setTimeout(() => el.style.backgroundColor = '#f8fafc', 1000);
+                        });
+                    } else {
+                        resetForm();
                     }
+                }
+
+                openRiwayatButtons.forEach(button => {
+                    button.addEventListener('click', async function () {
+                        const id = this.getAttribute('data-id');
+                        riwayatTableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px;"><i class="fa-solid fa-spinner fa-spin" style="font-size: 24px; color: #10b981;"></i><br><br>Memuat data...</td></tr>';
+                        riwayatModal.classList.add('show');
+
+                        try {
+                            const response = await fetch(`/kartu-kendali/riwayat-kartu-kendali/${id}`);
+                            const data = await response.json();
+
+                            // Populate Patient Info
+                            document.getElementById('info_nama').textContent = data.pasien.nama;
+                            document.getElementById('info_rm').textContent = data.pasien.nomor_rm;
+                            document.getElementById('info_regis').textContent = data.pasien.no_registrasi_nasional || '-';
+                            document.getElementById('info_gender').textContent = data.pasien.jenis_kelamin;
+                            document.getElementById('info_hp').textContent = data.pasien.no_hp;
+                            document.getElementById('info_status').textContent = data.pasien.status_pasien;
+
+                            riwayatTableBody.innerHTML = '';
+
+                            if (data.riwayat.length === 0) {
+                                riwayatTableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px; color: #94a3b8;">Belum ada riwayat kartu kendali.</td></tr>';
+                            } else {
+                                data.riwayat.forEach(item => {
+                                    let obatsHtml = '-';
+                                    if (item.obat_yang_diberikan && item.obat_yang_diberikan.length > 0) {
+                                        obatsHtml = item.obat_yang_diberikan.map(o => {
+                                            if (typeof o === 'string') return `• ${o}`;
+                                            return `• ${o.nama} (Sisa: ${o.jumlah || 0})`;
+                                        }).join('<br>');
+                                    }
+                                    const row = `
+                                        <tr style="background: #f8fafc; border-radius: 12px;">
+                                            <td style="padding: 15px; font-weight: 700; color: #1e293b;">${new Date(item.tanggal_kunjungan).toLocaleDateString('id-ID', {day: '2-digit', month: 'long', year: 'numeric'})}</td>
+                                            <td style="padding: 15px; color: #64748b;">${item.rencana_tanggal_kunjungan_selanjutnya ? new Date(item.rencana_tanggal_kunjungan_selanjutnya).toLocaleDateString('id-ID', {day: '2-digit', month: 'long', year: 'numeric'}) : '-'}</td>
+                                            <td style="padding: 15px;"><div style="max-width: 300px; font-size: 13px; font-weight: 600; color: #10b981;">${obatsHtml}</div></td>
+                                            <td style="padding: 15px;"><div style="font-size: 13px; color: #475569;">Sisa: ${item.jumlah_inh_yang_tersisa || '0'}<br>Diberikan: ${item.jumlah_inh_yang_diberikan_untuk_bulan_berikutnya || '0'}</div></td>
+                                            <td style="padding: 15px;"><div style="max-width: 200px; font-size: 13px; color: #475569;">${item.efek_samping_dan_lab_profilaksis || '-'}</div></td>
+                                            <td style="padding: 15px;"><div style="max-width: 250px; font-size: 13px; font-style: italic; color: #64748b;">${item.catatan || '-'}</div></td>
+                                        </tr>
+                                    `;
+                                    riwayatTableBody.insertAdjacentHTML('beforeend', row);
+                                });
+                            }
+                        } catch (error) {
+                            riwayatTableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px; color: #ef4444;">Gagal memuat data.</td></tr>';
+                        }
+                    });
+                });
+
+                closeButton.addEventListener('click', () => kartuModal.classList.remove('show'));
+                closeRiwayatButton.addEventListener('click', () => riwayatModal.classList.remove('show'));
+                
+                window.addEventListener('click', (e) => { 
+                    if (e.target === kartuModal) kartuModal.classList.remove('show'); 
+                    if (e.target === riwayatModal) riwayatModal.classList.remove('show'); 
                 });
             });
         </script>
