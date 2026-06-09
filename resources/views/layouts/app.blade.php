@@ -856,6 +856,32 @@
                 this.setCustomValidity('');
             });
         });
+
+        // Logout Confirmation
+        const logoutLinks = document.querySelectorAll('a[href*="logout"], .logout-btn');
+        logoutLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetUrl = this.getAttribute('href');
+                Swal.fire({
+                    title: 'Keluar dari Sistem?',
+                    text: 'Apakah Anda yakin ingin keluar dari sistem monitoring HIV?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#10b981',
+                    cancelButtonColor: '#ef4444',
+                    confirmButtonText: 'Ya, Keluar!',
+                    cancelButtonText: 'Batal',
+                    customClass: {
+                        popup: 'logout-swal-popup'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = targetUrl;
+                    }
+                });
+            });
+        });
     });
 </script>
 

@@ -336,8 +336,37 @@
             text-decoration: underline;
         }
 
+        .mobile-brand-logo {
+            display: none;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .mobile-brand-logo img {
+            height: 60px;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+        }
+
+        .mobile-brand-logo h3 {
+            font-size: 15px;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.2;
+        }
+
+        .mobile-brand-logo span {
+            font-size: 10px;
+            color: var(--primary-light);
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
         /* RESPONSIVE */
         @media (max-width: 950px) {
+            .mobile-brand-logo {
+                display: block;
+            }
             .login-container {
                 grid-template-columns: 1fr;
                 max-width: 500px;
@@ -350,12 +379,43 @@
             }
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: 576px) {
+            body {
+                align-items: center;
+                padding: 20px 16px;
+            }
+            .login-container {
+                border-radius: 24px;
+            }
             .login-form-area {
-                padding: 35px 25px;
+                padding: 30px 20px;
+            }
+            .form-header {
+                margin-bottom: 25px;
+                text-align: center;
             }
             .form-header h2 {
-                font-size: 28px;
+                font-size: 26px;
+            }
+            .form-header p {
+                font-size: 14px;
+            }
+            .input-group {
+                margin-bottom: 20px;
+            }
+            .input-wrapper input {
+                height: 52px;
+                border-radius: 12px;
+                font-size: 14px;
+            }
+            .btn-login {
+                height: 54px;
+                border-radius: 14px;
+                font-size: 15px;
+            }
+            .form-footer {
+                margin-top: 25px;
+                font-size: 14px;
             }
         }
     </style>
@@ -397,6 +457,13 @@
 
         {{-- RIGHT PANEL --}}
         <div class="login-form-area">
+            {{-- Mobile Brand Logo --}}
+            <div class="mobile-brand-logo">
+                <img src="{{ asset('assets/logo-puskesmas.png') }}" alt="Logo Puskesmas Benculuk">
+                <h3>PUSKESMAS BENCULUK</h3>
+                <span>MONITORING HIV</span>
+            </div>
+
             <div class="form-header">
                 <h2>Selamat Datang</h2>
                 <p>Silakan masuk untuk mengakses dashboard</p>

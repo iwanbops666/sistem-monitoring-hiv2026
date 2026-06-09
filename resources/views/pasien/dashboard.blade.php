@@ -273,12 +273,12 @@
                         @forelse ($riwayats as $riwayat)
                             <tr>
                                 <td>{{ \Carbon\Carbon::parse($riwayat->tanggal_kunjungan)->format('d M Y') }}</td>
-                                <td>
+                                <td data-label="Keterangan">
                                     <span class="kunjungan-type">
                                         <i class="fa-solid fa-pills"></i> Kontrol & Obat
                                     </span>
                                 </td>
-                                <td>{{ Str::limit($riwayat->catatan ?? '-', 40) }}</td>
+                                <td data-label="Catatan">{{ Str::limit($riwayat->catatan ?? '-', 40) }}</td>
                                 <td>
                                     <i class="fa-solid fa-chevron-right" style="color: #cbd5e1; font-size: 12px;"></i>
                                 </td>

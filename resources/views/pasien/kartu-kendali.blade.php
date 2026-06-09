@@ -166,9 +166,40 @@
             min-height: 52px;
         }
 
-        @media (max-width: 768px) {
-            .modal-grid { grid-template-columns: 1fr; }
-            .section-header { flex-direction: column; align-items: flex-start; gap: 15px; }
+        .grid-span-2 {
+            grid-column: span 2;
+        }
+
+        @media (max-width: 900px) {
+            .modal-box {
+                padding: 25px 20px;
+                max-height: 90vh;
+                border-radius: 20px;
+            }
+            .modal-close {
+                right: 15px;
+                top: 15px;
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+            }
+            .modal-header h2 {
+                font-size: 20px;
+                margin-bottom: 20px;
+                padding-right: 30px;
+            }
+            .modal-grid { 
+                grid-template-columns: 1fr; 
+                gap: 15px;
+            }
+            .grid-span-2 {
+                grid-column: span 1;
+            }
+            .section-header { 
+                flex-direction: column; 
+                align-items: flex-start; 
+                gap: 15px; 
+            }
         }
     </style>
 
@@ -193,13 +224,13 @@
                         @forelse ($records as $record)
                             <tr>
                                 <td>{{ \Carbon\Carbon::parse($record->tanggal_kunjungan)->format('d M Y') }}</td>
-                                <td>
+                                <td data-label="Rencana Kontrol">
                                     <span style="color: #3b82f6; font-weight: 600;">
                                         {{ $record->rencana_tanggal_kunjungan_selanjutnya ? \Carbon\Carbon::parse($record->rencana_tanggal_kunjungan_selanjutnya)->format('d M Y') : '-' }}
                                     </span>
                                 </td>
-                                <td>{{ Str::limit($record->catatan, 30) }}</td>
-                                <td>
+                                <td data-label="Catatan">{{ Str::limit($record->catatan, 30) }}</td>
+                                <td data-label="Status">
                                     <span style="padding: 4px 10px; background: #f1f5f9; border-radius: 6px; font-size: 12px; font-weight: 700; color: #475569;">
                                         Tercatat
                                     </span>
@@ -251,7 +282,7 @@
                     <label>Jadwal Kontrol Berikutnya</label>
                     <div class="field-val" id="modalRencana" style="color: #3b82f6; font-weight: 700;">-</div>
                 </div>
-                <div class="field-group" style="grid-column: span 2;">
+                <div class="field-group grid-span-2">
                     <label>Rejiman dan Jumlah Obat ARV yang tersisa</label>
                     <div class="field-val" id="modalObat" style="color: #10b981; font-weight: 700; min-height: 80px;">-</div>
                 </div>
@@ -267,7 +298,7 @@
                     <label>Efek Samping / Lab</label>
                     <div class="field-val" id="modalEfek">-</div>
                 </div>
-                <div class="field-group" style="grid-column: span 2;">
+                <div class="field-group grid-span-2">
                     <label>Catatan Tambahan</label>
                     <div class="field-val" id="modalCatatan" style="min-height: 100px;">-</div>
                 </div>
@@ -300,17 +331,17 @@
                     if (obatData.length > 0) {
                         modalObat.innerHTML = obatData.map(o => {
                             if (typeof o === 'string') return `<div style="margin-bottom: 5px;">• ${o}</div>`;
-                            return `<div style="margin-bottom: 5px; display: flex; justify-content: space-between;">
-                                        <span>• ${o.nama}</span>
-                                        <span style="color: #64748b;">Sisa: ${o.jumlah || 0}</span>
+                            return `<div style="margin-bottom: 8px; display: flex; flex-direction: column; border-bottom: 1px dashed #e2e8f0; padding-bottom: 6px;">
+                                        <span style="font-weight: 700; color: #0f766e;">• ${o.nama}</span>
+                                        <span style="color: #475569; font-size: 13px; padding-left: 12px; margin-top: 4px;">Sisa: <strong style="color: #0d9488;">${o.jumlah || 0}</strong></span>
                                     </div>`;
                         }).join('');
                     } else {
                         modalObat.textContent = '-';
                     }
 
-                    document.getElementById('modalInh').textContent = (this.dataset.inh || '0') + ' Unit';
-                    document.getElementById('modalInhNext').textContent = (this.dataset.inhNext || '0') + ' Unit';
+                    document.getElementById('modalInh').textContent = this.dataset.inh || '0';
+                    document.getElementById('modalInhNext').textContent = this.dataset.inhNext || '0';
                     document.getElementById('modalEfek').textContent = this.dataset.efek || '-';
                     document.getElementById('modalCatatan').textContent = this.dataset.catatan || '-';
                     

@@ -128,6 +128,7 @@
             color: #111827;
             background: #f8fafc;
             transition: all 0.2s;
+            width: 100%;
         }
 
         .form-group input:focus {
@@ -147,6 +148,7 @@
             position: relative;
             display: flex;
             align-items: center;
+            width: 100%;
         }
 
         .phone-input-wrapper span {
@@ -205,9 +207,20 @@
             box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
         }
 
-        @media (max-width: 768px) {
-            .form-grid { grid-template-columns: 1fr; }
+        .grid-span-2 {
+            grid-column: span 2;
+        }
+
+        @media (max-width: 900px) {
+            .form-grid { 
+                grid-template-columns: 1fr; 
+                gap: 15px;
+            }
+            .grid-span-2 {
+                grid-column: span 1;
+            }
             .profile-header-banner { flex-direction: column; text-align: center; }
+            .profile-actions { position: static; margin-top: 20px; }
         }
     </style>
 
@@ -289,7 +302,7 @@
                     Alamat & Kontak
                 </div>
                 <div class="form-grid">
-                    <div class="form-group" style="grid-column: span 2;">
+                    <div class="form-group grid-span-2">
                         <label>Alamat Lengkap (Domisili)</label>
                         <input type="text" name="alamat_lengkap" value="{{ old('alamat_lengkap', $pasien->alamat_lengkap) }}">
                     </div>
@@ -366,7 +379,7 @@
                         <label>Status Monitoring</label>
                         <input type="text" value="{{ $pasien->display_status }}" disabled>
                     </div>
-                    <div class="form-group" style="grid-column: span 2;">
+                    <div class="form-group grid-span-2">
                         <label>Keterangan Pasien</label>
                         <input type="text" value="{{ $pasien->keterangan_pasien ?? '-' }}" disabled>
                     </div>
@@ -408,7 +421,7 @@
                     Keamanan Akun
                 </div>
                 <div class="form-grid">
-                    <div class="form-group" style="grid-column: span 2;">
+                    <div class="form-group grid-span-2">
                         <label>Ganti Password (Kosongkan jika tidak ingin mengubah)</label>
                         <input type="password" name="password" placeholder="Masukkan password baru...">
                     </div>

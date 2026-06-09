@@ -438,6 +438,121 @@
             .footer-grid { grid-template-columns: 1fr; }
             .footer-brand { grid-column: span 1; }
         }
+
+        @media (max-width: 576px) {
+            .navbar {
+                padding: 15px 16px;
+            }
+            .brand {
+                gap: 8px;
+            }
+            .brand img {
+                height: 38px;
+            }
+            .brand img:first-child {
+                display: none; /* Sembunyikan logo banyuwangi agar hemat tempat */
+            }
+            .brand-text h3 {
+                font-size: 13px;
+                font-weight: 800;
+            }
+            .brand-text span {
+                font-size: 9px;
+            }
+            .btn-login-nav {
+                padding: 10px 16px;
+                font-size: 12px;
+                border-radius: 10px;
+                gap: 6px;
+            }
+            .hero-body {
+                padding: 40px 20px 80px;
+                justify-content: center;
+                text-align: center;
+            }
+            .hero-text h1 {
+                font-size: 30px;
+                letter-spacing: -1px;
+                margin-bottom: 15px;
+            }
+            .hero-text p {
+                font-size: 14px;
+                margin-bottom: 30px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .hero-btns {
+                width: 100%;
+            }
+            .btn-main {
+                padding: 16px 24px;
+                font-size: 15px;
+                border-radius: 14px;
+                width: 100%;
+                justify-content: center;
+            }
+            section {
+                padding: 60px 16px;
+            }
+            .section-header {
+                margin-bottom: 40px;
+            }
+            .section-header h2 {
+                font-size: 26px;
+                letter-spacing: -0.5px;
+            }
+            .section-header p {
+                font-size: 14px;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .card {
+                padding: 35px 24px;
+                border-radius: 24px;
+            }
+            .card-icon {
+                width: 55px;
+                height: 55px;
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+            .card h3 {
+                font-size: 18px;
+                margin-bottom: 10px;
+            }
+            .card p {
+                font-size: 14px;
+            }
+            footer {
+                padding: 60px 16px 30px;
+            }
+            .footer-grid {
+                gap: 35px;
+            }
+            .footer-brand h2 {
+                font-size: 22px;
+                margin-bottom: 15px;
+            }
+            .footer-brand p {
+                font-size: 14px;
+            }
+            .footer-links h4 {
+                font-size: 15px;
+                margin-bottom: 20px;
+            }
+            .footer-links li {
+                margin-bottom: 12px;
+            }
+            .footer-links a, .contact-info li {
+                font-size: 14px;
+            }
+            .footer-bottom {
+                padding-top: 30px;
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>

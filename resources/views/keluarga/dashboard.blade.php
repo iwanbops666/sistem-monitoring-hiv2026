@@ -232,8 +232,8 @@
                                 {{ \Carbon\Carbon::parse($riwayat->tanggal_kunjungan)->format('d M Y') }}
                             </div>
                         </td>
-                        <td>Kontrol & Pengambilan Obat</td>
-                        <td>{{ $riwayat->catatan ?? '-' }}</td>
+                        <td data-label="Jenis Kunjungan">Kontrol & Pengambilan Obat</td>
+                        <td data-label="Catatan Petugas">{{ $riwayat->catatan ?? '-' }}</td>
                     </tr>
                 @empty
                     <tr>
@@ -266,14 +266,14 @@
             <tbody>
                 @forelse ($vl_riwayats as $vl)
                     <tr style="border-bottom: 1px solid #f1f5f9;">
-                        <td style="padding: 15px 0;">
+                        <td>
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 <i class="fa-regular fa-calendar" style="color: #6366f1;"></i>
                                 {{ \Carbon\Carbon::parse($vl->tanggal)->format('d M Y') }}
                             </div>
                         </td>
-                        <td style="padding: 15px 0; font-weight: 600; color: #475569;">{{ $vl->kunjungan }}</td>
-                        <td style="padding: 15px 0;">
+                        <td data-label="Tahap Kunjungan" style="font-weight: 600; color: #475569;">{{ $vl->kunjungan }}</td>
+                        <td data-label="Status Viral Load">
                             <span style="background: #eef2ff; color: #4f46e5; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700;">
                                 {{ $vl->status_viral_load }}
                             </span>

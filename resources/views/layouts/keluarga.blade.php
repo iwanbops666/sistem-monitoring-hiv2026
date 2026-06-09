@@ -9,6 +9,7 @@
     <link rel="manifest" href="/manifest.json">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
         * {
@@ -326,19 +327,243 @@
             color: #94a3b8;
         }
 
+        /* RESPONSIVE STYLING */
         @media (max-width: 1024px) {
             .keluarga-main { padding: 40px 30px; }
         }
 
         @media (max-width: 900px) {
-            .keluarga-sidebar { display: none; }
-            .keluarga-main { margin-left: 0; width: 100%; }
+            .keluarga-sidebar {
+                display: none;
+            }
+            
+            .mobile-header {
+                display: flex !important;
+            }
+            
+            .mobile-bottom-nav {
+                display: flex !important;
+            }
+            
+            .keluarga-main {
+                margin-left: 0;
+                width: 100%;
+                padding: 95px 16px 100px 16px !important; /* Spacing for fixed header and bottom nav */
+            }
+            
+            .keluarga-topbar {
+                display: none !important; /* Hide desktop topbar */
+            }
+
+            .keluarga-notif-panel {
+                top: 80px;
+                right: 16px;
+                left: 16px;
+                width: calc(100% - 32px);
+                max-height: calc(100vh - 180px);
+                z-index: 10001;
+            }
+
+            /* Responsive tables to card-like list on mobile */
+            .modern-table, .modern-table thead, .modern-table tbody, .modern-table th, .modern-table td, .modern-table tr,
+            table, table thead, table tbody, table th, table td, table tr {
+                display: block;
+                width: 100%;
+            }
+            
+            .modern-table thead, table thead {
+                display: none;
+            }
+            
+            .modern-table tr, table tr {
+                background: #ffffff;
+                border-radius: 18px;
+                margin-bottom: 16px;
+                padding: 20px;
+                border: 1px solid #e2e8f0;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+            }
+            
+            .modern-table tr td, table tr td {
+                background: transparent !important;
+                padding: 10px 0 !important;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-radius: 0 !important;
+                border-bottom: 1px dashed #f1f5f9;
+                text-align: left !important;
+            }
+            
+            .modern-table tr td:last-child, table tr td:last-child {
+                border-bottom: none;
+            }
+            
+            .modern-table tr td:first-child, table tr td:first-child {
+                font-weight: 800;
+                font-size: 16px;
+                color: #065f46;
+                border-bottom: 1.5px solid #f1f5f9;
+                padding-bottom: 12px !important;
+                margin-bottom: 8px;
+                display: block;
+            }
+            
+            .modern-table tr td[data-label]::before, table tr td[data-label]::before {
+                content: attr(data-label);
+                font-weight: 700;
+                color: #94a3b8;
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+        }
+
+        /* MOBILE BAR DESIGNS */
+        .mobile-header {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 75px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(229, 231, 235, 0.6);
+            padding: 0 20px;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+        }
+
+        .mobile-logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .mobile-logo-container img {
+            height: 42px;
+            width: 42px;
+            object-fit: contain;
+        }
+
+        .mobile-logo-text h3 {
+            font-size: 13px;
+            font-weight: 850;
+            color: #065f46;
+            line-height: 1.3;
+        }
+
+        .mobile-logo-text span {
+            font-size: 10px;
+            color: #10b981;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .mobile-action-btns {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mobile-action-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #475569;
+            font-size: 18px;
+            position: relative;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .mobile-action-btn:active {
+            transform: scale(0.92);
+            background: #f1f5f9;
+        }
+
+        /* Mobile Bottom Nav */
+        .mobile-bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-top: 1px solid rgba(229, 231, 235, 0.6);
+            box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
+            justify-content: space-around;
+            align-items: center;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .mobile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            height: 100%;
+            text-decoration: none;
+            color: #94a3b8;
+            font-size: 11px;
+            font-weight: 700;
+            gap: 5px;
+            transition: all 0.25s;
+        }
+
+        .mobile-nav-item i {
+            font-size: 19px;
+            transition: transform 0.25s, color 0.25s;
+        }
+
+        .mobile-nav-item.active {
+            color: #065f46;
+        }
+
+        .mobile-nav-item.active i {
+            transform: scale(1.15) translateY(-2px);
+            color: #10b981;
         }
     </style>
 </head>
 <body>
 
 <div class="keluarga-wrapper">
+    <!-- MOBILE HEADER -->
+    <header class="mobile-header">
+        <div class="mobile-logo-container">
+            <img src="{{ asset('assets/logo-puskesmas.png') }}" alt="Logo">
+            <div class="mobile-logo-text">
+                <h3>PUSKESMAS BENCULUK</h3>
+                <span>MONITORING HIV - KELUARGA</span>
+            </div>
+        </div>
+        <div class="mobile-action-btns">
+            <button type="button" class="mobile-action-btn" id="keluargaBellMobileButton">
+                <i class="fa-regular fa-bell"></i>
+                <span class="keluarga-bell-dot" style="display: {{ ($global_notifications ?? collect())->count() > 0 ? 'block' : 'none' }}; top: 12px; right: 12px; width: 8px; height: 8px; border-width: 1.5px;"></span>
+            </button>
+            <a href="{{ url('/logout') }}" class="mobile-action-btn" style="color: #ef4444;" title="Keluar">
+                <i class="fa-solid fa-power-off"></i>
+            </a>
+        </div>
+    </header>
+
     <aside class="keluarga-sidebar">
         <div class="sidebar-top">
             <div class="keluarga-logo">
@@ -393,6 +618,22 @@
 
         @yield('content')
     </main>
+
+    <!-- MOBILE BOTTOM NAVIGATION -->
+    <nav class="mobile-bottom-nav">
+        <a href="{{ url('/keluarga/dashboard') }}" class="mobile-nav-item {{ request()->is('keluarga/dashboard') ? 'active' : '' }}">
+            <i class="fa-solid fa-house-chimney"></i>
+            <span>Dashboard</span>
+        </a>
+        <a href="{{ url('/keluarga/profile') }}" class="mobile-nav-item {{ request()->is('keluarga/profile') ? 'active' : '' }}">
+            <i class="fa-solid fa-user-pen"></i>
+            <span>Profil</span>
+        </a>
+        <a href="{{ url('/logout') }}" class="mobile-nav-item">
+            <i class="fa-solid fa-power-off"></i>
+            <span>Keluar</span>
+        </a>
+    </nav>
 </div>
 
 {{-- NOTIFICATION PANEL --}}
@@ -427,23 +668,55 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const bell = document.getElementById('keluargaBellButton');
+        const bellMobile = document.getElementById('keluargaBellMobileButton');
         const panel = document.getElementById('keluargaNotifPanel');
         const close = document.getElementById('keluargaNotifClose');
 
-        if (bell && panel) {
-            bell.addEventListener('click', (e) => {
+        if (panel) {
+            const togglePanel = (e) => {
                 e.stopPropagation();
                 panel.classList.toggle('show');
-            });
+            };
+
+            if (bell) bell.addEventListener('click', togglePanel);
+            if (bellMobile) bellMobile.addEventListener('click', togglePanel);
 
             close.addEventListener('click', () => panel.classList.remove('show'));
 
             document.addEventListener('click', (e) => {
-                if (!panel.contains(e.target) && !bell.contains(e.target)) {
+                if (!panel.contains(e.target) && 
+                    (!bell || !bell.contains(e.target)) && 
+                    (!bellMobile || !bellMobile.contains(e.target))) {
                     panel.classList.remove('show');
                 }
             });
         }
+
+        // Logout Confirmation
+        const logoutLinks = document.querySelectorAll('a[href*="logout"], .keluarga-logout');
+        logoutLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetUrl = this.getAttribute('href');
+                Swal.fire({
+                    title: 'Keluar dari Sistem?',
+                    text: 'Apakah Anda yakin ingin keluar dari sistem monitoring HIV?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#10b981',
+                    cancelButtonColor: '#ef4444',
+                    confirmButtonText: 'Ya, Keluar!',
+                    cancelButtonText: 'Batal',
+                    customClass: {
+                        popup: 'logout-swal-popup'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = targetUrl;
+                    }
+                });
+            });
+        });
     });
 </script>
 

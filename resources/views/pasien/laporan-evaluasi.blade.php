@@ -166,9 +166,40 @@
             min-height: 52px;
         }
 
-        @media (max-width: 768px) {
-            .modal-grid { grid-template-columns: 1fr; }
-            .section-header { flex-direction: column; align-items: flex-start; gap: 15px; }
+        .grid-span-2 {
+            grid-column: span 2;
+        }
+
+        @media (max-width: 900px) {
+            .modal-box {
+                padding: 25px 20px;
+                max-height: 90vh;
+                border-radius: 20px;
+            }
+            .modal-close {
+                right: 15px;
+                top: 15px;
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+            }
+            .modal-header h2 {
+                font-size: 20px;
+                margin-bottom: 20px;
+                padding-right: 30px;
+            }
+            .modal-grid { 
+                grid-template-columns: 1fr; 
+                gap: 15px;
+            }
+            .grid-span-2 {
+                grid-column: span 1;
+            }
+            .section-header { 
+                flex-direction: column; 
+                align-items: flex-start; 
+                gap: 15px; 
+            }
         }
     </style>
 
@@ -203,11 +234,11 @@
                                         </span>
                                     @endif
                                 </td>
-                                <td style="font-weight: 800; color: #1e293b;">
+                                <td data-label="Kunjungan / Agenda" style="font-weight: 800; color: #1e293b;">
                                     {{ $record->record_type == 'clinical' ? '#' . $record->kunjungan : $record->kunjungan }}
                                 </td>
-                                <td>{{ \Carbon\Carbon::parse($record->tanggal)->format('d M Y') }}</td>
-                                <td>
+                                <td data-label="Tanggal Periksa">{{ \Carbon\Carbon::parse($record->tanggal)->format('d M Y') }}</td>
+                                <td data-label="Hasil / Status">
                                     @if($record->record_type == 'clinical')
                                         @php
                                             $statusMap = [
@@ -234,7 +265,7 @@
                                             <span style="font-size: 11px; font-weight: 600; color: #64748b;">
                                                 Status: {{ $statusLabel }}
                                             </span>
-                                        </div>
+                                         </div>
                                     @else
                                         <span style="padding: 4px 10px; background: #fff7ed; border-radius: 6px; font-size: 12px; font-weight: 700; color: #f97316;">
                                             VL: {{ $record->nilai_viral_load }}
