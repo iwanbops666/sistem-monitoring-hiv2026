@@ -256,7 +256,7 @@
                         <label>Nomor WhatsApp</label>
                         <div class="phone-input-wrapper">
                             <span>+62</span>
-                            <input type="text" name="no_hp" value="{{ substr($keluarga->no_hp, 1) }}">
+                            <input type="text" name="no_hp" value="{{ substr($keluarga->no_hp, 1) }}" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                         </div>
                     </div>
                     <div class="form-group">

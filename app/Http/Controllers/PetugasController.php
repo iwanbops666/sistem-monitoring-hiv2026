@@ -453,10 +453,11 @@ class PetugasController extends Controller
             'email_keluarga' => 'required|string',
             'password_keluarga' => 'required|min:6',
             'nomor_rm' => 'nullable|unique:pasien,nomor_rm',
-            'nik' => 'nullable|unique:pasien,nik',
+            'nik' => 'nullable|digits:16|unique:pasien,nik',
         ], [
             'nomor_rm.unique' => 'Nomor RM sudah terdaftar.',
             'nik.unique' => 'NIK sudah terdaftar.',
+            'nik.digits' => 'NIK harus terdiri dari 16 angka.',
         ]);
 
         // Custom validation for unique email or phone number

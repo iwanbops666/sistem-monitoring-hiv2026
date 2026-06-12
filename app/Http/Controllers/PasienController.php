@@ -42,7 +42,7 @@ class PasienController extends Controller
             'nama' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'no_hp' => 'required|string|max:20',
-            'nik' => 'nullable|string|max:20',
+            'nik' => 'nullable|digits:16',
             'tempat_lahir' => 'nullable|string|max:255',
             'tanggal_lahir' => 'nullable|date',
             'jenis_kelamin' => 'nullable|string',

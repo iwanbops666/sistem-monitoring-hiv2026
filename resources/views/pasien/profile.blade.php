@@ -256,7 +256,7 @@
                     </div>
                     <div class="form-group">
                         <label>NIK (Nomor Induk Kependudukan)</label>
-                        <input type="text" name="nik" value="{{ old('nik', $pasien->nik) }}">
+                        <input type="text" name="nik" value="{{ old('nik', $pasien->nik) }}" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')" minlength="16" maxlength="16">
                     </div>
                     <div class="form-group">
                         <label>Tempat Lahir</label>
@@ -310,11 +310,11 @@
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                             <div class="form-group">
                                 <label>RT</label>
-                                <input type="text" name="rt" value="{{ old('rt', $pasien->rt ?? '') }}">
+                                <input type="text" name="rt" value="{{ old('rt', $pasien->rt ?? '') }}" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                             </div>
                             <div class="form-group">
                                 <label>RW</label>
-                                <input type="text" name="rw" value="{{ old('rw', $pasien->rw ?? '') }}">
+                                <input type="text" name="rw" value="{{ old('rw', $pasien->rw ?? '') }}" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                             </div>
                         </div>
                     </div>
@@ -332,13 +332,13 @@
                     </div>
                     <div class="form-group">
                         <label>Kode Pos</label>
-                        <input type="text" name="kode_pos" value="{{ old('kode_pos', $pasien->kode_pos ?? '') }}">
+                        <input type="text" name="kode_pos" value="{{ old('kode_pos', $pasien->kode_pos ?? '') }}" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                     </div>
                     <div class="form-group">
                         <label>Nomor WhatsApp</label>
                         <div class="phone-input-wrapper">
                             <span>+62</span>
-                            <input type="text" name="no_hp" value="{{ old('no_hp', substr($pasien->no_hp, 1)) }}">
+                            <input type="text" name="no_hp" value="{{ old('no_hp', substr($pasien->no_hp, 1)) }}" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                         </div>
                     </div>
                     <div class="form-group">
