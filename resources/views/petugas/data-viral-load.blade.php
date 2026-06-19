@@ -119,7 +119,7 @@
             <button id="closeHistoryModal" style="position: absolute; top: 25px; right: 25px; border: none; background: #f1f5f9; width: 35px; height: 35px; border-radius: 10px; cursor: pointer; color: #64748b;">&times;</button>
             
             <h2 style="font-size: 22px; font-weight: 900; color: #1e293b; margin-bottom: 10px; display: flex; align-items: center; gap: 12px;">
-                <i class="fa-solid fa-history" style="color: #6366f1;"></i>
+                <i class="fa-solid fa-vial-virus" style="color: #6366f1;"></i>
                 Riwayat Pemeriksaan Viral Load
             </h2>
             <p style="color: #64748b; margin-bottom: 30px; font-weight: 500;">Pasien: <span id="history_patient_name" style="color: #1e293b; font-weight: 800;">-</span></p>
@@ -172,13 +172,30 @@
                             historyTableBody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 40px; color: #94a3b8;">Belum ada riwayat Viral Load tercatat di laporan evaluasi.</td></tr>';
                         } else {
                             vlHistory.forEach(item => {
+                                let statusText = item.status_viral_load;
+                                let badgeStyle = '';
+                                
+                                if (statusText.includes('Sudah')) {
+                                    statusText = statusText.replace('Sudah Dilakukan Viraload ', 'Selesai (');
+                                    if (statusText.includes('Selesai (')) statusText += ')';
+                                    
+                                    badgeStyle = 'background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0;';
+                                } else if (statusText.includes('Belum')) {
+                                    badgeStyle = 'background: #fffbeb; color: #d97706; border: 1px solid #fde68a;';
+                                } else {
+                                    badgeStyle = 'background: #eef2ff; color: #4f46e5; border: 1px solid #e0e7ff;';
+                                }
+
                                 const row = `
-                                    <tr style="background: #f8fafc; border-radius: 12px;">
-                                        <td style="padding: 15px; font-weight: 700; color: #1e293b;">${new Date(item.tanggal).toLocaleDateString('id-ID', {day: '2-digit', month: 'long', year: 'numeric'})}</td>
+                                    <tr style="background: #f8fafc; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                                        <td style="padding: 15px; font-weight: 700; color: #1e293b; border-top-left-radius: 12px; border-bottom-left-radius: 12px;">
+                                            <i class="fa-regular fa-calendar" style="color: #6366f1; margin-right: 8px;"></i>
+                                            ${new Date(item.tanggal).toLocaleDateString('id-ID', {day: '2-digit', month: 'short', year: 'numeric'})}
+                                        </td>
                                         <td style="padding: 15px; color: #64748b; font-weight: 600;">${item.kunjungan}</td>
-                                        <td style="padding: 15px;">
-                                            <span style="background: #eef2ff; color: #4f46e5; padding: 6px 12px; border-radius: 8px; font-size: 13px; font-weight: 700; border: 1px solid #e0e7ff;">
-                                                ${item.status_viral_load}
+                                        <td style="padding: 15px; border-top-right-radius: 12px; border-bottom-right-radius: 12px;">
+                                            <span style="display: inline-block; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; ${badgeStyle}">
+                                                ${statusText}
                                             </span>
                                         </td>
                                     </tr>

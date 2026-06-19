@@ -247,35 +247,47 @@
     </div>
 
     <!-- RIWAYAT VIRAL LOAD -->
-    <div style="background: white; border-radius: 20px; padding: 30px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-top: 30px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h2 style="font-size: 18px; font-weight: 800; color: #1e293b; margin: 0; display: flex; align-items: center; gap: 10px;">
+    <div class="history-card" style="margin-top: 30px;">
+        <div class="card-header">
+            <h2 style="display: flex; align-items: center; gap: 10px;">
                 <i class="fa-solid fa-vial-circle-check" style="color: #6366f1;"></i>
                 Riwayat Pemeriksaan Viral Load
             </h2>
         </div>
 
-        <table style="width: 100%; border-collapse: collapse;">
+        <table class="modern-table">
             <thead>
-                <tr style="text-align: left; border-bottom: 2px solid #f1f5f9;">
-                    <th style="padding: 15px 0; color: #64748b; font-size: 12px; text-transform: uppercase;">Tanggal</th>
-                    <th style="padding: 15px 0; color: #64748b; font-size: 12px; text-transform: uppercase;">Tahap Kunjungan</th>
-                    <th style="padding: 15px 0; color: #64748b; font-size: 12px; text-transform: uppercase;">Status Viral Load</th>
+                <tr>
+                    <th>Tanggal</th>
+                    <th>Tahap Kunjungan</th>
+                    <th>Status Viral Load</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse ($vl_riwayats as $vl)
-                    <tr style="border-bottom: 1px solid #f1f5f9;">
-                        <td>
+                    <tr>
+                        <td data-label="Tanggal">
                             <div style="display: flex; align-items: center; gap: 10px;">
                                 <i class="fa-regular fa-calendar" style="color: #6366f1;"></i>
                                 {{ \Carbon\Carbon::parse($vl->tanggal)->format('d M Y') }}
                             </div>
                         </td>
-                        <td data-label="Tahap Kunjungan" style="font-weight: 600; color: #475569;">{{ $vl->kunjungan }}</td>
+                        <td data-label="Tahap Kunjungan">{{ $vl->kunjungan }}</td>
                         <td data-label="Status Viral Load">
-                            <span style="background: #eef2ff; color: #4f46e5; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700;">
-                                {{ $vl->status_viral_load }}
+                            @php
+                                $statusText = $vl->status_viral_load;
+                                $badgeStyle = 'background: #eef2ff; color: #4f46e5; border: 1px solid #e0e7ff;';
+                                
+                                if (str_contains($statusText, 'Sudah')) {
+                                    $statusText = str_replace('Sudah Dilakukan Viraload ', 'Selesai (', $statusText);
+                                    if (str_contains($statusText, 'Selesai (')) $statusText .= ')';
+                                    $badgeStyle = 'background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0;';
+                                } elseif (str_contains($statusText, 'Belum')) {
+                                    $badgeStyle = 'background: #fffbeb; color: #d97706; border: 1px solid #fde68a;';
+                                }
+                            @endphp
+                            <span style="display: inline-block; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; {{ $badgeStyle }}">
+                                {{ $statusText }}
                             </span>
                         </td>
                     </tr>
