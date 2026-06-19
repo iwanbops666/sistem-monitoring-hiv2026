@@ -94,3 +94,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/push-subscriptions', [PushSubscriptionController::class, 'update']);
     Route::delete('/push-subscriptions', [PushSubscriptionController::class, 'destroy']);
 });
+
+// ROUTE SEMENTARA UNTUK DEPLOY (Hapus jika sudah berhasil)
+Route::get('/seed-database', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate:fresh', [
+            '--seed' => true,
+            '--force' => true
+        ]);
+        return 'Sukses bro! Database berhasil di-migrate dan di-seed. Data Pasien sudah masuk. Sekarang hapus route ini di file routes/web.php demi keamanan.';
+    } catch (\Exception $e) {
+        return 'Gagal: ' . $e->getMessage();
+    }
+});
