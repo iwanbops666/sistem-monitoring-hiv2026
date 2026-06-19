@@ -14,6 +14,8 @@ class Petugas extends Model
         'user_id',
         'nip',
         'nama',
+        'tanggal_lahir',
+        'jenis_kelamin',
         'no_hp',
         'alamat',
     ];

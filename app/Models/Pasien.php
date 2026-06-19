@@ -114,22 +114,24 @@ class Pasien extends Model
 
     public function getViralLoadStatusAttribute()
     {
-        if (!$this->tanggal_awal_pengobatan) {
-            return 'Data Perawatan Kosong';
+        $mulaiArt = $this->laporanEvaluasi()->where('kunjungan', 'Saat Mulai ART')->orderBy('tanggal', 'asc')->first();
+
+        if (!$mulaiArt) {
+            return 'Belum Mulai ART';
         }
 
-        $start = \Carbon\Carbon::parse($this->tanggal_awal_pengobatan);
+        $start = \Carbon\Carbon::parse($mulaiArt->tanggal);
         $now = now();
         $diffMonths = $start->diffInMonths($now);
 
         // 1. Initial 6-month check
         $hasM6 = $this->dataPengobatan()
-            ->where('kategori_viral_load', 'Viraload 6 Bulan Awal')
-            ->orWhere(function($q) use ($start) {
-                $q->whereBetween('tanggal', [
-                    $start->copy()->addMonths(6)->subMonths(2),
-                    $start->copy()->addMonths(6)->addMonths(2)
-                ]);
+            ->where(function($query) use ($start) {
+                $query->where('kategori_viral_load', 'Viraload 6 Bulan Awal')
+                      ->orWhereBetween('tanggal', [
+                          $start->copy()->addMonths(6)->subMonths(2),
+                          $start->copy()->addMonths(6)->addMonths(2)
+                      ]);
             })->exists();
 
         if ($diffMonths >= 6 && $diffMonths < 12 && !$hasM6) {
@@ -138,11 +140,13 @@ class Pasien extends Model
 
         // 2. 1-Year check (12 months)
         $hasM12 = $this->dataPengobatan()
-            ->where('kategori_viral_load', 'Viraload Tahunan Rutin')
-            ->whereBetween('tanggal', [
-                $start->copy()->addMonths(12)->subMonths(3),
-                $start->copy()->addMonths(12)->addMonths(3)
-            ])->exists();
+            ->where(function($query) use ($start) {
+                $query->where('kategori_viral_load', 'Viraload Tahunan Rutin')
+                      ->orWhereBetween('tanggal', [
+                          $start->copy()->addMonths(12)->subMonths(3),
+                          $start->copy()->addMonths(12)->addMonths(3)
+                      ]);
+            })->exists();
 
         if ($diffMonths >= 12 && !$hasM12 && $diffMonths < 24) {
             return 'Perlu Cek VL (1 Tahun)';
@@ -178,9 +182,13 @@ class Pasien extends Model
 
     public function getNextViralLoadDateAttribute()
     {
-        if (!$this->tanggal_awal_pengobatan) return null;
+        $mulaiArt = $this->laporanEvaluasi()->where('kunjungan', 'Saat Mulai ART')->orderBy('tanggal', 'asc')->first();
 
-        $start = \Carbon\Carbon::parse($this->tanggal_awal_pengobatan);
+        if (!$mulaiArt) {
+            return null;
+        }
+
+        $start = \Carbon\Carbon::parse($mulaiArt->tanggal);
         $now = now();
         $diffMonths = $start->diffInMonths($now);
 

@@ -265,7 +265,7 @@
                 <th>Nama Pasien</th>
                 <th style="width: 80px; text-align: center;">No. RM</th>
                 <th style="width: 90px; text-align: center;">NIK</th>
-                <th style="width: 70px; text-align: center;">Gender</th>
+                <th style="width: 70px; text-align: center;">Jenis Kelamin</th>
                 <th style="width: 60px; text-align: center;">Status</th>
                 <th style="width: 100px; text-align: center;">Awal Obat</th>
             </tr>

@@ -243,7 +243,7 @@
                         <th>No RM</th>
                         <th>Regis Nasional</th>
                         <th>WhatsApp</th>
-                        <th>Gender</th>
+                        <th>Jenis Kelamin</th>
                         <th style="text-align: right;">Aksi</th>
                     </tr>
                 </thead>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Sistem Monitoring Pasien HIV')</title>
-
+    <link rel="icon" type="image/png" href="{{ asset('assets/logo-puskesmas.png') }}">
     <link rel="manifest" href="/manifest.json">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -722,13 +722,31 @@
     </aside>
 
     <main class="main-content">
+        @php
+            $hasPassWarning = Auth::check() && Auth::user()->updated_at->diffInMonths(now()) >= 3;
+            $hasGlobalNotif = collect($global_notifications ?? [])->count() > 0;
+            $ltfuPasien = [];
+            $inactivePasien = [];
+            if (Auth::check() && Auth::user()->role === 'petugas') {
+                $semuaPasien = \App\Models\Pasien::all();
+                $ltfuPasien = $semuaPasien->filter(function($p) {
+                    return $p->display_status === 'LTFU';
+                });
+                $inactivePasien = $semuaPasien->filter(function($p) {
+                    return $p->display_status === 'Inactive';
+                });
+            }
+            $hasLtfuNotif = count($ltfuPasien) > 0;
+            $hasInactiveNotif = count($inactivePasien) > 0;
+        @endphp
+
         <div class="topbar">
             <h1 class="page-title">@yield('title')</h1>
 
             <div class="user-area">
                 <button type="button" class="petugas-bell" id="petugasBellButton">
                     <i class="fa-regular fa-bell"></i>
-                    <span class="petugas-bell-dot"></span>
+                    <span class="petugas-bell-dot" style="display: {{ (isset($hasPassWarning) && $hasPassWarning) || (isset($hasGlobalNotif) && $hasGlobalNotif) || (isset($hasLtfuNotif) && $hasLtfuNotif) || (isset($hasInactiveNotif) && $hasInactiveNotif) ? 'block' : 'none' }};"></span>
                 </button>
 
                 <div class="petugas-user">
@@ -769,7 +787,47 @@
         </button>
     </div>
     <div class="notif-body">
-        @forelse($global_notifications ?? [] as $notif)
+
+        @if($hasPassWarning)
+            <div class="notif-item">
+                <div class="notif-icon-circle" style="background: #fee2e2; color: #ef4444;">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div class="notif-content">
+                    <h5>Peringatan Keamanan</h5>
+                    <p>Kata sandi Anda belum diperbarui lebih dari 3 bulan. Harap segera perbarui kata sandi untuk menjaga keamanan.</p>
+                    <small>Sistem Keamanan</small>
+                </div>
+            </div>
+        @endif
+
+        @if($hasLtfuNotif)
+            <a href="{{ url('manajemen-pasien/data-pasien?status=ltfu') }}" style="text-decoration: none; color: inherit;" class="notif-item">
+                <div class="notif-icon-circle" style="background: #fffbeb; color: #f59e0b;">
+                    <i class="fa-solid fa-user-clock"></i>
+                </div>
+                <div class="notif-content">
+                    <h5>Ada {{ count($ltfuPasien) }} Pasien LTFU!</h5>
+                    <p>Terdapat pasien yang sudah mangkir kontrol / putus berobat lebih dari 2 bulan. Harap segera lakukan pelacakan.</p>
+                    <small>Sistem Monitoring</small>
+                </div>
+            </a>
+        @endif
+
+        @if($hasInactiveNotif)
+            <a href="{{ url('manajemen-pasien/data-pasien?status=inactive') }}" style="text-decoration: none; color: inherit;" class="notif-item">
+                <div class="notif-icon-circle" style="background: #ffedd5; color: #f97316;">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div class="notif-content">
+                    <h5>Ada {{ count($inactivePasien) }} Pasien Inactive!</h5>
+                    <p>Terdapat pasien yang terlambat kontrol lebih dari 7 hari namun belum mencapai kriteria LTFU. Mohon untuk memonitor pasien ini.</p>
+                    <small>Sistem Monitoring</small>
+                </div>
+            </a>
+        @endif
+
+        @foreach($global_notifications ?? [] as $notif)
             <div class="notif-item">
                 <div class="notif-icon-circle">
                     <i class="fa-solid fa-circle-info"></i>
@@ -780,11 +838,13 @@
                     <small>{{ $notif->created_at->diffForHumans() }}</small>
                 </div>
             </div>
-        @empty
+        @endforeach
+
+        @if(!$hasPassWarning && !$hasGlobalNotif && !$hasLtfuNotif && !$hasInactiveNotif)
             <div style="padding: 40px 20px; text-align: center; color: #94a3b8;">
                 <p>Belum ada notifikasi baru</p>
             </div>
-        @endforelse
+        @endif
     </div>
 </div>
 

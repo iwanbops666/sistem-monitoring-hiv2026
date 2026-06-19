@@ -188,7 +188,16 @@
                             <option value="Memenuhi Syarat Medis ART">Memenuhi Syarat Medis ART</option>
                             <option value="Saat Mulai ART">Saat Mulai ART</option>
                             <option value="Setelah 6 Bulan ART">Setelah 6 Bulan ART</option>
-                            <option value="Setelah 12 Bulan ART">Setelah 12 Bulan ART</option>
+                            <option value="Setelah 1 Tahun ART">Setelah 1 Tahun ART</option>
+                            <option value="Setelah 2 Tahun ART">Setelah 2 Tahun ART</option>
+                            <option value="Setelah 3 Tahun ART">Setelah 3 Tahun ART</option>
+                            <option value="Setelah 4 Tahun ART">Setelah 4 Tahun ART</option>
+                            <option value="Setelah 5 Tahun ART">Setelah 5 Tahun ART</option>
+                            <option value="Setelah 6 Tahun ART">Setelah 6 Tahun ART</option>
+                            <option value="Setelah 7 Tahun ART">Setelah 7 Tahun ART</option>
+                            <option value="Setelah 8 Tahun ART">Setelah 8 Tahun ART</option>
+                            <option value="Setelah 9 Tahun ART">Setelah 9 Tahun ART</option>
+                            <option value="Setelah 10 Tahun ART">Setelah 10 Tahun ART</option>
                         </select>
                     </div>
 

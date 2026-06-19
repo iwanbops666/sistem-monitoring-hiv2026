@@ -332,7 +332,7 @@
                             <th>Nama Pasien</th>
                             <th>No RM</th>
                             <th>Regis Nasional</th>
-                            <th>Gender</th>
+                            <th>Jenis Kelamin</th>
                             <th>Status Monitoring</th>
                         </tr>
                     </thead>
