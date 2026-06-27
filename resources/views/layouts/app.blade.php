@@ -1047,6 +1047,15 @@
                 confirmButtonColor: '#ef4444'
             });
         @endif
+
+        @if($errors->any())
+            Swal.fire({
+                icon: 'error',
+                title: 'Validasi Gagal!',
+                html: "{!! implode('<br>', $errors->all()) !!}",
+                confirmButtonColor: '#ef4444'
+            });
+        @endif
     </script>
 </body>
 </html>
