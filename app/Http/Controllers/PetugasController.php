@@ -626,6 +626,40 @@ class PetugasController extends Controller
             return $phone;
         };
 
+        // Validasi Email / No HP Pasien
+        if ($pasien->user && $request->email_pasien) {
+            $loginPasien = $request->email_pasien;
+            $isEmailPasien = filter_var($loginPasien, FILTER_VALIDATE_EMAIL);
+            $formattedLoginPasien = $isEmailPasien ? $loginPasien : $formatPhone($loginPasien);
+            
+            if ($isEmailPasien) {
+                if (\App\Models\User::where('email', $formattedLoginPasien)->where('id', '!=', $pasien->user_id)->exists()) {
+                    return back()->withErrors(['email_pasien' => 'Email pasien telah digunakan.'])->withInput();
+                }
+            } else {
+                if (\App\Models\User::where('phone_number', $formattedLoginPasien)->where('id', '!=', $pasien->user_id)->exists()) {
+                    return back()->withErrors(['email_pasien' => 'Nomor HP pasien telah digunakan.'])->withInput();
+                }
+            }
+        }
+
+        // Validasi Email / No HP Keluarga
+        if ($pasien->keluarga && $pasien->keluarga->user_id && $request->email_keluarga) {
+            $loginKeluarga = $request->email_keluarga;
+            $isEmailKeluarga = filter_var($loginKeluarga, FILTER_VALIDATE_EMAIL);
+            $formattedLoginKeluarga = $isEmailKeluarga ? $loginKeluarga : $formatPhone($loginKeluarga);
+            
+            if ($isEmailKeluarga) {
+                if (\App\Models\User::where('email', $formattedLoginKeluarga)->where('id', '!=', $pasien->keluarga->user_id)->exists()) {
+                    return back()->withErrors(['email_keluarga' => 'Email keluarga telah digunakan.'])->withInput();
+                }
+            } else {
+                if (\App\Models\User::where('phone_number', $formattedLoginKeluarga)->where('id', '!=', $pasien->keluarga->user_id)->exists()) {
+                    return back()->withErrors(['email_keluarga' => 'Nomor HP keluarga telah digunakan.'])->withInput();
+                }
+            }
+        }
+
         // 1. Update Pasien Profile
         $pasien->update($request->all());
         $pasien->update(['no_hp' => $formatPhone($request->no_hp)]);

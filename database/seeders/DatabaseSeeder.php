@@ -36,7 +36,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Seeder DummyPasienSeeder will generate all 11 patients and their related data
-
         $this->call(DummyPasienSeeder::class);
     }
 }
