@@ -666,12 +666,13 @@ class PetugasController extends Controller
 
         // 2. Update Pasien User (Login Identifier)
         if ($pasien->user) {
+            $userData = ['name' => $request->nama];
+            
             $loginPasien = $request->email_pasien;
             if ($loginPasien) {
                 $isEmailPasien = filter_var($loginPasien, FILTER_VALIDATE_EMAIL);
                 $formattedLogin = $isEmailPasien ? $loginPasien : $formatPhone($loginPasien);
                 
-                $userData = ['name' => $request->nama];
                 if ($isEmailPasien) {
                     $userData['email'] = $formattedLogin;
                     $userData['phone_number'] = $formatPhone($request->no_hp);
@@ -679,13 +680,13 @@ class PetugasController extends Controller
                     $userData['email'] = null;
                     $userData['phone_number'] = $formattedLogin;
                 }
-                
-                if ($request->password_pasien) {
-                    $userData['password'] = \Illuminate\Support\Facades\Hash::make($request->password_pasien);
-                }
-                
-                $pasien->user->update($userData);
             }
+            
+            if ($request->filled('password_pasien')) {
+                $userData['password'] = \Illuminate\Support\Facades\Hash::make($request->password_pasien);
+            }
+            
+            $pasien->user->update($userData);
         }
 
         // 3. Update Keluarga Profile
@@ -704,12 +705,13 @@ class PetugasController extends Controller
 
             // Update Keluarga User (Login Identifier)
             if ($pasien->keluarga->user) {
+                $userKData = ['name' => $request->nama_keluarga ?: 'Keluarga ' . $request->nama];
+                
                 $loginKeluarga = $request->email_keluarga;
                 if ($loginKeluarga) {
                     $isEmailKeluarga = filter_var($loginKeluarga, FILTER_VALIDATE_EMAIL);
                     $formattedLoginK = $isEmailKeluarga ? $loginKeluarga : $formatPhone($loginKeluarga);
                     
-                    $userKData = ['name' => $request->nama_keluarga ?: 'Keluarga ' . $request->nama];
                     if ($isEmailKeluarga) {
                         $userKData['email'] = $formattedLoginK;
                         $userKData['phone_number'] = $formatPhone($request->no_hp_keluarga);
@@ -717,13 +719,13 @@ class PetugasController extends Controller
                         $userKData['email'] = null;
                         $userKData['phone_number'] = $formattedLoginK;
                     }
-                    
-                    if ($request->password_keluarga) {
-                        $userKData['password'] = \Illuminate\Support\Facades\Hash::make($request->password_keluarga);
-                    }
-                    
-                    $pasien->keluarga->user->update($userKData);
                 }
+                
+                if ($request->filled('password_keluarga')) {
+                    $userKData['password'] = \Illuminate\Support\Facades\Hash::make($request->password_keluarga);
+                }
+                
+                $pasien->keluarga->user->update($userKData);
             }
         }
 

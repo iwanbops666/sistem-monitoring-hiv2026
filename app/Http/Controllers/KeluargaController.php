@@ -44,10 +44,22 @@ class KeluargaController extends Controller
         $user = Auth::user();
         $keluarga = $user->keluarga;
 
-        $user->update([
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|min:6',
+        ]);
+
+        $userData = [
             'name' => $request->nama,
             'email' => $request->email,
-        ]);
+        ];
+
+        if ($request->filled('password')) {
+            $userData['password'] = \Illuminate\Support\Facades\Hash::make($request->password);
+        }
+
+        $user->update($userData);
 
         if ($request->hasFile('foto_profil')) {
             if ($user->foto_profil) {

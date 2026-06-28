@@ -48,12 +48,19 @@ class PasienController extends Controller
             'jenis_kelamin' => 'nullable|string',
             'agama' => 'nullable|string',
             'alamat_lengkap' => 'nullable|string|max:500',
+            'password' => 'nullable|min:6',
         ]);
 
-        $user->update([
+        $userData = [
             'name' => $request->nama,
             'email' => $request->email,
-        ]);
+        ];
+
+        if ($request->filled('password')) {
+            $userData['password'] = \Illuminate\Support\Facades\Hash::make($request->password);
+        }
+
+        $user->update($userData);
 
         if ($request->hasFile('foto_profil')) {
             if ($user->foto_profil) {
