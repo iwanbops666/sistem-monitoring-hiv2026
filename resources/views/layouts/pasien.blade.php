@@ -114,7 +114,7 @@
 
         .pasien-logout {
             width: 100%;
-            background: rgba(255, 255, 255, 0.08);
+            background: #dc2626;
             color: #ffffff;
             border-radius: 14px;
             padding: 14px 20px;
@@ -125,13 +125,13 @@
             font-size: 15px;
             font-weight: 700;
             transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid #b91c1c;
         }
 
         .pasien-logout:hover {
-            background: #ef4444;
-            border-color: #ef4444;
-            box-shadow: 0 8px 15px rgba(239, 68, 68, 0.3);
+            background: #b91c1c;
+            border-color: #991b1b;
+            box-shadow: 0 8px 15px rgba(220, 38, 38, 0.2);
         }
 
         /* CONTENT */
@@ -558,7 +558,7 @@
                 <i class="fa-regular fa-bell"></i>
                 <span class="pasien-bell-dot" style="display: {{ ($global_notifications ?? collect())->count() > 0 ? 'block' : 'none' }}; top: 12px; right: 12px; width: 8px; height: 8px; border-width: 1.5px;"></span>
             </button>
-            <a href="{{ url('/logout') }}" class="mobile-action-btn" style="color: #ef4444;" title="Keluar">
+            <a href="{{ url('/logout') }}" class="mobile-action-btn" style="background: #dc2626; color: #ffffff; border-color: #b91c1c;" title="Keluar">
                 <i class="fa-solid fa-power-off"></i>
             </a>
         </div>

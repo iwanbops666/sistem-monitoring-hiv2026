@@ -391,23 +391,23 @@
             <section class="profile-section-card">
                 <div class="section-title">
                     <i class="fa-solid fa-people-roof"></i>
-                    Data Keluarga / PMO (Pengawas Menelan Obat)
+                    Data PMO (Pendamping Minum Obat)
                 </div>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label>Nama Keluarga</label>
+                        <label>Nama PMO</label>
                         <input type="text" value="{{ $pasien->keluarga->nama }}" disabled>
                     </div>
                     <div class="form-group">
-                        <label>Hubungan</label>
-                        <input type="text" value="{{ $pasien->keluarga->hubungan ?? '-' }}" disabled>
+                        <label>Status Hubungan</label>
+                        <input type="text" value="{{ $pasien->keluarga->status_hubungan ?? '-' }}" disabled>
                     </div>
                     <div class="form-group">
-                        <label>Nomor WhatsApp Keluarga</label>
+                        <label>Nomor WhatsApp PMO</label>
                         <input type="text" value="{{ $pasien->keluarga->no_hp }}" disabled>
                     </div>
                     <div class="form-group">
-                        <label>Alamat Keluarga</label>
+                        <label>Alamat PMO</label>
                         <input type="text" value="{{ $pasien->keluarga->alamat }}" disabled>
                     </div>
                 </div>

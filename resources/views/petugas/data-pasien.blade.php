@@ -483,61 +483,77 @@
                                 </div>
                             </div>
 
-                            {{-- CARD 5: DATA KELUARGA / PMO --}}
+                            {{-- CARD 5: DATA PMO --}}
                             <div class="identitas-card">
                                 <div class="identitas-section-title">
                                     <i class="fa-solid fa-users"></i> Penanggung Jawab / PMO
                                 </div>
 
-                                <div class="identitas-group">
-                                    <label>Nama Lengkap Keluarga / PMO</label>
-                                    <input type="text" name="nama_keluarga" placeholder="Nama Lengkap Penanggung Jawab">
-                                </div>
-
-                                <div class="identitas-group">
-                                    <label>Nomor WhatsApp Keluarga</label>
-                                    <div class="phone-input-wrapper">
-                                        <span>+62</span>
-                                        <input type="text" name="no_hp_keluarga" placeholder="812xxxx">
+                                <div class="identitas-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                    <div>
+                                        <label>Nama Lengkap PMO</label>
+                                        <input type="text" name="nama_keluarga" placeholder="Nama Lengkap Penanggung Jawab" style="width: 100%;">
+                                    </div>
+                                    <div>
+                                        <label>Status Hubungan</label>
+                                        <input type="text" name="status_hubungan" list="edit_status_options" placeholder="Pilih atau ketik status..." style="width: 100%;" required autocomplete="off">
+                                        <datalist id="edit_status_options">
+                                            <option value="Suami">
+                                            <option value="Istri">
+                                            <option value="Saudara">
+                                            <option value="Orangtua">
+                                        </datalist>
                                     </div>
                                 </div>
 
+
                                 <div class="identitas-group">
-                                    <label>Alamat Lengkap Keluarga</label>
-                                    <input type="text" name="alamat_keluarga" placeholder="Alamat Lengkap Keluarga">
+                                    <label>Alamat Lengkap PMO</label>
+                                    <input type="text" name="alamat_keluarga" placeholder="Alamat Lengkap PMO">
+                                </div>
+
+                                <div class="identitas-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                        <div>
+                                            <label>RT PMO</label>
+                                            <input type="text" name="rt_keluarga" placeholder="000">
+                                        </div>
+                                        <div>
+                                            <label>RW PMO</label>
+                                            <input type="text" name="rw_keluarga" placeholder="000">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label>Nomor WhatsApp PMO</label>
+                                        <div class="phone-input-wrapper">
+                                            <span>+62</span>
+                                            <input type="text" name="no_hp_keluarga" placeholder="812xxxx" style="width: 100%;">
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="identitas-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                                     <div>
-                                        <label>RT Keluarga</label>
-                                        <input type="text" name="rt_keluarga" placeholder="000">
-                                    </div>
-                                    <div>
-                                        <label>RW Keluarga</label>
-                                        <input type="text" name="rw_keluarga" placeholder="000">
-                                    </div>
-                                </div>
-
-                                <div class="identitas-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                                    <div>
-                                        <label>Kecamatan Keluarga</label>
+                                        <label>Kecamatan PMO</label>
                                         <input type="text" name="kecamatan_keluarga" placeholder="Kecamatan">
                                     </div>
                                     <div>
-                                        <label>Kabupaten Keluarga</label>
+                                        <label>Kabupaten PMO</label>
                                         <input type="text" name="kabupaten_keluarga" placeholder="Kabupaten">
                                     </div>
                                 </div>
 
                                 <div style="border-top: 1px dashed #e2e8f0; margin: 25px 0; padding-top: 25px;"></div>
 
-                                <div class="identitas-group">
-                                    <label>Username / Email Keluarga</label>
-                                    <input type="text" name="email_keluarga" placeholder="Akses login keluarga">
-                                </div>
-                                <div class="identitas-group">
-                                    <label>Password Keluarga (Kosongkan jika tetap)</label>
-                                    <input type="password" name="password_keluarga" placeholder="********">
+                                <div class="identitas-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                    <div>
+                                        <label>Username / Email PMO</label>
+                                        <input type="text" name="email_keluarga" placeholder="Akses login PMO" style="width: 100%;">
+                                    </div>
+                                    <div>
+                                        <label>Password PMO (Kosongkan jika tetap)</label>
+                                        <input type="password" name="password_keluarga" placeholder="********" style="width: 100%;">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -594,6 +610,7 @@
 
                                 if (data.keluarga) {
                                     form.querySelector('[name="nama_keluarga"]').value = data.keluarga.nama || '';
+                                    form.querySelector('[name="status_hubungan"]').value = data.keluarga.status_hubungan || '';
                                     form.querySelector('[name="no_hp_keluarga"]').value = data.keluarga.no_hp ? data.keluarga.no_hp.replace('+62', '') : '';
                                     form.querySelector('[name="alamat_keluarga"]').value = data.keluarga.alamat || '';
                                     form.querySelector('[name="rt_keluarga"]').value = data.keluarga.rt || '';
@@ -613,6 +630,7 @@
                 closeIdentitasButton.addEventListener('click', () => identitasModal.classList.remove('show'));
                 document.getElementById('cancelIdentitas').addEventListener('click', () => identitasModal.classList.remove('show'));
                 identitasModal.addEventListener('click', (e) => { if (e.target === identitasModal) identitasModal.classList.remove('show'); });
+
             });
         </script>
     @endpush

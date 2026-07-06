@@ -592,6 +592,7 @@ class PetugasController extends Controller
                 'user_id' => $userKeluarga->id,
                 'pasien_id' => $userPasien->id,
                 'nama' => $request->nama_keluarga ?: 'Keluarga ' . $request->nama,
+                'status_hubungan' => $request->status_hubungan,
                 'no_hp' => $hpKeluarga,
                 'alamat' => $request->alamat_keluarga,
                 'rt' => $request->rt_keluarga,
@@ -693,6 +694,7 @@ class PetugasController extends Controller
         if ($pasien->keluarga) {
             $pasien->keluarga->update([
                 'nama' => $request->nama_keluarga,
+                'status_hubungan' => $request->status_hubungan,
                 'no_hp' => $formatPhone($request->no_hp_keluarga),
                 'alamat' => $request->alamat_keluarga,
                 'rt' => $request->rt_keluarga,

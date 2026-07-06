@@ -14,6 +14,7 @@ class Keluarga extends Model
         'user_id',
         'pasien_id',
         'nama',
+        'status_hubungan',
         'no_hp',
         'alamat',
         'rt',

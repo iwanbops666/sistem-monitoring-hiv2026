@@ -230,7 +230,7 @@
             </div>
             <div class="profile-info-text">
                 <h1>{{ Auth::user()->name }}</h1>
-                <p>Keluarga Pasien • Pendamping: {{ $keluarga->pasien->nama }}</p>
+                <p>PMO Pasien • Pendamping: {{ $keluarga->pasien->nama }}</p>
             </div>
         </div>
 
@@ -283,7 +283,7 @@
                     </div>
                     <div class="form-group">
                         <label>Status Hubungan</label>
-                        <input type="text" value="{{ $keluarga->hubungan ?? 'Keluarga' }}" disabled>
+                        <input type="text" value="{{ $keluarga->status_hubungan ?? 'PMO' }}" disabled>
                     </div>
                 </div>
             </section>

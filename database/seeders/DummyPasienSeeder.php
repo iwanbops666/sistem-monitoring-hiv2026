@@ -68,8 +68,9 @@ class DummyPasienSeeder extends Seeder
             // 1. Create User
             $tanggal_mulai_art = Carbon::now()->subMonthsNoOverflow($conf[1])->startOfDay();
 
+            $nama_pasien = $faker->name;
             $userPasien = User::create([
-                'name' => 'Pasien ' . $count,
+                'name' => $nama_pasien,
                 'email' => "pasien{$count}@test.com",
                 'password' => Hash::make('password'),
                 'role' => 'pasien',
@@ -107,8 +108,9 @@ class DummyPasienSeeder extends Seeder
             ]);
 
             // 3. Create Keluarga
+            $nama_keluarga = $faker->name;
             $userKeluarga = User::create([
-                'name' => 'Keluarga ' . $userPasien->name,
+                'name' => $nama_keluarga,
                 'email' => "keluarga{$count}@test.com",
                 'password' => Hash::make('password'),
                 'role' => 'keluarga',

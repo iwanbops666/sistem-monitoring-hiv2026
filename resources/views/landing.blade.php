@@ -587,7 +587,7 @@
                 <span style="background: rgba(5, 150, 105, 0.2); padding: 8px 20px; border-radius: 100px; font-size: 14px; font-weight: 700; color: var(--primary-light); margin-bottom: 20px; display: inline-block; backdrop-filter: blur(5px); border: 1px solid rgba(52, 211, 153, 0.3);">
                     Digital Health Solutions
                 </span>
-                <h1>Sistem Monitoring Pasien HIV Terintegrasi</h1>
+                <h1>Sistem Monitoring Pasien HIV</h1>
                 <p>Platform digital modern yang dirancang untuk memperkuat pengawasan kepatuhan minum obat, jadwal kontrol berkala, dan manajemen data klinis secara aman dan efisien.</p>
                 
                 <div class="hero-btns">

@@ -256,7 +256,7 @@
 
                 <div class="kartu-group" style="margin-bottom: 25px;">
                     <label>Rejiman dan Jumlah Obat ARV yang tersisa</label>
-                    <div class="obat-grid">
+                    <div class="obat-grid" id="obat_grid_container">
                         @php
                             $daftar_obat = [
                                 'TDF(300)/3TC(300)/EFV(600)',
@@ -267,7 +267,7 @@
                             ];
                         @endphp
                         @foreach($daftar_obat as $obat)
-                            <div class="obat-item">
+                            <div class="obat-item static-obat-item">
                                 <input type="checkbox" name="obat_selected[]" value="{{ $obat }}" class="obat-cb">
                                 <span>{{ $obat }}</span>
                                 <div style="display: flex; align-items: center;">
@@ -277,6 +277,9 @@
                             </div>
                         @endforeach
                     </div>
+                    <button type="button" id="btn_add_obat" style="background: #f8fafc; border: 1.5px dashed #cbd5e1; color: #475569; padding: 10px 15px; border-radius: 12px; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; margin-top: -10px;">
+                        <i class="fa-solid fa-plus"></i> Tambah Jenis Obat Lainnya
+                    </button>
                 </div>
 
                 <div class="kartu-grid">
@@ -398,8 +401,38 @@
                 const inputEfek = document.getElementById('input_efek_samping');
                 const inputCatatan = document.getElementById('input_catatan');
                 
-                const obatItems = document.querySelectorAll('.obat-item');
                 const textSave = document.getElementById('text_save_kartu');
+                const btnAddObat = document.getElementById('btn_add_obat');
+                const obatGrid = document.getElementById('obat_grid_container');
+                let customObatCount = 0;
+
+                btnAddObat.addEventListener('click', function() {
+                    customObatCount++;
+                    const id = 'custom_obat_' + customObatCount;
+                    const valName = 'Obat_Baru_' + customObatCount;
+                    const html = `
+                        <div class="obat-item custom-obat-item" id="${id}_container">
+                            <input type="checkbox" name="obat_selected[]" value="${valName}" class="obat-cb" id="${id}_cb" checked>
+                            <input type="text" id="${id}_name" placeholder="Ketik nama obat..." style="flex: 1; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 6px 10px; font-size: 13px;" value="${valName}">
+                            <div style="display: flex; align-items: center;">
+                                <span class="obat-qty-label">Sisa:</span>
+                                <input type="number" name="obat_jumlah[${valName}]" id="${id}_qty" class="obat-qty-input" placeholder="0" min="0">
+                            </div>
+                            <button type="button" onclick="document.getElementById('${id}_container').remove()" style="background: none; border: none; color: #ef4444; cursor: pointer; margin-left: 5px;" title="Hapus Obat"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    `;
+                    obatGrid.insertAdjacentHTML('beforeend', html);
+
+                    const nameInput = document.getElementById(`${id}_name`);
+                    const cbInput = document.getElementById(`${id}_cb`);
+                    const qtyInput = document.getElementById(`${id}_qty`);
+
+                    nameInput.addEventListener('input', function() {
+                        const val = this.value || valName;
+                        cbInput.value = val;
+                        qtyInput.name = `obat_jumlah[${val}]`;
+                    });
+                });
 
                 function resetForm() {
                     inputRencana.value = '';
@@ -408,10 +441,12 @@
                     inputEfek.value = '';
                     inputCatatan.value = '';
                     
-                    obatItems.forEach(item => {
+                    document.querySelectorAll('.static-obat-item').forEach(item => {
                         item.querySelector('.obat-cb').checked = false;
                         item.querySelector('.obat-qty-input').value = '';
                     });
+                    
+                    document.querySelectorAll('.custom-obat-item').forEach(el => el.remove());
                     
                     textSave.textContent = 'Simpan Kartu Kendali';
                 }
@@ -458,13 +493,16 @@
                         inputEfek.value = existing.efek_samping_dan_lab_profilaksis || '';
                         inputCatatan.value = existing.catatan || '';
                         
-                        // Fill medications
+                        // Fill static medications
                         const obats = existing.obat_yang_diberikan || [];
-                        obatItems.forEach(item => {
+                        const standardObats = Array.from(document.querySelectorAll('.static-obat-item span')).map(span => span.textContent);
+                        
+                        document.querySelectorAll('.custom-obat-item').forEach(el => el.remove());
+                        
+                        document.querySelectorAll('.static-obat-item').forEach(item => {
                             const cb = item.querySelector('.obat-cb');
                             const qtyInput = item.querySelector('.obat-qty-input');
                             
-                            // Data bisa berupa array string (lama) atau array objek (baru)
                             const found = obats.find(o => (typeof o === 'string' ? o : o.nama) === cb.value);
                             
                             if (found) {
@@ -473,6 +511,39 @@
                             } else {
                                 cb.checked = false;
                                 qtyInput.value = '';
+                            }
+                        });
+
+                        // Append dynamic custom medications if any
+                        obats.forEach(o => {
+                            const nama = typeof o === 'string' ? o : o.nama;
+                            const jumlah = typeof o === 'object' ? (o.jumlah || '') : '';
+                            
+                            if (!standardObats.includes(nama)) {
+                                customObatCount++;
+                                const id = 'custom_obat_' + customObatCount;
+                                const html = `
+                                    <div class="obat-item custom-obat-item" id="${id}_container">
+                                        <input type="checkbox" name="obat_selected[]" value="${nama}" class="obat-cb" id="${id}_cb" checked>
+                                        <input type="text" id="${id}_name" style="flex: 1; border: 1.5px solid #e2e8f0; border-radius: 8px; padding: 6px 10px; font-size: 13px;" value="${nama}">
+                                        <div style="display: flex; align-items: center;">
+                                            <span class="obat-qty-label">Sisa:</span>
+                                            <input type="number" name="obat_jumlah[${nama}]" id="${id}_qty" class="obat-qty-input" value="${jumlah}" min="0">
+                                        </div>
+                                        <button type="button" onclick="document.getElementById('${id}_container').remove()" style="background: none; border: none; color: #ef4444; cursor: pointer; margin-left: 5px;" title="Hapus Obat"><i class="fa-solid fa-trash"></i></button>
+                                    </div>
+                                `;
+                                document.getElementById('obat_grid_container').insertAdjacentHTML('beforeend', html);
+                                
+                                const nameInput = document.getElementById(`${id}_name`);
+                                const cbInput = document.getElementById(`${id}_cb`);
+                                const qtyInput = document.getElementById(`${id}_qty`);
+
+                                nameInput.addEventListener('input', function() {
+                                    const val = this.value || `Obat_Baru_${customObatCount}`;
+                                    cbInput.value = val;
+                                    qtyInput.name = `obat_jumlah[${val}]`;
+                                });
                             }
                         });
 

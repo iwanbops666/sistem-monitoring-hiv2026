@@ -269,69 +269,83 @@
             <div class="registrasi-section">
                 <div class="section-header">
                     <i class="fa-solid fa-users-viewfinder"></i>
-                    Data Keluarga / PMO (Pendamping Minum Obat)
+                    Data PMO (Pendamping Minum Obat)
                 </div>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label>Nama Keluarga / PMO</label>
+                        <label>Nama PMO</label>
                         <input type="text" name="nama_keluarga" placeholder="Nama pendamping" value="{{ old('nama_keluarga') }}">
                     </div>
                     <div class="form-group">
-                        <label>Nomor WhatsApp Keluarga</label>
+                        <label>Status Hubungan</label>
+                        <input type="text" name="status_hubungan" list="status_options" placeholder="Pilih atau ketik status..." value="{{ old('status_hubungan') }}" required autocomplete="off">
+                        <datalist id="status_options">
+                            <option value="Suami">
+                            <option value="Istri">
+                            <option value="Saudara">
+                            <option value="Orangtua">
+                        </datalist>
+                    </div>
+                    
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label>Alamat Lengkap PMO</label>
+                        <input type="text" name="alamat_keluarga" placeholder="Alamat lengkap PMO" value="{{ old('alamat_keluarga') }}">
+                    </div>
+                    
+                    <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <label>RT PMO</label>
+                            <input type="text" name="rt_keluarga" placeholder="000" value="{{ old('rt_keluarga') }}" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                        </div>
+                        <div>
+                            <label>RW PMO</label>
+                            <input type="text" name="rw_keluarga" placeholder="000" value="{{ old('rw_keluarga') }}" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Nomor WhatsApp PMO</label>
                         <div class="phone-input-wrapper">
                             <span>+62</span>
                             <input type="text" name="no_hp_keluarga" placeholder="81234567890" value="{{ old('no_hp_keluarga') }}" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                         </div>
                     </div>
-                    <div class="form-group" style="grid-column: span 2;">
-                        <label>Alamat Lengkap Keluarga</label>
-                        <input type="text" name="alamat_keluarga" placeholder="Alamat lengkap keluarga" value="{{ old('alamat_keluarga') }}">
-                    </div>
-                    <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <div>
-                            <label>RT Keluarga</label>
-                            <input type="text" name="rt_keluarga" placeholder="000" value="{{ old('rt_keluarga') }}" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                        </div>
-                        <div>
-                            <label>RW Keluarga</label>
-                            <input type="text" name="rw_keluarga" placeholder="000" value="{{ old('rw_keluarga') }}" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                        </div>
-                    </div>
-                    <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <div>
-                            <label>Provinsi Keluarga</label>
-                            <select name="provinsi_keluarga" id="provinsi_keluarga" required>
-                                <option value="">Pilih Provinsi</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label>Kabupaten Keluarga</label>
-                            <select name="kabupaten_keluarga" id="kabupaten_keluarga" required disabled>
-                                <option value="">Pilih Kabupaten</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                        <div>
-                            <label>Kecamatan Keluarga</label>
-                            <select name="kecamatan_keluarga" id="kecamatan_keluarga" required disabled>
-                                <option value="">Pilih Kecamatan</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label>Kelurahan Keluarga</label>
-                            <select name="kelurahan_keluarga" id="kelurahan_keluarga" required disabled>
-                                <option value="">Pilih Kelurahan</option>
-                            </select>
-                        </div>
+                    
+                    <div class="form-group">
+                        <label>Provinsi PMO</label>
+                        <select name="provinsi_keluarga" id="provinsi_keluarga" required>
+                            <option value="">Pilih Provinsi</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label>Email / No. HP Keluarga (Untuk Login)</label>
-                        <input type="text" name="email_keluarga" placeholder="email@keluarga.com atau 0812..." value="{{ old('email_keluarga') }}">
+                        <label>Kabupaten PMO</label>
+                        <select name="kabupaten_keluarga" id="kabupaten_keluarga" required disabled>
+                            <option value="">Pilih Kabupaten</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Kecamatan PMO</label>
+                        <select name="kecamatan_keluarga" id="kecamatan_keluarga" required disabled>
+                            <option value="">Pilih Kecamatan</option>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label>Password Akun Keluarga</label>
-                        <input type="password" name="password_keluarga" placeholder="********" value="{{ old('password_keluarga') }}">
+                        <label>Kelurahan PMO</label>
+                        <select name="kelurahan_keluarga" id="kelurahan_keluarga" required disabled>
+                            <option value="">Pilih Kelurahan</option>
+                        </select>
+                    </div>
+
+                    <div style="grid-column: 1 / -1; border-top: 1px dashed #e2e8f0; margin-top: 10px; padding-top: 25px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px 40px;">
+                        <div class="form-group">
+                            <label>Email / No. HP PMO (Untuk Login)</label>
+                            <input type="text" name="email_keluarga" placeholder="email@pmo.com atau 0812..." value="{{ old('email_keluarga') }}">
+                        </div>
+                        <div class="form-group">
+                            <label>Password Akun PMO</label>
+                            <input type="password" name="password_keluarga" placeholder="********" value="{{ old('password_keluarga') }}">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -390,15 +404,15 @@
             // Old values from Laravel
             const oldValues = {
                 pasien: {
-                    provinsi: "{{ old('provinsi') }}",
-                    kabupaten: "{{ old('kabupaten') }}",
-                    kecamatan: "{{ old('kecamatan') }}",
+                    provinsi: "{{ old('provinsi', 'JAWA TIMUR') }}",
+                    kabupaten: "{{ old('kabupaten', 'KABUPATEN BANYUWANGI') }}",
+                    kecamatan: "{{ old('kecamatan', 'CLURING') }}",
                     kelurahan: "{{ old('kelurahan') }}"
                 },
                 keluarga: {
-                    provinsi: "{{ old('provinsi_keluarga') }}",
-                    kabupaten: "{{ old('kabupaten_keluarga') }}",
-                    kecamatan: "{{ old('kecamatan_keluarga') }}",
+                    provinsi: "{{ old('provinsi_keluarga', 'JAWA TIMUR') }}",
+                    kabupaten: "{{ old('kabupaten_keluarga', 'KABUPATEN BANYUWANGI') }}",
+                    kecamatan: "{{ old('kecamatan_keluarga', 'CLURING') }}",
                     kelurahan: "{{ old('kelurahan_keluarga') }}"
                 }
             };
@@ -535,6 +549,7 @@
                 if(id) loadVillages(id, 'kelurahan_keluarga', null);
                 else document.getElementById('kelurahan_keluarga').disabled = true;
             });
+
         });
     </script>
     @endpush

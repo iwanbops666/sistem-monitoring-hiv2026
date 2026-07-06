@@ -165,7 +165,7 @@
 
         .logout-btn {
             width: 100%;
-            background: rgba(255, 255, 255, 0.08);
+            background: #dc2626;
             color: #ffffff;
             border-radius: 14px;
             padding: 14px 20px;
@@ -176,13 +176,13 @@
             font-size: 15px;
             font-weight: 700;
             transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid #b91c1c;
         }
 
         .logout-btn:hover {
-            background: #ef4444;
-            border-color: #ef4444;
-            box-shadow: 0 8px 15px rgba(239, 68, 68, 0.3);
+            background: #b91c1c;
+            border-color: #991b1b;
+            box-shadow: 0 8px 15px rgba(220, 38, 38, 0.2);
         }
 
         /* MAIN CONTENT */
