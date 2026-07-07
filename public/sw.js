@@ -1,20 +1,42 @@
+self.addEventListener('install', function (event) {
+    self.skipWaiting();
+});
+
+self.addEventListener('activate', function (event) {
+    event.waitUntil(self.clients.claim());
+});
+
 self.addEventListener('push', function (event) {
-    if (!(self.Notification && self.Notification.permission === 'granted')) {
+    if (!event.data) {
+        console.log('Push event but no data');
         return;
     }
 
-    if (event.data) {
+    try {
         const msg = event.data.json();
         console.log('Push received:', msg);
 
+        const title = msg.title || 'Notifikasi Baru';
+        const options = {
+            body: msg.body || 'Anda memiliki notifikasi baru.',
+            icon: msg.icon || '/assets/logo-puskesmas.png',
+            badge: msg.badge || '/assets/logo-puskesmas.png',
+            data: {
+                url: (msg.data && msg.data.url) || msg.action_url || '/'
+            },
+            requireInteraction: true // Keeps notification open until user interacts
+        };
+
         event.waitUntil(
-            self.registration.showNotification(msg.title, {
-                body: msg.body,
-                icon: msg.icon || '/assets/logo-puskesmas.png',
-                badge: '/assets/logo-puskesmas.png',
-                data: {
-                    url: (msg.data && msg.data.url) || msg.action_url || '/'
-                }
+            self.registration.showNotification(title, options)
+        );
+    } catch (e) {
+        console.error('Error parsing push data:', e);
+        event.waitUntil(
+            self.registration.showNotification('Notifikasi Baru', {
+                body: event.data.text(),
+                icon: '/assets/logo-puskesmas.png',
+                data: { url: '/' }
             })
         );
     }
