@@ -45,7 +45,28 @@ self.addEventListener('push', function (event) {
 self.addEventListener('notificationclick', function (event) {
     event.notification.close();
 
+    const targetUrl = event.notification.data.url || '/';
+    const absoluteTargetUrl = new URL(targetUrl, self.location.origin).href;
+
     event.waitUntil(
-        clients.openWindow(event.notification.data.url)
+        clients.matchAll({ type: 'window', includeUncontrolled: true })
+            .then(function (clientList) {
+                // Cari apakah ada tab yang sudah terbuka dengan origin yang sama
+                for (let i = 0; i < clientList.length; i++) {
+                    const client = clientList[i];
+                    if (new URL(client.url).origin === self.location.origin) {
+                        // Jika ketemu, navigasikan ke URL tujuan dan fokus ke tab tersebut
+                        if ('navigate' in client) {
+                            client.navigate(absoluteTargetUrl);
+                        }
+                        return client.focus();
+                    }
+                }
+                
+                // Jika tidak ada tab yang terbuka, buka tab baru
+                if (clients.openWindow) {
+                    return clients.openWindow(absoluteTargetUrl);
+                }
+            })
     );
 });

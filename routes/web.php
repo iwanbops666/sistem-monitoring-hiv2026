@@ -14,6 +14,16 @@ use App\Http\Controllers\PushSubscriptionController;
 */
 
 Route::get('/', function () {
+    if (auth()->check()) {
+        $role = auth()->user()->role;
+        if ($role === 'petugas' || $role === 'admin') {
+            return redirect('/dashboard');
+        } elseif ($role === 'pasien') {
+            return redirect('/pasien/dashboard');
+        } elseif ($role === 'keluarga') {
+            return redirect('/keluarga/dashboard');
+        }
+    }
     return view('landing');
 });
 

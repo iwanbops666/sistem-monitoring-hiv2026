@@ -206,9 +206,17 @@
             font-size: 56px;
             font-weight: 900;
             line-height: 1.1;
-            margin-bottom: 25px;
+            margin-bottom: 10px;
             letter-spacing: -2px;
             text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .hero-text h2 {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 25px;
+            color: var(--primary-light);
+            text-shadow: 0 5px 15px rgba(0,0,0,0.4);
         }
 
         .hero-text p {
@@ -425,6 +433,7 @@
         @media (max-width: 1100px) {
             .navbar, .hero-body, section, footer { padding: 40px 40px; }
             .hero-text h1 { font-size: 48px; }
+            .hero-text h2 { font-size: 32px; }
             .nav-links { display: none; }
             .footer-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
             .footer-brand { grid-column: span 2; }
@@ -432,6 +441,7 @@
 
         @media (max-width: 768px) {
             .hero-text h1 { font-size: 38px; }
+            .hero-text h2 { font-size: 26px; }
             .hero-btns { flex-direction: column; }
             .btn-main { justify-content: center; }
             .section-header h2 { font-size: 32px; }
@@ -473,6 +483,10 @@
             .hero-text h1 {
                 font-size: 30px;
                 letter-spacing: -1px;
+                margin-bottom: 5px;
+            }
+            .hero-text h2 {
+                font-size: 22px;
                 margin-bottom: 15px;
             }
             .hero-text p {
@@ -588,6 +602,7 @@
                     Digital Health Solutions
                 </span>
                 <h1>Sistem Monitoring Pasien HIV</h1>
+                <h2>Puskesmas Benculuk</h2>
                 <p>Platform digital modern yang dirancang untuk memperkuat pengawasan kepatuhan minum obat, jadwal kontrol berkala, dan manajemen data klinis secara aman dan efisien.</p>
                 
                 <div class="hero-btns">
