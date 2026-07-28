@@ -1,0 +1,35 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sistem-monitoring-hiv-app
+    restart: unless-stopped
+    ports:
+      - "8080:80" # Expose app on port 8080. You can change this or route it via Nginx reverse proxy.
+    environment:
+      - APP_ENV=production
+      - APP_DEBUG=false
+    volumes:
+      - .env:/var/www/html/.env
+      - storage_data:/var/www/html/storage
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    container_name: sistem-monitoring-hiv-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: skripsi
+      MYSQL_ROOT_PASSWORD: root_password_here # Ganti dengan password yang aman
+      MYSQL_PASSWORD: password_here           # Ganti dengan password yang aman
+      MYSQL_USER: user_here                   # Ganti dengan username database
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "127.0.0.1:3306:3306" # Hanya bisa diakses secara lokal dari VPS untuk keamanan.
+
+volumes:
+  storage_data:
+  db_data:
