@@ -1,3 +1,16 @@
+@php
+    $dashboardUrl = url('/login');
+    if (auth()->check()) {
+        $role = auth()->user()->role;
+        if ($role === 'petugas' || $role === 'admin') {
+            $dashboardUrl = url('/dashboard');
+        } elseif ($role === 'pasien') {
+            $dashboardUrl = url('/pasien/dashboard');
+        } elseif ($role === 'keluarga') {
+            $dashboardUrl = url('/keluarga/dashboard');
+        }
+    }
+@endphp
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -590,10 +603,17 @@
                 <li><a href="#kontak">Kontak</a></li>
             </ul>
 
-            <a href="{{ url('/login') }}" class="btn-login-nav">
-                <i class="fa-solid fa-lock"></i>
-                Login System
-            </a>
+            @auth
+                <a href="{{ $dashboardUrl }}" class="btn-login-nav" style="background: var(--primary-dark);">
+                    <i class="fa-solid fa-gauge"></i>
+                    Ke Dashboard
+                </a>
+            @else
+                <a href="{{ url('/login') }}" class="btn-login-nav">
+                    <i class="fa-solid fa-lock"></i>
+                    Login System
+                </a>
+            @endauth
         </nav>
 
         <div class="hero-body">
@@ -606,10 +626,17 @@
                 <p>Platform digital modern yang dirancang untuk memperkuat pengawasan kepatuhan minum obat, jadwal kontrol berkala, dan manajemen data klinis secara aman dan efisien.</p>
                 
                 <div class="hero-btns">
-                    <a href="{{ url('/login') }}" class="btn-main">
-                        Dapatkan Akses Sekarang
-                        <i class="fa-solid fa-arrow-right"></i>
-                    </a>
+                    @auth
+                        <a href="{{ $dashboardUrl }}" class="btn-main" style="background: var(--primary-dark);">
+                            Ke Dashboard
+                            <i class="fa-solid fa-gauge"></i>
+                        </a>
+                    @else
+                        <a href="{{ url('/login') }}" class="btn-main">
+                            Dapatkan Akses Sekarang
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    @endauth
                 </div>
             </div>
         </div>
@@ -681,7 +708,11 @@
                     <li><a href="#">Beranda</a></li>
                     <li><a href="#fitur">Fitur Utama</a></li>
                     <li><a href="#tentang">Manfaat</a></li>
-                    <li><a href="{{ url('/login') }}">Akses Login</a></li>
+                    @auth
+                        <li><a href="{{ $dashboardUrl }}">Dashboard</a></li>
+                    @else
+                        <li><a href="{{ url('/login') }}">Akses Login</a></li>
+                    @endauth
                 </ul>
             </div>
 

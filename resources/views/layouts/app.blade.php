@@ -636,11 +636,13 @@
     <aside class="sidebar">
         <div class="sidebar-top">
             <div class="sidebar-logo">
-                <img src="{{ asset('assets/logo-puskesmas.png') }}" alt="Logo">
-                <h3>
-                    PUSKESMAS BENCULUK<br>
-                    <span style="font-size: 12px; opacity: 0.7;">KAB. BANYUWANGI</span>
-                </h3>
+                <a href="{{ url('/') }}" style="text-decoration: none; color: inherit; display: block;">
+                    <img src="{{ asset('assets/logo-puskesmas.png') }}" alt="Logo">
+                    <h3>
+                        PUSKESMAS BENCULUK<br>
+                        <span style="font-size: 12px; opacity: 0.7;">KAB. BANYUWANGI</span>
+                    </h3>
+                </a>
             </div>
 
             <ul class="menu">

@@ -546,13 +546,13 @@
 <div class="keluarga-wrapper">
     <!-- MOBILE HEADER -->
     <header class="mobile-header">
-        <div class="mobile-logo-container">
+        <a href="{{ url('/') }}" class="mobile-logo-container" style="text-decoration: none; color: inherit;">
             <img src="{{ asset('assets/logo-puskesmas.png') }}" alt="Logo">
             <div class="mobile-logo-text">
                 <h3>PUSKESMAS BENCULUK</h3>
                 <span>MONITORING HIV - KELUARGA</span>
             </div>
-        </div>
+        </a>
         <div class="mobile-action-btns">
             <button type="button" class="mobile-action-btn" id="keluargaBellMobileButton">
                 <i class="fa-regular fa-bell"></i>
@@ -567,11 +567,13 @@
     <aside class="keluarga-sidebar">
         <div class="sidebar-top">
             <div class="keluarga-logo">
-                <img src="{{ asset('assets/logo-puskesmas.png') }}" alt="Logo">
-                <h3>
-                    PUSKESMAS BENCULUK<br>
-                    <span style="font-size: 12px; opacity: 0.7;">KAB. BANYUWANGI</span>
-                </h3>
+                <a href="{{ url('/') }}" style="text-decoration: none; color: inherit; display: block;">
+                    <img src="{{ asset('assets/logo-puskesmas.png') }}" alt="Logo">
+                    <h3>
+                        PUSKESMAS BENCULUK<br>
+                        <span style="font-size: 12px; opacity: 0.7;">KAB. BANYUWANGI</span>
+                    </h3>
+                </a>
             </div>
 
             <ul class="keluarga-menu">

@@ -9,6 +9,16 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
+        if (Auth::check()) {
+            $user = Auth::user();
+            if ($user->role === 'petugas' || $user->role === 'admin') {
+                return redirect('/dashboard');
+            } elseif ($user->role === 'pasien') {
+                return redirect('/pasien/dashboard');
+            } elseif ($user->role === 'keluarga') {
+                return redirect('/keluarga/dashboard');
+            }
+        }
         return view('login');
     }
 
